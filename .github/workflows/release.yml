@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: nrwl/nx-set-shas@v3
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+
+      - name: use node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: set registry for @gourmetseasoningsake pkgs (gh)
+        run: pnpm config set @gourmetseasoningsake:registry https://npm.pkg.github.com
+
+      - name: set token for gh registry
+        run: pnpm config set //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}
+
+      - name: install deps
+        run: pnpm install
+
+      - name: run tests
+        run: pnpm nx affected --target=test
+
+#  publish:
+#    needs: build
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        node-version: [16]
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: pnpm/action-setup@v2.2.2
+#        with:
+#          version: 7
+#
+#      - name: use node.js ${{ matrix.node-version }}
+#        uses: actions/setup-node@v2
+#        with:
+#          node-version: ${{ matrix.node-version }}
+#          cache: "pnpm"
+#
+#      - name: set registry for @gourmetseasoningsake pkgs (gh)
+#        run: pnpm config set @gourmetseasoningsake:registry https://npm.pkg.github.com
+#
+#      - name: set publish registry (gh)
+#        run: pnpm config set registry https://npm.pkg.github.com/
+#
+#      - name: set token for gh registry
+#        run: pnpm config set //npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: install deps
+#        run: pnpm install
+#
+#      - name: install deps
+#        run: pnpm build
+#
+#      - name: publish
+#        run: pnpm publish --no-git-checks
