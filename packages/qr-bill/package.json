@@ -1,0 +1,25 @@
+{
+  "name": "@prpsake/qr-bill",
+  "description": "swiss qr-bill web component",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./LiberationSans-Bold": "./dist/fonts/LiberationSans-Bold.woff",
+    "./LiberationSans-Regular": "./dist/fonts/LiberationSans-Regular.woff"
+  },
+  "types": "types/index.d.ts",
+  "scripts": {
+    "test": "exit 0",
+    "test:publish": "pnpm publish --dry-run --no-git-checks",
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "peerDependencies": {
+    "hybrids": "^8.1.5"
+  }
+}
