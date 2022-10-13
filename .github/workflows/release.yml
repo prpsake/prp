@@ -71,7 +71,7 @@ jobs:
       - name: install deps
         run: pnpm install
 
-      - name: install deps
+      - name: build
         run: pnpm nx affected --target=build
 
       - name: publish
