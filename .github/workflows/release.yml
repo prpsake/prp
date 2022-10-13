@@ -72,7 +72,7 @@ jobs:
         run: pnpm install
 
       - name: build
-        run: pnpm nx affected --target=build
+        run: pnpm nx run-many --target=build
 
       - name: publish
-        run: pnpm nx affected --target=release
+        run: pnpm nx run-many --target=release
