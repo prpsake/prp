@@ -17,5 +17,13 @@
         ]
       }
     }
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"]
+    },
+    "test:publish": {
+      "dependsOn": ["^build"]
+    }
   }
 }

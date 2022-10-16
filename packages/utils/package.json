@@ -1,12 +1,13 @@
 {
   "name": "@prpsake/utils",
+  "description": "",
   "version": "0.0.1",
-  "main": "src/api.js",
   "type": "module",
   "files": [
     "src",
     "dist"
   ],
+  "module": "./dist/index.js",
   "exports": {
     ".": "./dist/index.js",
     "./CLI": "./src/CLI.js",
