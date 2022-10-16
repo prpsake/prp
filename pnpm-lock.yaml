@@ -44,7 +44,7 @@ importers:
     specifiers:
       '@prpsake/qr-bill': '*'
       '@prpsake/utils': '*'
-    dependencies:
+    devDependencies:
       '@prpsake/qr-bill': link:../qr-bill
       '@prpsake/utils': link:../utils
 

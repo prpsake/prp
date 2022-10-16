@@ -17,7 +17,7 @@
     "build": "vite build",
     "release": "pnpm publish --no-git-checks"
   },
-  "dependencies": {
+  "devDependencies": {
     "@prpsake/qr-bill": "*",
     "@prpsake/utils": "*"
   }
