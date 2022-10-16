@@ -1,0 +1,25 @@
+{
+  "name": "@prpsake/utils",
+  "version": "0.0.1",
+  "main": "src/api.js",
+  "type": "module",
+  "files": [
+    "src"
+  ],
+  "exports": {
+    ".": "./src/api.js",
+    "./CLI": "./src/CLI.js",
+    "./Config": "./src/Config.js",
+    "./Env": "./src/Env.js",
+    "./Filereader": "./src/Filereader.js",
+    "./Obj": "./src/Object.js",
+    "./Task": "./src/Task.js"
+  },
+  "scripts": {
+    "test": "echo run utils && exit 0",
+    "test:publish": "pnpm publish --dry-run --no-git-checks",
+    "dev": "vite",
+    "build": "vite build",
+    "release": "pnpm publish --no-git-checks"
+  }
+}

@@ -49,6 +49,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: nrwl/nx-set-shas@v3
       - uses: pnpm/action-setup@v2.2.3
         with:
           version: 7
@@ -72,7 +75,7 @@ jobs:
         run: pnpm install
 
       - name: build
-        run: pnpm nx run-many --target=build
+        run: pnpm nx affected --target=build
 
       - name: publish
-        run: pnpm nx run-many --target=release
+        run: pnpm nx affected --target=release

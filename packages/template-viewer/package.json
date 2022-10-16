@@ -1,0 +1,23 @@
+{
+  "name": "@prpsake/template-viewer",
+  "description": "prp document template viewer",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "test": "echo run template viewer test && exit 0",
+    "test:publish": "pnpm publish --dry-run --no-git-checks",
+    "dev": "vite",
+    "build": "vite build",
+    "release": "pnpm publish --no-git-checks"
+  },
+  "dependencies": {
+    "@prpsake/qr-bill": "*",
+    "@prpsake/utils": "*"
+  }
+}

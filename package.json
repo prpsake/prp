@@ -8,6 +8,7 @@
     "@nrwl/cli": "14.8.3",
     "@nrwl/workspace": "14.8.3",
     "autoprefixer": "^10.4.12",
+    "execa": "^6.1.0",
     "hybrids": "^8.1.5",
     "nx": "14.8.3",
     "postcss": "^8.4.17",

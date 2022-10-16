@@ -1,0 +1,18 @@
+# config
+
+config.js -linguist-detectable
+*.config.js -linguist-detectable
+*.config.mjs -linguist-detectable
+
+
+
+# tests
+
+/ava/*
+*.spec.js -linguist-detectable
+
+
+
+# misc
+
+/json-server/*
