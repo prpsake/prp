@@ -4,10 +4,11 @@
   "main": "src/api.js",
   "type": "module",
   "files": [
-    "src"
+    "src",
+    "dist"
   ],
   "exports": {
-    ".": "./src/api.js",
+    ".": "./dist/index.js",
     "./CLI": "./src/CLI.js",
     "./Config": "./src/Config.js",
     "./Env": "./src/Env.js",
