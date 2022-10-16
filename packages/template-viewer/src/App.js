@@ -42,7 +42,7 @@ const App = ({
 
       const observer = new MutationObserver((mutations) => {
         for (const mutation of mutations) {
-          if (mutation.addedNodes[0]?.tagName?.startsWith(tagPrefix)) {
+          if (mutation.addedNodes[0]?.tagName?.startsWith("VIEW-")) {
             preview({ host })
             break
           }
