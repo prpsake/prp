@@ -8,7 +8,7 @@
     "types"
   ],
   "exports": {
-    ".": "./dist/index.js",
+    ".": "./dist/api.js",
     "./LiberationSans-Bold": "./dist/fonts/LiberationSans-Bold.woff",
     "./LiberationSans-Regular": "./dist/fonts/LiberationSans-Regular.woff"
   },
