@@ -14,6 +14,7 @@ importers:
       postcss: ^8.4.17
       prettier: ^2.6.2
       rescript: ^10.0.1
+      rescript-webapi: ^0.6.1
       rollup-plugin-html-literals: github:gourmetseasoningsake/rollup-plugin-html-literals
       tailwindcss: ^3.1.8
       typescript: ~4.8.2
@@ -29,6 +30,7 @@ importers:
       postcss: 8.4.17
       prettier: 2.7.1
       rescript: 10.0.1
+      rescript-webapi: 0.6.1
       rollup-plugin-html-literals: github.com/gourmetseasoningsake/rollup-plugin-html-literals/e9c1e53c37b17bb463bc0892bc55393912a9ffe2
       tailwindcss: 3.1.8_postcss@8.4.17
       typescript: 4.8.4
@@ -3078,6 +3080,10 @@ packages:
   /require-directory/2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
     engines: {node: '>=0.10.0'}
+    dev: true
+
+  /rescript-webapi/0.6.1:
+    resolution: {integrity: sha512-I/eeHOcsUfWbCf6u15zd+rKxMz9awSjjdRa8eFtl2X+HjDNs0mJxoC4uFFK9dIazYcmY2VpuK5TTpOPXvdkhDw==}
     dev: true
 
   /rescript/10.0.1:

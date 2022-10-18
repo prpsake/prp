@@ -1,13 +1,6 @@
 /node_modules/
-/test/
-/build/
 /dist/
 /coverage/
-/tools/
-/src/**/_*
-/public/data/*.json
-!/public/data/invoice-sample.json
-
 
 /lib/
 /src/**/*.bs.js
@@ -15,17 +8,10 @@
 .bsb.lock
 .merlin
 
+*.log*
 
 # env
 *.local
 
-
 # os specific
 .DS_Store
-
-
-favicon.config.json
-
-
-# temp
-README_.md
