@@ -1,0 +1,14 @@
+rescript = 1
+rule cp
+  command = cp $i $out
+rule touch
+ command = touch $out
+o Filereader.cmi : cp ../bs/src/Filereader.cmi
+o Filereader.cmj : cp ../bs/src/Filereader.cmj
+o Filereader.cmt : cp ../bs/src/Filereader.cmt
+o Filereader.res : cp ../../src/Filereader.res
+o Webapi.cmi : cp ../bs/src/bindings/Webapi.cmi
+o Webapi.cmj : cp ../bs/src/bindings/Webapi.cmj
+o Webapi.cmt : cp ../bs/src/bindings/Webapi.cmt
+o Webapi.res : cp ../../src/bindings/Webapi.res
+build install.stamp : touch Filereader.cmi Filereader.cmj Webapi.cmi Webapi.cmj 

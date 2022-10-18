@@ -20,7 +20,7 @@
   "scripts": {
     "test": "echo run utils && exit 0",
     "test:publish": "pnpm publish --dry-run --no-git-checks",
-    "dev": "vite",
+    "dev": "rescript build -w",
     "build": "vite build",
     "release": "pnpm publish --no-git-checks"
   }

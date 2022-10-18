@@ -1,20 +1,22 @@
-import path from "path"
+import { resolve } from "path"
 import { defineConfig } from "vite"
-
+import createReScriptPlugin from "@jihchi/vite-plugin-rescript"
 
 
 export default ({ mode }) => {
   return defineConfig({
-    envPrefix: ["EXP_"],
     publicDir: "public",
     build: {
       target: "esnext",
       minify: true,
       lib: {
-        entry: path.resolve(__dirname, "src/api.js"),
+        entry: resolve(__dirname, "src/api.js"),
         fileName: "index",
         formats: ["es"],
       }
-    }
+    },
+    plugins: [
+      createReScriptPlugin(),
+    ]
   })
 }

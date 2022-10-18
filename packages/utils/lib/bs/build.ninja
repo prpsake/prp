@@ -1,0 +1,16 @@
+rescript = 1
+rule astj
+  command = /Users/jerome/Projects/PRP/prp/node_modules/.pnpm/rescript@10.0.1/node_modules/rescript/darwin/bsc.exe  -bs-v 10.0.1  -absname -bs-ast -o $out $i
+o src/Filereader.ast : astj ../../src/Filereader.res
+rule deps
+  command = /Users/jerome/Projects/PRP/prp/node_modules/.pnpm/rescript@10.0.1/node_modules/rescript/darwin/bsb_helper.exe -hash b59d4904de828fbb6694836192f4b244 $in
+  restat = 1
+o src/Filereader.d : deps src/Filereader.ast
+rule mij
+  command = /Users/jerome/Projects/PRP/prp/node_modules/.pnpm/rescript@10.0.1/node_modules/rescript/darwin/bsc.exe -I src/bindings -I src   -bs-package-name utils -bs-package-output es6:$in_d:.mjs $i
+  dyndep = 1
+  restat = 1
+o src/Filereader.cmj src/Filereader.cmi ../../src/Filereader.mjs : mij src/Filereader.ast
+o src/bindings/Webapi.ast : astj ../../src/bindings/Webapi.res
+o src/bindings/Webapi.d : deps src/bindings/Webapi.ast
+o src/bindings/Webapi.cmj src/bindings/Webapi.cmi ../../src/bindings/Webapi.mjs : mij src/bindings/Webapi.ast
