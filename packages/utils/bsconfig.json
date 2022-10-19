@@ -12,5 +12,6 @@
       "in-source": true
     }
   ],
-  "suffix": ".mjs"
+  "suffix": ".mjs",
+  "bs-dependencies": ["rescript-webapi"]
 }
