@@ -113,11 +113,24 @@ const App = ({
 })
 
 
-export function defineWith({ tag, tagQR, previewSelector, templates, styles }) {
-  if (tagQR) define({ tag: tagQR, ...AQRBill })
-  const templatesConnected = modelsFromTemplates({ templates })
+export function defineWith({
+  tag,
+  templates,
+  styles,
+  previewSelector = "#preview",
+  tagQR = true,
+}) {
+  if (tagQR) {
+    define({
+      tag: typeof tagQR === "string" ? tagQR : "a-qr-bill",
+      class: "absolute bottom-0 left-0",
+      ...AQRBill
+    })
+  }
 
   store.set(Session, { styles }).then(() => {
+    const templatesConnected = modelsFromTemplates({ templates })
+
     define({
       tag,
       ...(App({

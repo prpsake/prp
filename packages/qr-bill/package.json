@@ -10,8 +10,8 @@
   "module": "./dist/index.js",
   "exports": {
     ".": "./dist/index.js",
-    "./LiberationSans-Bold": "./dist/fonts/LiberationSans-Bold.woff",
-    "./LiberationSans-Regular": "./dist/fonts/LiberationSans-Regular.woff"
+    "./LiberationSans-Bold": "./dist/assets/LiberationSans-Bold.woff",
+    "./LiberationSans-Regular": "./dist/assets/LiberationSans-Regular.woff"
   },
   "types": "types/index.d.ts",
   "scripts": {

@@ -22704,7 +22704,7 @@ var syntaxes = {
 		syntax: "circle | ellipse"
 	},
 	"-non-standard-font": {
-		comment: "non standard fonts",
+		comment: "non standard assets",
 		references: [
 			"https://webkit.org/blog/3709/using-the-system-font-in-web-content/"
 		],
@@ -30104,7 +30104,7 @@ class Counters extends Handler {
 				}
 			}
 		});
-		
+
 		return increments;
 	}
 
@@ -30509,7 +30509,7 @@ class NthOfType extends Handler {
 	onRule(ruleNode, ruleItem, rulelist) {
 		let selector = lib.generate(ruleNode.prelude);
 		if (selector.match(/:(first|last|nth)-of-type/)) {
-			
+
 			let declarations = lib.generate(ruleNode.block);
 			declarations = declarations.replace(/[{}]/g,"");
 
@@ -30564,7 +30564,7 @@ class Following extends Handler {
 	onRule(ruleNode, ruleItem, rulelist) {
 		let selector = lib.generate(ruleNode.prelude);
 		if (selector.match(/\+/)) {
-			
+
 			let declarations = lib.generate(ruleNode.block);
 			declarations = declarations.replace(/[{}]/g,"");
 
@@ -31412,11 +31412,11 @@ class StringSets extends Handler {
 
 		this.stringSetSelectors = {};
 		this.type;
-		// pageLastString = last string variable defined on the page 
+		// pageLastString = last string variable defined on the page
 		this.pageLastString;
 
 	}
-	
+
 	onDeclaration(declaration, dItem, dList, rule) {
 		if (declaration.property === "string-set") {
 			let selector = lib.generate(rule.ruleNode.prelude);
@@ -31447,7 +31447,7 @@ class StringSets extends Handler {
 			funcNode.name = "var";
 			funcNode.children = new lib.List();
 
- 
+
 			if(this.type === "first" || this.type === "last" || this.type === "start" || this.type === "first-except"){
 				funcNode.children.append(
 					funcNode.children.createItem({
@@ -31470,15 +31470,15 @@ class StringSets extends Handler {
 
 	afterPageLayout(fragment) {
 
-	
+
 		if ( this.pageLastString === undefined )
 		{
 			this.pageLastString = {};
 		}
-	
-		
+
+
 		for (let name of Object.keys(this.stringSetSelectors)) {
-	
+
 			let set = this.stringSetSelectors[name];
 			let selected = fragment.querySelectorAll(set.selector);
 
@@ -31498,11 +31498,11 @@ class StringSets extends Handler {
 				selected.forEach((sel) => {
 					// push each content into the array to define in the variable the first and the last element of the page.
 					this.pageLastString[name] = selected[selected.length - 1].textContent;
-				
-				});	
+
+				});
 
 				/* FIRST */
-	
+
 				varFirst = selected[0].textContent;
 
 
@@ -31513,7 +31513,7 @@ class StringSets extends Handler {
 
 				/* START */
 
-				// Hack to find if the sel. is the first elem of the page / find a better way 
+				// Hack to find if the sel. is the first elem of the page / find a better way
 				let selTop = selected[0].getBoundingClientRect().top;
 				let pageContent = selected[0].closest(".pagedjs_page_content");
 				let pageContentTop = pageContent.getBoundingClientRect().top;
@@ -31527,18 +31527,18 @@ class StringSets extends Handler {
 				/* FIRST EXCEPT */
 
 				varFirstExcept = "";
-				
+
 			}
 
 			fragment.style.setProperty(`--pagedjs-string-first-${name}`, `"${cleanPseudoContent(varFirst)}`);
 			fragment.style.setProperty(`--pagedjs-string-last-${name}`, `"${cleanPseudoContent(varLast)}`);
 			fragment.style.setProperty(`--pagedjs-string-start-${name}`, `"${cleanPseudoContent(varStart)}`);
 			fragment.style.setProperty(`--pagedjs-string-first-except-${name}`, `"${cleanPseudoContent(varFirstExcept)}`);
-			
-	
+
+
 		}
 	}
-	
+
 
 }
 
@@ -31785,7 +31785,7 @@ class TargetText extends Handler {
 						if (split.length > 1) {
 							psuedo += "::" + split[1];
 						}
-						
+
 						if (target.style === "before" || target.style === "after") {
 							const pseudoType = `${target.style}Content`;
 							textContent = cleanPseudoContent(this[pseudoType]);
