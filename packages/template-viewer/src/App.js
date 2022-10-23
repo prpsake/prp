@@ -2,7 +2,7 @@ import stylesApp from "./styles.css"
 
 import { store, define, router, html } from "hybrids"
 import { Element as AQRBill } from "@prpsake/qr-bill"
-import { Filereader } from "@prpsake/utils"
+import { BlobReader } from "@prpsake/utils"
 
 import Session from "./Session.js"
 import { preview } from "./Paginator.js"
@@ -158,7 +158,7 @@ function toggleMode (host, _e) {
 
 
 function readTemplateJsonData ({ host, e, templates }) {
-  Filereader.readFileAsText({
+  BlobReader.readFileAsText({
     e,
     onLoad: ({ result, file }) => {
       try {

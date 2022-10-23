@@ -5,7 +5,7 @@ config.js -linguist-detectable
 *.config.cjs -linguist-detectable
 
 # src
-/src/**/*.mjs
+/src/**/*.mjs -linguist-detectable
 
 # tests
 /ava/*

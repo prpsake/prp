@@ -10,3 +10,7 @@ config.js -linguist-detectable
 # tests
 /ava/*
 *.spec.js -linguist-detectable
+
+
+# vendor libs
+/src/lib/paged.js -linguist-detectable
