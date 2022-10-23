@@ -4,19 +4,18 @@
   "version": "0.0.1",
   "type": "module",
   "files": [
-    "src",
-    "dist"
+    "dist",
+    "types",
+    "src/BlobReader.mjs",
+    "src/Obj.mjs"
   ],
   "module": "./dist/index.js",
   "exports": {
     ".": "./dist/index.js",
-    "./CLI": "./src/CLI.js",
-    "./Config": "./src/Config.js",
-    "./Env": "./src/Env.js",
-    "./Filereader": "./src/Filereader.js",
-    "./Obj": "./src/Object.js",
-    "./Task": "./src/Task.js"
+    "./BlobReader": "./src/BlobReader.mjs",
+    "./Obj": "./src/Obj.mjs"
   },
+  "types": "types/index.d.ts",
   "scripts": {
     "test": "echo run utils && exit 0",
     "test:publish": "pnpm publish --dry-run --no-git-checks",

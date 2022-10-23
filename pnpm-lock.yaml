@@ -9,6 +9,7 @@ importers:
       '@nrwl/workspace': 14.8.3
       autoprefixer: ^10.4.12
       execa: ^6.1.0
+      gentype: ^4.5.0
       hybrids: ^8.1.5
       nx: 14.8.3
       postcss: ^8.4.17
@@ -25,6 +26,7 @@ importers:
       '@nrwl/workspace': 14.8.3_dmjzcauo3cshxeipj7bv64ktgm
       autoprefixer: 10.4.12_postcss@8.4.17
       execa: 6.1.0
+      gentype: 4.5.0
       hybrids: 8.1.5
       nx: 14.8.3
       postcss: 8.4.17
@@ -1938,6 +1940,12 @@ packages:
   /gensync/1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
+    dev: true
+
+  /gentype/4.5.0:
+    resolution: {integrity: sha512-XqHBQPS6Qb2HSgNJAwYRXbQJ4LSvz+MgNvuWnj8bz0teSorsy2kDxA6F1eZx5ft8cnfKAls4uNEgd5uNcPbQDg==}
+    hasBin: true
+    requiresBuild: true
     dev: true
 
   /get-caller-file/2.0.5:
