@@ -60,7 +60,7 @@ type Element<E> = Component<E>
 declare module Helpers {
   function showWith(data: QRData, otherKeys: {[key in keyof QRData]?: string[]}): boolean
   function notShowWith(data: QRData, otherKeys: {[key in keyof QRData]?: string[]}): boolean
-  function modelQR(param: { data: InputData, validate: boolean, format: boolean }): QRData & QRControlData
+  function modelQR<M>(param: { data: M, validate: boolean, format: boolean }): QRData & QRControlData
 }
 
 

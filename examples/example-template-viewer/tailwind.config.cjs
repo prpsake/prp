@@ -1,5 +1,5 @@
 module.exports = {
-  content: ["./src/templates/*.js"],
+  content: ["./src/templates/*.{js,ts}"],
   theme: {
     fontFamily: {
       mono: "var(--template-font)",
