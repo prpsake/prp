@@ -1,29 +1,37 @@
-import {define, html, router, store} from "hybrids";
-import Session from "./Session";
+import {define, html, router, store} from "hybrids"
+import { Obj } from "@prpsake/utils"
+
+import Session from "./Session"
 
 
 export function modelsFromTemplates({templates}) {
-  return Object
-    .fromEntries(Object
-      .entries(templates)
-      .map(([key, template]) => [key, {
-          content: template.content,
-          model: {
-            templates: [""],
-            ...(template.model),
-            [store.connect]: {
-              offline: true,
-              set: (_id, values) => values,
-              get: () => {
-                const {file} = store.get(Session)
+  return Obj.map(
+    templates,
+    ([key, template]) => {
+      return [key, {
+        content: template.content,
+        model: {
+          templates: [""],
+          ...(Obj.omitProp(template.model, "connect")),
+          [store.connect]: {
+            offline: true,
+            ...(template.model.connect || {}),
+            set: (_id, values) => values,
+            get: () => {
+              const {useFile, file} = store.get(Session)
+              if (!useFile && template.model.connect?.get) {
+                return template.model.connect.get
+              } else {
                 return fetch(`/data/${file}`)
                   .then(resp => resp.json())
                   .catch(e => console.log(e))
               }
             }
           }
-        }]
-      ))
+        }
+      }]
+    }
+  )
 }
 
 

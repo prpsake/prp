@@ -3,6 +3,7 @@ import { store } from "hybrids"
 
 export default {
   styles: "",
+  useFile: false,
   file: "invoice-sample.json",
   lang: "",
   title: "",

@@ -14,7 +14,7 @@
     font-optical-sizing: auto;
   }
 
-  .the-app {
+  .prp-template-viewer-app {
     display: none;
   }
 
@@ -23,7 +23,7 @@
       @apply bg-gray-200;
     }
 
-    .the-app {
+    .prp-template-viewer-app {
       display: unset
     }
 

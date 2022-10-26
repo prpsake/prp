@@ -1,7 +1,7 @@
 import stylesApp from "./styles.css"
 
 import { store, define, router, html } from "hybrids"
-import { Element as AQRBill } from "@prpsake/qr-bill"
+import { Element as QRBill } from "@prpsake/qr-bill"
 import { BlobReader } from "@prpsake/utils"
 
 import Session from "./Session.js"
@@ -27,7 +27,7 @@ const App = ({
   onFileDrop
 }) => ({
   session: store(Session),
-  class: "bottom-0 right-0 w-96 font-sans text-system-fg the-app", // NB: position fixed is set in previewer#preview
+  class: "bottom-0 right-0 w-96 font-sans text-system-fg prp-template-viewer-app", // NB: position fixed is set in previewer#preview
   previewElm: {
     value: undefined,
     connect: (host, key) => {
@@ -114,17 +114,21 @@ const App = ({
 
 
 export function defineWith({
-  tag,
   templates,
   styles,
-  previewSelector = "#preview",
-  tagQR = true,
+  tag = "template-viewer",
+  tagQR = "qr-bill",
+  previewSelector = "#template-view"
 }) {
-  if (tagQR) {
+  if (!(typeof tag === "string" && typeof previewSelector === "string")) {
+    return
+  }
+
+  if (typeof tagQR === "string") {
     define({
-      tag: typeof tagQR === "string" ? tagQR : "a-qr-bill",
+      tag: tagQR,
       class: "absolute bottom-0 left-0",
-      ...AQRBill
+      ...QRBill
     })
   }
 

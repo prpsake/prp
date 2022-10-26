@@ -18,7 +18,7 @@ importers:
       rescript-webapi: ^0.6.1
       rollup-plugin-html-literals: github:gourmetseasoningsake/rollup-plugin-html-literals
       tailwindcss: ^3.1.8
-      typescript: ~4.8.2
+      typescript: ~4.8.4
       vite: ^3.1.7
     devDependencies:
       '@jihchi/vite-plugin-rescript': 4.1.0_rescript@10.0.1+vite@3.1.7

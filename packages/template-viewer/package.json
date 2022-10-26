@@ -4,12 +4,12 @@
   "version": "0.0.3",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "module": "./dist/index.js",
-  "exports": {
-    ".": "./dist/index.js"
-  },
+  "exports": "./dist/index.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "test": "echo run template viewer test && exit 0",
     "test:publish": "pnpm publish --dry-run --no-git-checks",

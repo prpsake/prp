@@ -1,12 +1,10 @@
 import { defineWith } from "@prpsake/template-viewer";
-
-import * as estimate from "./templates/estimate.js"
-import * as invoice from "./templates/invoice.js"
+import * as estimate from "./templates/estimate"
+import * as invoice from "./templates/invoice"
 import styles from "./index.css"
 
 
 defineWith({
-  tag: "the-app",
   templates: { estimate, invoice },
-  styles
+  styles,
 })

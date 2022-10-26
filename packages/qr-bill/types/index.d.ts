@@ -1,33 +1,33 @@
-import { Component } from "hybrids"
+import type { Component } from "hybrids"
 
 
 type BaseData = {
-  lang: string
+  lang?: string
   currency: string
-  amount: string
+  amount?: string
   iban: string
-  referenceType: string
-  reference: string
-  message: string
-  messageCode: string
+  referenceType?: string
+  reference?: string
+  message?: string
+  messageCode?: string
 }
 
 
 type InputAddressData = {
-  addressType: string
+  readonly addressType: string
   name: string
   street: string
   streetNumber: string
-  postOfficeBox: string
+  postOfficeBox?: string
   postalCode: string
   locality: string
   countryCode: string
 }
 
 
-type InputData = BaseData & {
+export type InputData = BaseData & {
   creditor: InputAddressData
-  debtor: InputAddressData
+  debtor?: InputAddressData
 } & { [key: string]: any }
 
 
@@ -60,7 +60,7 @@ type Element<E> = Component<E>
 declare module Helpers {
   function showWith(data: QRData, otherKeys: {[key in keyof QRData]?: string[]}): boolean
   function notShowWith(data: QRData, otherKeys: {[key in keyof QRData]?: string[]}): boolean
-  function modelQR(obj: { data: InputData, validate: boolean, format: boolean }): QRData & QRControlData
+  function modelQR(param: { data: InputData, validate: boolean, format: boolean }): QRData & QRControlData
 }
 
 
