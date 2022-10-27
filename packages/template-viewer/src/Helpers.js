@@ -9,18 +9,17 @@ export function modelsFromTemplates({templates}) {
     templates,
     ([key, template]) => {
       return [key, {
-        content: template.content,
+        view: template.view,
         model: {
           templates: [""],
           ...(Obj.omitProp(template.model, "connect")),
           [store.connect]: {
             offline: true,
-            ...(template.model.connect || {}),
             set: (_id, values) => values,
             get: () => {
               const {useFile, file} = store.get(Session)
-              if (!useFile && template.model.connect?.get) {
-                return template.model.connect.get
+              if (!useFile && template.model.connect) {
+                return template.model.connect
               } else {
                 return fetch(`/data/${file}`)
                   .then(resp => resp.json())
@@ -44,7 +43,7 @@ export const viewsFromTemplates = ({templates}) => {
       session: store(Session),
       render: ({data, session}) =>
         store.ready(data) && store.ready(session)
-          ? template.content({data})
+          ? template.view({data})
           : html``
     })
   })

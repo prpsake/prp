@@ -2,7 +2,7 @@ import {Model} from "@prpsake/template-viewer";
 import Party from "./Party";
 
 
-interface Invoice {
+interface InvoiceBase {
   title: string
   number: string
   subject: string
@@ -14,8 +14,8 @@ interface Invoice {
   reference: string
   message: string
   messageCode: string
-  creditor: Model<Party>
-  debtor: Model<Party>
+  creditor: Party
+  debtor: Party
   note: string
   items: Array<{
     quantity: string
@@ -27,11 +27,10 @@ interface Invoice {
     issues: Array<string>
   }>
   emailSubject: string
-  qr?: {}
 }
 
 
-const Invoice: Model<Invoice> = {
+const InvoiceBase: Model<InvoiceBase> = {
   title: "",
   number: "",
   subject: "",
@@ -59,4 +58,4 @@ const Invoice: Model<Invoice> = {
 }
 
 
-export default Invoice
+export default InvoiceBase

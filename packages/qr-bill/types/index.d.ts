@@ -1,7 +1,7 @@
 import type { Component } from "hybrids"
 
 
-type BaseData = {
+type QRBillBase = {
   lang?: string
   currency: string
   amount?: string
@@ -13,8 +13,8 @@ type BaseData = {
 }
 
 
-type InputAddressData = {
-  readonly addressType: string
+type QRBillAddress = {
+  addressType: string
   name: string
   street: string
   streetNumber: string
@@ -25,13 +25,23 @@ type InputAddressData = {
 }
 
 
-export type InputData = BaseData & {
-  creditor: InputAddressData
-  debtor?: InputAddressData
-} & { [key: string]: any }
+type QRBillInit = QRBillBase & {
+  creditor: QRBillAddress
+  debtor?: QRBillAddress
+}
 
 
-type QRData = BaseData & {
+type QRBillControl = {
+  showQRCode: boolean
+  showAmount: boolean
+  showDebtor: boolean
+  showAdditionalInfo: boolean
+  showReference: boolean
+  reduceContent: boolean
+}
+
+
+type QRBill = QRBillBase & {
   creditorName: string
   creditorCountryCode: string
   creditorAddressLine1: string
@@ -44,33 +54,23 @@ type QRData = BaseData & {
 }
 
 
-type QRControlData = {
-  showQRCode: boolean
-  showAmount: boolean
-  showDebtor: boolean
-  showAdditionalInfo: boolean
-  showReference: boolean
-  reduceContent: boolean
-}
-
-
 type Element<E> = Component<E>
 
 
 declare module Helpers {
-  function showWith(data: QRData, otherKeys: {[key in keyof QRData]?: string[]}): boolean
-  function notShowWith(data: QRData, otherKeys: {[key in keyof QRData]?: string[]}): boolean
-  function modelQR<M>(param: { data: M, validate: boolean, format: boolean }): QRData & QRControlData
+  function showWith(data: QRBill, otherKeys: {[key in keyof QRBill]?: string[]}): boolean
+  function notShowWith(data: QRBill, otherKeys: {[key in keyof QRBill]?: string[]}): boolean
+  function modelQR<M>(param: { data: M, validate: boolean, format: boolean }): QRBill & QRBillControl
 }
 
 
 declare module Parser {
-  function parseJson(str: string): InputData
+  function parseJson(str: string): QRBillInit
 }
 
 
 declare module Validator {
-  function validate(data: InputData): InputData
+  function validate(data: QRBillInit): QRBillInit
 }
 
 
@@ -85,10 +85,10 @@ declare module Formatter {
 
 
 declare module Data {
-  const defaultAddressData: InputAddressData
-  const defaultData: InputData
-  function entries(data: InputData): string[][]
-  function object(data: InputData): QRData
+  const defaultAddressData: QRBillAddress
+  const defaultData: QRBillInit
+  function entries(data: QRBillInit): string[][]
+  function object(data: QRBillInit): QRBill
 }
 
 

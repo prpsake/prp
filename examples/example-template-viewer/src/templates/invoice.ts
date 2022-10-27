@@ -1,19 +1,18 @@
-import {html, Helpers, Model} from "@prpsake/template-viewer"
+import {html, Helpers, type Model, type View } from "@prpsake/template-viewer"
+import InvoiceBase from "../models/InvoiceBase";
 
-import Invoice from "../models/Invoice";
 
-
-export const model: Model<Invoice> = {
-  ...Invoice,
+export const model: Model<InvoiceBase> = {
+  ...InvoiceBase,
   qr: data => Helpers.modelQR({
-    data: { ...data, iban: data.creditor.iban },
+    data: {...data, iban: data.creditor.iban},
     validate: true,
     format: true
   })
 }
 
 
-export const content = ({ data }) => html`
+export const view: View<InvoiceBase> = ({ data }) => html`
   <!-- repeated content : start -->
   <footer class="bottom-left -mt-[1.5mm] font-mono text-template-fg">
     <div class="flex text-2xs">

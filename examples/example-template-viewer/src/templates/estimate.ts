@@ -1,12 +1,10 @@
-import { html, Model } from "@prpsake/template-viewer"
-
-import Invoice from "../models/Invoice"
-
-
-export const model: Model<Invoice> = {...Invoice}
+import {html, Model, View} from "@prpsake/template-viewer"
+import InvoiceBase from "../models/InvoiceBase"
 
 
-export const content = ({ data }) => html`
+export const model: Model<InvoiceBase> = InvoiceBase
+
+export const view: View<InvoiceBase> = ({ data }) => html`
   <!-- repeated content : start -->
   <footer class="bottom-left -mt-[1.5mm] font-mono text-template-fg">
     <div class="flex text-2xs">

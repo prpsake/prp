@@ -1,6 +1,3 @@
-import { Model } from "@prpsake/template-viewer"
-
-
 interface Party {
   name: string
   organisation: string
@@ -18,7 +15,7 @@ interface Party {
 }
 
 
-const Party: Model<Party> = {
+const Party: Party = {
   name: "",
   organisation: "",
   street: "",
