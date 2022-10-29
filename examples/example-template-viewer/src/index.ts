@@ -6,5 +6,5 @@ import styles from "./index.css"
 
 defineWith({
   templates: { estimate, invoice },
-  styles,
+  styles
 })

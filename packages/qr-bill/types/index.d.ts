@@ -1,6 +1,5 @@
 import type { Component } from "hybrids"
 
-
 type QRBillBase = {
   lang?: string
   currency: string
@@ -14,7 +13,9 @@ type QRBillBase = {
 
 
 type QRBillAddress = {
-  addressType: string
+  // NB: By swiss-qr-bill-spec `addressType` can also be "S" (separated address items) but only "K" (combined address
+  // items) are handled at the moment. See Parser.res and Validator.res.
+  addressType?: "K"
   name: string
   street: string
   streetNumber: string
@@ -57,24 +58,24 @@ type QRBill = QRBillBase & {
 type Element<E> = Component<E>
 
 
-declare module Helpers {
+export namespace Helpers {
   function showWith(data: QRBill, otherKeys: {[key in keyof QRBill]?: string[]}): boolean
   function notShowWith(data: QRBill, otherKeys: {[key in keyof QRBill]?: string[]}): boolean
-  function modelQR<M>(param: { data: M, validate: boolean, format: boolean }): QRBill & QRBillControl
+  function modelQR(param: { data: QRBillInit, validate: boolean, format: boolean }): QRBill & QRBillControl
 }
 
 
-declare module Parser {
+export namespace Parser {
   function parseJson(str: string): QRBillInit
 }
 
 
-declare module Validator {
+export namespace Validator {
   function validate(data: QRBillInit): QRBillInit
 }
 
 
-declare module Formatter {
+export namespace Formatter {
   function removeWhitespace(str: string): string
   function blockStr3(str: string): string
   function blockStr4(str: string): string
@@ -84,7 +85,7 @@ declare module Formatter {
 }
 
 
-declare module Data {
+export namespace Data {
   const defaultAddressData: QRBillAddress
   const defaultData: QRBillInit
   function entries(data: QRBillInit): string[][]
@@ -100,6 +101,6 @@ type QRCodeOptions = {
 }
 
 
-declare module QRCode {
+export namespace QRCode {
   function pathDataFromString(content: string, options: QRCodeOptions): string
 }

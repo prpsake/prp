@@ -1,10 +1,10 @@
-import {html, Helpers, type Model, type View } from "@prpsake/template-viewer"
+import { html, modelQR, type Model, type View } from "@prpsake/template-viewer"
 import InvoiceBase from "../models/InvoiceBase";
 
 
 export const model: Model<InvoiceBase> = {
   ...InvoiceBase,
-  qr: data => Helpers.modelQR({
+  qr: data => modelQR({
     data: {...data, iban: data.creditor.iban},
     validate: true,
     format: true
