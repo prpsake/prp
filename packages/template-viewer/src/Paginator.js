@@ -1,5 +1,5 @@
 import { store } from "hybrids"
-import { Previewer } from "./lib/paged.js"
+import { Previewer } from "./lib/paged.lib.js"
 
 
 import Session from "./Session.js"
