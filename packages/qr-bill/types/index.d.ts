@@ -1,5 +1,6 @@
 import type { Component } from "hybrids"
 
+
 type QRBillBase = {
   lang?: string
   currency: string
@@ -61,6 +62,17 @@ type Element<E> = Component<E>
 export namespace Helpers {
   function showWith(data: QRBill, otherKeys: {[key in keyof QRBill]?: string[]}): boolean
   function notShowWith(data: QRBill, otherKeys: {[key in keyof QRBill]?: string[]}): boolean
+
+
+  /**
+   * modelQR
+   *
+   * @param {object} param
+   * @param {QRBillInit} param.data
+   * @param {boolean} param.validate
+   * @param {boolean} param.format
+   * @returns {QRBill & QRBillControl}
+   */
   function modelQR(param: { data: QRBillInit, validate: boolean, format: boolean }): QRBill & QRBillControl
 }
 

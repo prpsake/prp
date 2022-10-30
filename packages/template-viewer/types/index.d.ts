@@ -1,12 +1,16 @@
-import type {
-  Model as HybridsModel,
-  UpdateFunctionWithMethods
+import {
+  type Model as HybridsModel,
+  type UpdateFunctionWithMethods,
+  html as hybridsHtml,
+  svg as hybridsSvg
 } from "hybrids"
 
-import type {
-  QRBill,
-  QRBillControl, QRBillInit
+import {
+  type QRBill,
+  type QRBillControl,
+  Helpers
 } from "@prpsake/qr-bill"
+
 
 
 
@@ -81,11 +85,12 @@ export function defineWith(param: {
  * `
  * ```
  *
+ * @function html
  * @param {TemplateStringsArray} parts
  * @param {...unknown} args
  * @returns {UpdateFunctionWithMethods<E>}
  */
-export function html<E>(parts: TemplateStringsArray, ...args: unknown[]): UpdateFunctionWithMethods<E>
+export const html: typeof hybridsHtml
 
 
 /**
@@ -103,20 +108,12 @@ export function html<E>(parts: TemplateStringsArray, ...args: unknown[]): Update
  * `
  * ```
  *
+ * @function svg
  * @param {TemplateStringsArray} parts
  * @param {...unknown} args
  * @returns {UpdateFunctionWithMethods<E>}
  */
-export function svg<E>(parts: TemplateStringsArray, ...args: unknown[]): UpdateFunctionWithMethods<E>
+export const svg: typeof hybridsSvg
 
 
-/**
- * Blub
- *
- * @param {object} param
- * @param {QRBillInit} param.data
- * @param {boolean} param.validate
- * @param {boolean} param.format
- * @returns {QRBill & QRBillControl}
- */
-export function modelQR(param: { data: QRBillInit, validate: boolean, format: boolean }): QRBill & QRBillControl
+export const modelQR: typeof Helpers.modelQR
