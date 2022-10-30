@@ -208,7 +208,8 @@ Procfile          text
 # Ignore files (like .npmignore or .gitignore)
 *.*ignore         text
 
-# Hide files
+# Visibility
 *.config.js       linguist-detectable=false
 *.config.cjs      linguist-detectable=false
 *.lib.js          linguist-detectable=false
+*.resi            linguist-detectable=true
