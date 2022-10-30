@@ -11,14 +11,13 @@ const isObject =
 
 
 
-const isTrueish = 
-  x => 
+const isTrueish =
+  x =>
   typeof x === 'number' || x
 
 
 
-// any of (any v of k1 OR any v of k2 OR ...)
-const showWith = 
+const showWith =
   (host, otherKeys) =>
   isObject(otherKeys) ?
   Object.entries(otherKeys).map(
@@ -31,7 +30,6 @@ const showWith =
 
 
 
-// any of (every v of k1 OR every v of k2 OR ... )
 const notShowWith =
   (host, otherKeys) =>
   isObject(otherKeys) ?
@@ -55,7 +53,7 @@ const modelQR = ({ data, validate = true, format = true }) => {
     .map(x => validate ? Validator.validate(x) : x)
     .map(Data.object)
     [0]
-  
+
   return {
     ...data_,
     amount: format ? Formatter.moneyFromNumberStr2(data_.amount) : data_.amount,
