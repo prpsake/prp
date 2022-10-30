@@ -102,7 +102,6 @@ TODO              text
 *.vue             text
 
 # Configs
-*.config.js       text
 *.cnf             text
 *.conf            text
 *.config          text
@@ -209,5 +208,6 @@ Procfile          text
 # Ignore files (like .npmignore or .gitignore)
 *.*ignore         text
 
-# Lib files
-*.lib.js          text
+# Hide files
+*.config.js       linguist-detectable=false
+*.lib.js          linguist-detectable=false
