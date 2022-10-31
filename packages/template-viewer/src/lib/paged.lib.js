@@ -12342,7 +12342,7 @@ var background = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/background"
@@ -12442,7 +12442,7 @@ var color$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/color"
@@ -12658,7 +12658,7 @@ var font = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font"
@@ -12940,7 +12940,7 @@ var opacity = {
 	computed: "specifiedValueClipped0To1",
 	order: "uniqueOrder",
 	alsoAppliesTo: [
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/opacity"
@@ -15263,7 +15263,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/background-attachment"
@@ -15284,7 +15284,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/background-blend-mode"
@@ -15305,7 +15305,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/background-clip"
@@ -15326,7 +15326,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/background-color"
@@ -15347,7 +15347,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/background-image"
@@ -15368,7 +15368,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/background-origin"
@@ -15389,7 +15389,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/background-position"
@@ -15442,7 +15442,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/background-repeat"
@@ -15463,7 +15463,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/background-size"
@@ -17395,7 +17395,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-family"
@@ -17416,7 +17416,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-feature-settings"
@@ -17437,7 +17437,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-kerning"
@@ -17458,7 +17458,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-language-override"
@@ -17479,7 +17479,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-optical-sizing"
@@ -17500,7 +17500,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-variation-settings"
@@ -17521,7 +17521,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-size"
@@ -17542,7 +17542,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-size-adjust"
@@ -17579,7 +17579,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-stretch"
@@ -17600,7 +17600,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-style"
@@ -17621,7 +17621,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-synthesis"
@@ -17642,7 +17642,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-variant"
@@ -17663,7 +17663,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-variant-alternates"
@@ -17684,7 +17684,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-variant-caps"
@@ -17705,7 +17705,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-variant-east-asian"
@@ -17726,7 +17726,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-variant-ligatures"
@@ -17747,7 +17747,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-variant-numeric"
@@ -17768,7 +17768,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-variant-position"
@@ -17789,7 +17789,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/font-weight"
@@ -18469,7 +18469,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/line-height"
@@ -20681,7 +20681,7 @@ var require$$1 = {
 	computed: "asSpecifiedExceptMatchParent",
 	order: "orderOfAppearance",
 	alsoAppliesTo: [
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/text-align"
@@ -20748,7 +20748,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/text-decoration"
@@ -20769,7 +20769,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/text-decoration-color"
@@ -20790,7 +20790,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/text-decoration-line"
@@ -20843,7 +20843,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/text-decoration-style"
@@ -20864,7 +20864,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/text-decoration-thickness"
@@ -21004,7 +21004,7 @@ var require$$1 = {
 	computed: "asSpecified",
 	order: "uniqueOrder",
 	alsoAppliesTo: [
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/text-overflow"
@@ -21041,7 +21041,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/text-shadow"
@@ -21078,7 +21078,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/text-transform"
@@ -21099,7 +21099,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/text-underline-offset"
@@ -21301,7 +21301,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/vertical-align"
@@ -21373,7 +21373,7 @@ var require$$1 = {
 	alsoAppliesTo: [
 		"::first-letter",
 		"::first-line",
-		"::placeholder"
+		"::data"
 	],
 	status: "standard",
 	mdn_url: "https://developer.mozilla.org/docs/Web/CSS/word-spacing"
