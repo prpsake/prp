@@ -110,6 +110,7 @@ export namespace Helpers {
    * })
    * ```
    *
+   * @see Validator.validate
    * @param {QRBillInit} param.data - The input data to be transformed.
    * @param {boolean} param.validate - Whether to validate the input data.
    * @param {boolean} param.format - Whether to format the input data.
