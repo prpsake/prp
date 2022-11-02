@@ -1,4 +1,5 @@
 import type {Component} from "hybrids"
+import {Expand} from "tailwindcss/types/config";
 
 
 type QRBillBase = {

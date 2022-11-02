@@ -12,8 +12,6 @@ import {
 } from "@prpsake/qr-bill"
 
 
-
-
 type PRPModel<M> = {
   qr?: QRBill & QRBillControl | ((data: M) => QRBill & QRBillControl)
   connect?: Promise<any | void>
