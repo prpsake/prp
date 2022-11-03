@@ -1,2 +1,2 @@
-export type { BlobReader } from "../src/BlobReader"
-export type { Obj } from "../src/Obj";
+export * as BlobReader from "./BlobReader"
+export * as Obj from "./Obj"

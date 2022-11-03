@@ -5,11 +5,8 @@ import {
   svg as hybridsSvg
 } from "hybrids"
 
-import {
-  type QRBill,
-  type QRBillControl,
-  Helpers
-} from "@prpsake/qr-bill"
+
+import {QRBill, QRBillControl} from "@prpsake/qr-bill/types/Data";
 
 
 type PRPModel<M> = {
@@ -114,4 +111,4 @@ export const html: typeof hybridsHtml
 export const svg: typeof hybridsSvg
 
 
-export const modelQR: typeof Helpers.modelQR
+export { modelQR } from "@prpsake/qr-bill/types/Helpers"
