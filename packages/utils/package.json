@@ -1,20 +1,14 @@
 {
   "name": "@prpsake/utils",
   "description": "",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "files": [
     "dist",
-    "types",
-    "src/BlobReader.mjs",
-    "src/Obj.mjs"
+    "types"
   ],
   "module": "./dist/index.js",
-  "exports": {
-    ".": "./dist/index.js",
-    "./BlobReader": "./src/BlobReader.mjs",
-    "./Obj": "./src/Obj.mjs"
-  },
+  "exports": "./dist/index.js",
   "types": "types/index.d.ts",
   "scripts": {
     "test": "echo run utils && exit 0",
