@@ -209,8 +209,6 @@ Procfile          text
 *.*ignore         text
 
 # Visibility
-*.js              linguist-detectable=false
 *.config.js       linguist-detectable=false
 *.config.cjs      linguist-detectable=false
 *.lib.js          linguist-detectable=false
-*.resi            linguist-detectable=true
