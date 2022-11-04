@@ -48,8 +48,8 @@
 *.sql             text
 *.styl            text
 *.tag             text
-*.ts              text
-*.tsx             text
+*.ts              text diff=typescript
+*.tsx             text diff=typescript
 *.xml             text
 *.xhtml           text diff=html
 
