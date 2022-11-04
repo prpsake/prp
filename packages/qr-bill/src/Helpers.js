@@ -2,12 +2,7 @@ import * as Parser from "./Parser.mjs"
 import * as Validator from "./Validator.mjs"
 import * as Data from "./Data.mjs"
 import * as Formatter from "./Formatter.mjs"
-
-
-
-const isObject =
-  x =>
-  Boolean(x?.constructor) && Object.is(x.constructor, Object)
+import { Obj } from "@prpsake/utils"
 
 
 
@@ -19,7 +14,7 @@ const isTrueish =
 
 const showWith =
   (host, otherKeys) =>
-  isObject(otherKeys) ?
+  Obj.isObject(otherKeys) ?
   Object.entries(otherKeys).map(
     ([k, vs]) =>
     Array.isArray(vs) ?
@@ -32,7 +27,7 @@ const showWith =
 
 const notShowWith =
   (host, otherKeys) =>
-  isObject(otherKeys) ?
+  Obj.isObject(otherKeys) ?
   Object.entries(otherKeys).map(
     ([k, vs]) =>
     Array.isArray(vs) ?
@@ -43,8 +38,8 @@ const notShowWith =
 
 
 
-const fn = f => ({ set: (_, value) => f(value) })
-
+// const fn = f => ({ set: (_, value) => f(value) })
+//
 
 
 const modelQR = ({ data, validate = true, format = true }) => {
@@ -69,4 +64,4 @@ const modelQR = ({ data, validate = true, format = true }) => {
 }
 
 
-export { showWith, notShowWith, fn, modelQR }
+export { showWith, notShowWith, modelQR }

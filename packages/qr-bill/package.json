@@ -21,6 +21,9 @@
     "build": "vite build",
     "release": "pnpm publish --no-git-checks"
   },
+  "devDependencies": {
+    "@prpsake/utils": "*"
+  },
   "peerDependencies": {
     "hybrids": "^8.1.5"
   }

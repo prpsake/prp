@@ -55,9 +55,12 @@ importers:
 
   packages/qr-bill:
     specifiers:
+      '@prpsake/utils': '*'
       hybrids: ^8.1.5
     dependencies:
       hybrids: 8.1.5
+    devDependencies:
+      '@prpsake/utils': link:../utils
 
   packages/template-viewer:
     specifiers:
