@@ -217,5 +217,8 @@ Procfile          text
 #packages/* linguist-documentation=false
 #packages/* linguist-vendored
 
-examples/*        linguist-documentation=false
-examples/*        linguist-vendored
+packages/*        linguist-documentation=false
+packages/*        linguist-vendored
+
+examples/**/*     linguist-documentation=false
+examples/**/*     linguist-vendored
