@@ -48,8 +48,8 @@
 *.sql             text
 *.styl            text
 *.tag             text
-*.ts              text diff=typescript
-*.tsx             text diff=typescript
+*.ts              text
+*.tsx             text
 *.xml             text
 *.xhtml           text diff=html
 
@@ -209,6 +209,7 @@ Procfile          text
 *.*ignore         text
 
 # Visibility
+*.js              linguist-detectable=false
 *.config.js       linguist-detectable=false
 *.config.cjs      linguist-detectable=false
 *.lib.js          linguist-detectable=false
