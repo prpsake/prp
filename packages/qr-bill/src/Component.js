@@ -76,7 +76,7 @@ const svgQRCode =
 
 
 
-export default {
+export const Component = {
   lang: "en",
 
   currency: "",

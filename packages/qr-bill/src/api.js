@@ -1,4 +1,4 @@
-export { default as Element } from "./Element.js"
+export { Component } from "./Component.js"
 export * as Helpers from "./Helpers.js"
 export * as Parser from "./Parser.mjs"
 export * as Validator from "./Validator.mjs"
