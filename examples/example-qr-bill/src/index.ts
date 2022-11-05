@@ -9,6 +9,7 @@ customElements.define("qr-bill", qrBill)
 const el: Component = document.querySelector("qr-bill")
 el.data = Helpers.modelQR({
   data: {
+    lang: "fr",
     currency: "CHF",
     iban: "CH1509000000152034087",
     amount: "18",

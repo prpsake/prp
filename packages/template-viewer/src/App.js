@@ -1,7 +1,7 @@
 import stylesApp from "./styles.css"
 
 import { store, define, router, html } from "hybrids"
-import { Element as QRBill } from "@prpsake/qr-bill"
+import { Component as QRBill } from "@prpsake/qr-bill"
 import { BlobReader } from "@prpsake/utils"
 
 import Session from "./Session.js"

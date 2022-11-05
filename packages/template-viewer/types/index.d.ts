@@ -6,11 +6,11 @@ import {
 } from "hybrids"
 
 
-import {QRBill, QRBillControl} from "@prpsake/qr-bill/types/Data";
+import { Data } from "@prpsake/qr-bill";
 
 
 type PRPModel<M> = {
-  qr?: QRBill & QRBillControl | ((data: M) => QRBill & QRBillControl)
+  qr?: Data.QRBill & Data.QRBillControl | ((data: M) => Data.QRBill & Data.QRBillControl)
   connect?: Promise<any | void>
 }
 
