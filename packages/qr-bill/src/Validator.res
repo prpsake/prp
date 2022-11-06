@@ -184,7 +184,7 @@ let validateAddressData: Data.dataOption<Data.addressData> => Data.dataOption<
         ),
         street: ad.street->validateWithRexp(
           x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{0,70}$/")),
-          " must be at most 70 characters long",
+          "must be at most 70 characters long",
         ),
         streetNumber: ad.streetNumber->validateWithRexp(
           x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{0,16}$/")),

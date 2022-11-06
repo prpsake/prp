@@ -1,7 +1,7 @@
 export type QRBillBase = {
-  lang?: string
-  currency: string
-  amount?: string
+  lang?: "fr" | "it" | "de" | "en"
+  currency: "CHF" | "EUR"
+  amount?: string | number
   iban: string
   referenceType?: string
   reference?: string
@@ -15,10 +15,10 @@ export type QRBillAddress = {
   // address items) are handled at the moment. See Parser.res and Validator.res.
   addressType?: "K"
   name: string
-  street: string
-  streetNumber: string
-  postOfficeBox?: string
-  postalCode: string
+  street?: string
+  streetNumber?: string | number
+  postOfficeBox?: string | number
+  postalCode: string | number
   locality: string
   countryCode: string
 }
