@@ -13,42 +13,22 @@ pnpm add @prpsake/qr-bill hybrids
 
 ## Usage
 
-### Define the element
-
-#### Either as [hybrids](https://hybrids.js.org) custom element...
+### Use with [hybrids](https://hybrids.js.org)
 
 ```typescript
 import { define } from "hybrids"
-import { Element } from "@prpsake/qr-bill"
+import { Component } from "@prpsake/qr-bill"
 
 define({
   tag: "my-qr-bill",
-  ...Element
+  ...Component
 })
 ```
 
-#### ... Or as normal custom element
+### Use without hybrids
 
 ```typescript
-import { define } from "hybrids"
-import { Element } from "@prpsake/qr-bill"
+import { CompiledComponent } from "@prpsake/qr-bill"
 
-const myQRBill = define.compile(Element)
-
-customElements.define("my-qr-bill", myQRBill)
-
+customElements.define("my-qr-bill", CompiledComponent)
 ```
-
-### Use the element
-
-```typescript jsx
-import {QRBillInit} from "@prpsake/qr-bill/types/Data"
-
-export default {
-  someRenderFn: (data: QRBillInit) => `
-    <my-qr-bill data=${data}></my-qr-bill>
-  `
-}
-```
-
-

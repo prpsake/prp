@@ -83,7 +83,7 @@ export function defineWith(param: {
  * @function html
  * @param {TemplateStringsArray} parts
  * @param {...unknown} args
- * @returns {UpdateFunctionWithMethods<E>}
+ * @return {UpdateFunctionWithMethods<E>}
  */
 export const html: typeof hybridsHtml
 
@@ -106,7 +106,7 @@ export const html: typeof hybridsHtml
  * @function svg
  * @param {TemplateStringsArray} parts
  * @param {...unknown} args
- * @returns {UpdateFunctionWithMethods<E>}
+ * @return {UpdateFunctionWithMethods<E>}
  */
 export const svg: typeof hybridsSvg
 

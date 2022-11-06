@@ -2,7 +2,7 @@
  * Remove whitespace from a string.
  *
  * @param {string} str - A string
- * @returns string - The string without whitespace
+ * @return {string} - The string without whitespace
  */
 export function removeWhitespace(str: string): string
 
@@ -16,7 +16,7 @@ export function removeWhitespace(str: string): string
  * ```
  *
  * @param {string} str - A string.
- * @returns string - The string without whitespace.
+ * @return {string} - The string without whitespace.
  */
 export function blockStr3(str: string): string
 
@@ -30,7 +30,7 @@ export function blockStr3(str: string): string
  * ```
  *
  * @param {string} str - A string.
- * @returns string - The formatted string.
+ * @return {string} - The formatted string.
  */
 export function blockStr4(str: string): string
 
@@ -44,7 +44,7 @@ export function blockStr4(str: string): string
  * ```
  *
  * @param {string} str - A string.
- * @returns string - The formatted string.
+ * @return {string} - The formatted string.
  */
 export function blockStr5(str: string): string
 

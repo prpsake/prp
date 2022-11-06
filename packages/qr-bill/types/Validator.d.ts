@@ -6,6 +6,6 @@ import {Data} from "./index";
  * Error handling is incomplete and will change in the near future.
  *
  * @param {Data.QRBillInit} data - The qr-bill data.
- * @returns Data.QRBillInit - The validated qr-bill data.
+ * @return {Data.QRBillInit} - The validated qr-bill data.
  */
 function validate(data: Data.QRBillInit): Data.QRBillInit

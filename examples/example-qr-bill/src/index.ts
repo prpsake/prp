@@ -18,4 +18,3 @@ fetch("/data/qr-bill-sample.json")
     })
     document.body.appendChild(qrBill)
   })
-
