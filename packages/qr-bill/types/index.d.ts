@@ -1,4 +1,4 @@
-export { Component } from "./Component"
+export { Component, CompiledComponent } from "./Component"
 export * as Helpers from "./Helpers"
 export * as Parser from "./Parser"
 export * as Validator from "./Validator"

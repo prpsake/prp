@@ -1,12 +1,11 @@
-import {QRBillInit} from "./Data";
+import {Data} from "./index";
 
 
 /**
  * Validate the qr-bill data. Errors, resp. invalid data items are visualized and do not throw. NB(29.10.22):
  * Error handling is incomplete and will change in the near future.
  *
- * @param data - The qr-bill data.
- * @returns QRBillInit - The validated qr-bill data.
+ * @param {Data.QRBillInit} data - The qr-bill data.
+ * @returns Data.QRBillInit - The validated qr-bill data.
  */
-function validate(data: QRBillInit): QRBillInit
-
+function validate(data: Data.QRBillInit): Data.QRBillInit

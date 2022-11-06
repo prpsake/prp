@@ -1,5 +1,5 @@
 import styles from "./styles.css"
-import { html } from "hybrids"
+import { html, define } from "hybrids"
 import { translations as tr } from "./Translations.mjs"
 import * as QRCode from "./QRCode.mjs"
 
@@ -276,3 +276,6 @@ export const Component = {
 
   `.style(styles)
 }
+
+
+export const CompiledComponent = define.compile(Component)

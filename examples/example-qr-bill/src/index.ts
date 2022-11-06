@@ -1,28 +1,21 @@
 import "./style.css"
-import {define} from "hybrids"
-import {Helpers, Component} from "@prpsake/qr-bill"
+import {CompiledComponent, Helpers, Data} from "@prpsake/qr-bill"
 
 
-const qrBill = define.compile(Component)
-customElements.define("qr-bill", qrBill)
+customElements.define("qr-bill", CompiledComponent)
 
-const el: Component = document.querySelector("qr-bill")
-el.data = Helpers.modelQR({
-  data: {
-    lang: "fr",
-    currency: "CHF",
-    iban: "CH1509000000152034087",
-    amount: "18",
-    creditor: {
-      name: "Daphne Kräcker",
-      street: "Rue",
-      streetNumber: "1",
-      locality: "Lausanne",
-      postalCode: "1000",
-      countryCode: "CH"
-    }
-  },
-  validate: true,
-  format: true
-})
+
+const qrBill: CompiledComponent = document.createElement("qr-bill")
+
+
+fetch("/data/qr-bill-sample.json")
+  .then(json => json.json())
+  .then((data: Data.QRBillInit) => {
+    qrBill.data = Helpers.modelQR({
+      data,
+      validate: true,
+      format: true
+    })
+    document.body.appendChild(qrBill)
+  })
 

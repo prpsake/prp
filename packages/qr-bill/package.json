@@ -24,7 +24,7 @@
   "devDependencies": {
     "@prpsake/utils": "*"
   },
-  "peerDependencies": {
+  "optionalDependencies": {
     "hybrids": "^8.1.5"
   }
 }

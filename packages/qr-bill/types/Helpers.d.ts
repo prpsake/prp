@@ -1,4 +1,4 @@
-import {QRBill, QRBillControl, QRBillInit} from "./Data";
+import {Data} from "./index";
 
 
 /**
@@ -10,12 +10,12 @@ import {QRBill, QRBillControl, QRBillInit} from "./Data";
  *    // showReference is true and the part is shown.
  * };
  * ```
- * @param {QRBill} data - The qr-bill data.
- * @param {{[key in keyof QRBill]?: string[]}} otherKeys - A subset of the qr-bill data keys with values set as a
+ * @param {Data.QRBill} data - The qr-bill data.
+ * @param {{[key in keyof Data.QRBill]?: string[]}} otherKeys - A subset of the qr-bill data keys with values set as a
  * value array to be checked against the actual value.
  * @returns boolean
  */
-export function showWith(data: QRBill, otherKeys: { [key in keyof QRBill]?: string[] }): boolean
+export function showWith(data: Data.QRBill, otherKeys: { [key in keyof Data.QRBill]?: string[] }): boolean
 
 
 /**
@@ -31,12 +31,12 @@ export function showWith(data: QRBill, otherKeys: { [key in keyof QRBill]?: stri
  *    // and the part is not shown.
  * };
  * ```
- * @param {QRBill} data - The qr-bill data.
- * @param {{[key in keyof QRBill]?: string[]}} otherKeys - A subset of the qr-bill data keys with values set as a
+ * @param {Data.QRBill} data - The qr-bill data.
+ * @param {{[key in keyof Data.QRBill]?: string[]}} otherKeys - A subset of the qr-bill data keys with values set as a
  *   value array to be checked against the actual value.
  * @returns boolean
  */
-export function notShowWith(data: QRBill, otherKeys: { [key in keyof QRBill]?: string[] }): boolean
+export function notShowWith(data: Data.QRBill, otherKeys: { [key in keyof Data.QRBill]?: string[] }): boolean
 
 
 /**
@@ -52,9 +52,9 @@ export function notShowWith(data: QRBill, otherKeys: { [key in keyof QRBill]?: s
  * })
  * ```
  *
- * @param {QRBillInit} param.data - The input data to be transformed.
+ * @param {Data.QRBillInit} param.data - The input data to be transformed.
  * @param {boolean} param.validate - Whether to validate the input data.
  * @param {boolean} param.format - Whether to format the input data.
- * @returns {QRBill & QRBillControl} - The transformed data.
+ * @returns {Data.QRBill & Data.QRBillControl} - The transformed data.
  */
-export function modelQR(param: { data: QRBillInit, validate: boolean, format: boolean }): QRBill & QRBillControl
+export function modelQR(param: { data: Data.QRBillInit, validate: boolean, format: boolean }): Data.QRBill & Data.QRBillControl

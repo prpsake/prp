@@ -1,2 +1,5 @@
-export { Component } from "hybrids";
+export {
+  Component,
+  HybridElement as CompiledComponent
+} from "hybrids";
 
