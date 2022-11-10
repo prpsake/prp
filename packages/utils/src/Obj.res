@@ -1,4 +1,4 @@
-let omitProp: (. Object.t<'k, 'v>, string) => Object.t<'k2, 'v2> = %raw(`
+let omitProp: (. Object0.t<'k, 'v>, string) => Object0.t<'k2, 'v2> = %raw(`
   (obj, key) => {
     const { [key]: _, ...rest } = obj
     return rest
@@ -6,15 +6,15 @@ let omitProp: (. Object.t<'k, 'v>, string) => Object.t<'k2, 'v2> = %raw(`
 `)
 
 
-let map: (. Object.t<'k, 'v>, (('k, 'v)) => ('k2, 'v2)) => Object.t<'k2, 'v2> =
+let map: (. Object0.t<'k, 'v>, (('k, 'v)) => ('k2, 'v2)) => Object0.t<'k2, 'v2> =
   (. obj, mapFn) =>
-  Object.entries(obj)
-  ->Array.map(mapFn)
-  ->Object.fromEntries
+  Object0.entries(obj)
+  ->Array0.map(mapFn)
+  ->Object0.fromEntries
 
 
 
 let isObject: 'a => bool =
   obj =>
-  Boolean.boolean(obj) &&
-  Object.toString(obj) == "[object Object]"
+  Boolean0.boolean(obj) &&
+  Object0.toString(obj) == "[object Object]"

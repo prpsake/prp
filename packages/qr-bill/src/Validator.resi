@@ -1,1 +1,1 @@
-let validate: Data.data => Data.data
+let validate: Data.qrBillInit => Data.qrBillInit

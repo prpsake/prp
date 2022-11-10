@@ -68,7 +68,7 @@ customElements.define("my-qr-bill", CompiledComponent)
 
 const qrBill: CompiledComponent = document.createElement("qr-bill")
 
-myApi.get(`/${id}`).then((data: Data.QRBillInit) => {
+myApi.get(`/${id}`).then((data: Data.QrBillInit) => {
     qrBill.data = Helpers.modelQR({
       data,
       validate: true,

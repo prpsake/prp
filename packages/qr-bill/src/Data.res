@@ -6,7 +6,7 @@ type dataOption<'a> =
   | Error({@as("type") _type: string, key: string, val: string, msg: string})
   | None
 
-type addressData = {
+type qrBillAddress = {
   addressType: dataOption<string>,
   name: dataOption<string>,
   street: dataOption<string>,
@@ -17,7 +17,7 @@ type addressData = {
   countryCode: dataOption<string>,
 }
 
-type data = {
+type qrBillInit = {
   lang: dataOption<string>,
   currency: dataOption<string>,
   amount: dataOption<string>,
@@ -26,11 +26,69 @@ type data = {
   reference: dataOption<string>,
   message: dataOption<string>,
   messageCode: dataOption<string>,
-  creditor: dataOption<addressData>,
-  debtor: dataOption<addressData>,
+  creditor: dataOption<qrBillAddress>,
+  debtor: dataOption<qrBillAddress>,
 }
 
-let defaultAddressData: addressData = {
+//type qrBill = {
+//  lang: string,
+//  currency: string,
+//  amount: string,
+//  iban: string,
+//  referenceType: string,
+//  reference: string,
+//  message: string,
+//  messageCode: string,
+//  creditorAddressType: string,
+//  creditorName: string,
+//  creditorAddressLine1: string,
+//  creditorAddressLine2: string,
+//  creditorCountryCode: string,
+//  debtorAddressType: string,
+//  debtorName: string,
+//  debtorAddressLine1: string,
+//  debtorAddressLine2: string,
+//  debtorCountryCode: string,
+//  qrCodeString: string,
+//}
+
+type qrBillComponentAddress = {
+  addressType: string,
+  name: string,
+  addressLine1: string,
+  addressLine2: string,
+  countryCode: string,
+}
+
+type qrBillComponent = {
+  lang: string,
+  currency: string,
+  amount: string,
+  iban: string,
+  referenceType: string,
+  reference: string,
+  message: string,
+  messageCode: string,
+  creditorAddressType: string,
+  creditorName: string,
+  creditorCountryCode: string,
+  creditorAddressLine1: string,
+  creditorAddressLine2: string,
+  debtorAddressType: string,
+  debtorName: string,
+  debtorAddressLine1: string,
+  debtorAddressLine2: string,
+  debtorCountryCode: string,
+  qrCodeString: string,
+  showQRCode: bool,
+  showAmount: bool,
+  showDebtor: bool,
+  showAdditionalInfo: bool,
+  showReference: bool,
+  reduceContent: bool,
+}
+
+let defaultQrBillAddress: qrBillAddress = {
   addressType: Default({key: "addressType", val: ""}),
   name: Default({key: "name", val: ""}),
   street: Default({key: "street", val: ""}),
@@ -41,7 +99,7 @@ let defaultAddressData: addressData = {
   countryCode: Default({key: "countryCode", val: ""}),
 }
 
-let defaultData: data = {
+let defaultQrBillInit: qrBillInit = {
   lang: Default({key: "lang", val: "en"}),
   currency: None,
   amount: None,
@@ -50,115 +108,138 @@ let defaultData: data = {
   reference: None,
   message: None,
   messageCode: None,
-  creditor: Default({key: "creditor", val: defaultAddressData}),
-  debtor: Default({key: "debtor", val: defaultAddressData}),
+  creditor: Default({key: "creditor", val: defaultQrBillAddress}),
+  debtor: Default({key: "debtor", val: defaultQrBillAddress}),
 }
-
-let dictGet: (Js.Dict.t<string>, string) => string = (d, key) =>
-  switch Js.Dict.get(d, key) {
-  | Some(x) => x
-  | None => ""
-  }
 
 let fold: dataOption<string> => string = o =>
   switch o {
   | User({val}) => val
   | Default({val}) => val
-  | Error({val}) => "Error: " ++ val
+  | Error({val}) => {
+      Js.log("Error: " ++ val)
+      ""
+    }
   | None => ""
   }
 
-let addQrCodeStringFromEntries: array<(string, string)> => array<(string, string)> = xs =>
-  Js.Dict.fromArray(xs)->(
-    d =>
-      [
-        // header
-        "SPC",
-        "0200",
-        "1",
-        // account
-        d->dictGet("iban"),
-        // creditor
-        d->dictGet("creditorAddressType"),
-        d->dictGet("creditorName"),
-        d->dictGet("creditorAddressLine1"),
-        d->dictGet("creditorAddressLine2"),
-        "",
-        "",
-        d->dictGet("creditorCountryCode"),
-        // ultimate creditor (future FEATURE)
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        // payment amount information
-        d->dictGet("amount"),
-        d->dictGet("currency"),
-        // ultimate debtor
-        d->dictGet("debtorAddressType"),
-        d->dictGet("debtorName"),
-        d->dictGet("debtorAddressLine1"),
-        d->dictGet("debtorAddressLine2"),
-        "",
-        "",
-        d->dictGet("debtorCountryCode"),
-        // reference
-        d->dictGet("referenceType"),
-        d->dictGet("reference"),
-        // additional information
-        d->dictGet("message"),
-        "EPD",
-        d->dictGet("messageCode"),
-        // alternative information (IMPLEMENT)
-        "",
-        "",
-      ]
-      ->Js.Array2.joinWith("\n")
-      ->(x => [("qrCodeString", x)]->Js.Array2.concat(xs))
-  )
+let componentQrCodeString: qrBillComponent => string =
+  d =>
+  [
+    // header
+    "SPC",
+    "0200",
+    "1",
+    // account
+    d.iban,
+    // creditor
+    d.creditorAddressType,
+    d.creditorName,
+    d.creditorAddressLine1,
+    d.creditorAddressLine2,
+    "",
+    "",
+    d.creditorCountryCode,
+    // ultimate creditor (future FEATURE)
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    // payment amount information
+    d.amount,
+    d.currency,
+    // ultimate debtor
+    d.debtorAddressType,
+    d.debtorName,
+    d.debtorAddressLine1,
+    d.debtorAddressLine2,
+    "",
+    "",
+    d.debtorCountryCode,
+    // reference
+    d.referenceType,
+    d.reference,
+    // additional information
+    d.message,
+    "EPD",
+    d.messageCode,
+    // alternative information (IMPLEMENT)
+    "",
+    "",
+  ]
+  ->Js.Array2.joinWith("\n")
 
-let addressEntries: (dataOption<addressData>, string) => array<(string, string)> = (d, key) =>
+let componentAddress: dataOption<qrBillAddress> => qrBillComponentAddress =
+  d =>
   switch d {
   | User({val}) => val
-  | _ => defaultAddressData
-  }->(
-    ad => {
-      let addressLine1 = switch ad.postOfficeBox {
-      | User({val}) => val
-      | _ => (ad.street->fold ++ " " ++ ad.streetNumber->fold)->Js.String2.trim
-      }
-
-      let addressLine2 = (ad.postalCode->fold ++ " " ++ ad.locality->fold)->Js.String2.trim
-
-      [
-        (key ++ "AddressType", "K"),
-        (key ++ "Name", ad.name->fold),
-        (key ++ "AddressLine1", addressLine1),
-        (key ++ "AddressLine2", addressLine2),
-        (key ++ "CountryCode", ad.countryCode->fold),
-      ]
+  | _ => defaultQrBillAddress
+  }->ad => {
+    let addressLine1 = switch ad.postOfficeBox {
+    | User({val}) => val
+    | _ => (ad.street->fold ++ " " ++ ad.streetNumber->fold)->Js.String2.trim
     }
-  )
 
-let entries: data => array<(string, string)> = d =>
-  [
-    ("lang", d.lang->fold),
-    ("currency", d.currency->fold),
-    ("amount", d.amount->fold),
-    ("iban", d.iban->fold),
-    ("referenceType", d.referenceType->fold),
-    ("reference", d.reference->fold),
-    ("message", d.message->fold),
-    ("messageCode", d.messageCode->fold),
-  ]->(
-    xs =>
-      d.creditor
-      ->addressEntries("creditor")
-      ->Js.Array2.concat(xs)
-      ->(xs => d.debtor->addressEntries("debtor")->Js.Array2.concat(xs)->addQrCodeStringFromEntries)
-  )
+    let addressLine2 = (ad.postalCode->fold ++ " " ++ ad.locality->fold)->Js.String2.trim
+    {
+      addressType: "K",
+      name: ad.name->fold,
+      addressLine1: addressLine1,
+      addressLine2: addressLine2,
+      countryCode: ad.countryCode->fold
+    }
+  }
 
-let object: data => Js.Dict.t<string> = d => entries(d)->Js.Dict.fromArray
+let component: qrBillInit => qrBillComponent =
+  d =>
+  ( componentAddress(d.creditor),
+    componentAddress(d.debtor),
+  )->((
+    creditor,
+    debtor
+  )) => ({
+    lang: d.lang->fold,
+    currency: d.currency->fold,
+    amount: d.amount->fold,
+    iban: d.iban->fold,
+    referenceType: d.referenceType->fold,
+    reference: d.reference->fold,
+    message: d.message->fold,
+    messageCode: d.messageCode->fold,
+    creditorAddressType: creditor.addressType,
+    creditorName: creditor.name,
+    creditorAddressLine1: creditor.addressLine1,
+    creditorAddressLine2: creditor.addressLine2,
+    creditorCountryCode: creditor.countryCode,
+    debtorAddressType: debtor.addressType,
+    debtorName: debtor.name,
+    debtorAddressLine1: debtor.addressLine1,
+    debtorAddressLine2: debtor.addressLine2,
+    debtorCountryCode: debtor.countryCode,
+    qrCodeString: "",
+    showQRCode: false,
+    showAmount: false,
+    showDebtor: false,
+    showAdditionalInfo: false,
+    showReference: false,
+    reduceContent: false,
+  })->cd => {
+    let qrCodeString = componentQrCodeString(cd)
+    {
+      ...cd,
+      amount: cd.amount->Formatter.moneyFromNumberStr2,
+      iban: cd.iban->Formatter.blockStr4,
+      referenceType: cd.referenceType->Formatter.referenceBlockStr,
+      qrCodeString: qrCodeString,
+      showQRCode: qrCodeString != "",
+      showAmount: cd.amount != "",
+      showDebtor: cd.debtorName != "" && cd.debtorAddressLine1 != "" && cd.debtorAddressLine2 != "",
+      showAdditionalInfo: cd.message != "" || cd.messageCode != "",
+      showReference: cd.referenceType == "QRR" || cd.referenceType == "SCOR",
+      reduceContent: false,
+    }
+  }
+

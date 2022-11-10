@@ -17,7 +17,7 @@ let parseString: Data.dataOption<Js.Json.t> => Data.dataOption<string> => Data.d
     | JSONString(s) =>
       switch Js.String.trim(s) {
       | "" => dfo
-      | _ => Data.User({ key, val: s })  
+      | _ => Data.User({ key, val: s })
       }
     | JSONNumber(n) => Data.User({ key, val: Js.Float.toString(n) })
     | _ => dfo
@@ -52,7 +52,7 @@ let chooseReferenceType =
   reference =>
   iban =>
   switch reference {
-  | Data.None => Data.defaultData.referenceType
+  | Data.None => Data.defaultQrBillInit.referenceType
   | _ =>
     switch iban {
     | Data.User({ val }) =>
@@ -60,7 +60,7 @@ let chooseReferenceType =
       ->Js.String2.substring(~from=4, ~to_=5)
       ->x => (x == "3" ? "QRR" : "SCOR")
       ->x => Data.User({ key: "referenceType", val: x })
-    | _ => Data.defaultData.referenceType
+    | _ => Data.defaultQrBillInit.referenceType
     }
   }
 
@@ -74,7 +74,7 @@ let chooseAddressType =
 
 
 
-let parseJson: string => Data.data =
+let parseJson: Js.Dict.t<Js.Json.t> => Data.qrBillInit =
   str =>
   try {
     let json =
@@ -86,17 +86,17 @@ let parseJson: string => Data.data =
     switch Js.Json.classify(json) {
     | JSONObject(d) =>
       let dataGet = dictGet(d)
-      let iban = dataGet("iban")->parseString(Data.defaultData.iban)
-      let reference = dataGet("reference")->parseString(Data.defaultData.reference)
+      let iban = dataGet("iban")->parseString(Data.defaultQrBillInit.iban)
+      let reference = dataGet("reference")->parseString(Data.defaultQrBillInit.reference)
       {
-        lang: dataGet("lang")->parseString(Data.defaultData.lang),
-        currency: dataGet("currency")->parseString(Data.defaultData.currency),
-        amount: dataGet("amount")->parseFloatString(Data.defaultData.amount),
+        lang: dataGet("lang")->parseString(Data.defaultQrBillInit.lang),
+        currency: dataGet("currency")->parseString(Data.defaultQrBillInit.currency),
+        amount: dataGet("amount")->parseFloatString(Data.defaultQrBillInit.amount),
         iban,
         referenceType: chooseReferenceType(reference, iban),
         reference,
-        message: dataGet("message")->parseString(Data.defaultData.message),
-        messageCode: dataGet("messageCode")->parseString(Data.defaultData.messageCode),
+        message: dataGet("message")->parseString(Data.defaultQrBillInit.message),
+        messageCode: dataGet("messageCode")->parseString(Data.defaultQrBillInit.messageCode),
         creditor:
           switch Js.Dict.get(d, "creditor") {
           | Some(x) =>
@@ -105,8 +105,8 @@ let parseJson: string => Data.data =
               let addressDataGet = dictGet(d)
               let streetNumber = addressDataGet("streetNumber")->parseString(Data.None)
               let postalCode = addressDataGet("postalCode")->parseString(Data.None)
-              Data.User({ 
-                key: "creditor", 
+              Data.User({
+                key: "creditor",
                 val: {
                   addressType: chooseAddressType(streetNumber, postalCode),
                   name: addressDataGet("name")->parseString(Data.None),
@@ -118,9 +118,9 @@ let parseJson: string => Data.data =
                   countryCode: addressDataGet("countryCode")->parseString(Data.None)
                 }
               })
-            | _ => Data.defaultData.creditor
+            | _ => Data.defaultQrBillInit.creditor
             }
-          | None => Data.defaultData.creditor
+          | None => Data.defaultQrBillInit.creditor
           },
         debtor:
           switch Js.Dict.get(d, "debtor") {
@@ -130,8 +130,8 @@ let parseJson: string => Data.data =
               let addressDataGet = dictGet(d)
               let streetNumber = addressDataGet("streetNumber")->parseString(Data.None)
               let postalCode = addressDataGet("postalCode")->parseString(Data.None)
-              Data.User({ 
-                key: "debtor", 
+              Data.User({
+                key: "debtor",
                 val: {
                   addressType: chooseAddressType(streetNumber, postalCode),
                   name: addressDataGet("name")->parseString(Data.None),
@@ -143,13 +143,13 @@ let parseJson: string => Data.data =
                   countryCode: addressDataGet("countryCode")->parseString(Data.None)
                 }
               })
-            | _ => Data.defaultData.debtor
+            | _ => Data.defaultQrBillInit.debtor
             }
-          | None => Data.defaultData.debtor
+          | None => Data.defaultQrBillInit.debtor
           },
       }
-    | _ => Data.defaultData //failwith("Expected an object")
+    | _ => Data.defaultQrBillInit //failwith("Expected an object")
     }
   } catch {
-  | _ => Data.defaultData
+  | _ => Data.defaultQrBillInit
   }

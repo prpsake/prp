@@ -1,5 +1,5 @@
 {
-  "name": "utils",
+  "name": "@prpsake/utils",
   "sources": [
     {
       "dir": "src",

@@ -2,6 +2,7 @@
   "lang": "de",
   "currency": "CHF",
   "amount": "2880.00",
+  "iban": "CH1509000000152034087",
   "message": "Rechnung 00123",
   "creditor": {
     "name": "Andere Org",

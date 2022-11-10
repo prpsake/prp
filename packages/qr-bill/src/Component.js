@@ -75,8 +75,18 @@ const svgQRCode =
   </svg>`
 
 
+const coerceValue =
+  coerceFn =>
+  defaultValue => ({
+    value: defaultValue,
+    set: (_, value) => typeof value === typeof defaultValue ? value : coerceFn(value)
+  })
 
-export const Component = {
+
+const coerceBoolFromNumStr = coerceValue(v => Boolean(v|0))
+
+
+export const object = {
   lang: "en",
 
   currency: "",
@@ -87,11 +97,13 @@ export const Component = {
   message: "",
   messageCode: "",
 
+  creditorAddressType: "", // QUESTION: Use case if other than 'K'? Delete if none.
   creditorName: "",
   creditorAddressLine1: "",
   creditorAddressLine2: "",
   creditorCountryCode: "",
 
+  debtorAddressType: "", // QUESTION: Use case if other than 'K'? Delete if none.
   debtorName: "",
   debtorAddressLine1: "",
   debtorAddressLine2: "",
@@ -278,4 +290,4 @@ export const Component = {
 }
 
 
-export const CompiledComponent = define.compile(Component)
+export const compiled = define.compile(object)

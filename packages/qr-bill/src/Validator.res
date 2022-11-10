@@ -166,8 +166,8 @@ let validateReference: (
   | t => t
   }
 
-let validateAddressData: Data.dataOption<Data.addressData> => Data.dataOption<
-  Data.addressData,
+let validateAddressData: Data.dataOption<Data.qrBillAddress> => Data.dataOption<
+  Data.qrBillAddress,
 > = o =>
   switch o {
   | Data.User({key, val: ad}) =>
@@ -211,14 +211,14 @@ let validateAddressData: Data.dataOption<Data.addressData> => Data.dataOption<
   | t => t
   }
 
-let validate: Data.data => Data.data = d =>
+let validate: Data.qrBillInit => Data.qrBillInit = d =>
   d.referenceType
   ->validateWithRexp(
     x => Formatter.removeWhitespace(x)->Js.String2.match_(%re("/^(QRR|SCOR|NON)$/")),
     "must be either QRR, SCOR or NON",
   )
   ->(
-    (referenceType): Data.data => {
+    (referenceType): Data.qrBillInit => {
       lang: d.lang->validateWithRexp(
         x => Formatter.removeWhitespace(x)->Js.String2.match_(%re("/^(en|de|fr|it)$/")),
         "must be either en, de, fr, or it",

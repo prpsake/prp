@@ -6,7 +6,7 @@ type dataOption<'a> =
   | Error({@as("type") _type: string, key: string, val: string, msg: string})
   | None
 
-type addressData = {
+type qrBillAddress = {
   addressType: dataOption<string>,
   name: dataOption<string>,
   street: dataOption<string>,
@@ -17,7 +17,7 @@ type addressData = {
   countryCode: dataOption<string>,
 }
 
-type data = {
+type qrBillInit = {
   lang: dataOption<string>,
   currency: dataOption<string>,
   amount: dataOption<string>,
@@ -26,14 +26,68 @@ type data = {
   reference: dataOption<string>,
   message: dataOption<string>,
   messageCode: dataOption<string>,
-  creditor: dataOption<addressData>,
-  debtor: dataOption<addressData>,
+  creditor: dataOption<qrBillAddress>,
+  debtor: dataOption<qrBillAddress>,
 }
 
-let defaultAddressData: addressData
+//type qrBill = {
+//  lang: string,
+//  currency: string,
+//  amount: string,
+//  iban: string,
+//  referenceType: string,
+//  reference: string,
+//  message: string,
+//  messageCode: string,
+//  creditorAddressType: string,
+//  creditorName: string,
+//  creditorAddressLine1: string,
+//  creditorAddressLine2: string,
+//  creditorCountryCode: string,
+//  debtorAddressType: string,
+//  debtorName: string,
+//  debtorAddressLine1: string,
+//  debtorAddressLine2: string,
+//  debtorCountryCode: string,
+//  qrCodeString: string,
+//}
 
-let defaultData: data
+//type qrBillComponentAddress = {
+//  addressType: string,
+//  name: string,
+//  addressLine1: string,
+//  addressLine2: string,
+//  countryCode: string,
+//}
 
-let entries: data => array<(string, string)>
+type qrBillComponent = {
+  lang: string,
+  currency: string,
+  amount: string,
+  iban: string,
+  referenceType: string,
+  reference: string,
+  message: string,
+  messageCode: string,
+  creditorAddressType: string,
+  creditorName: string,
+  creditorCountryCode: string,
+  creditorAddressLine1: string,
+  creditorAddressLine2: string,
+  debtorAddressType: string,
+  debtorName: string,
+  debtorAddressLine1: string,
+  debtorAddressLine2: string,
+  debtorCountryCode: string,
+  qrCodeString: string,
+  showQRCode: bool,
+  showAmount: bool,
+  showDebtor: bool,
+  showAdditionalInfo: bool,
+  showReference: bool,
+  reduceContent: bool,
+}
 
-let object: data => Js.Dict.t<string>
+let defaultQrBillInit: qrBillInit
+
+let component: qrBillInit => qrBillComponent

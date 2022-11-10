@@ -6,12 +6,12 @@ type readFileParam = { e: Dom.InputEvent.t, onLoad: onLoadFn }
 
 
 let readFileAsText: readFileParam => unit = ({ e, onLoad }) => {
-  let reader = FileReader.make()
+  let reader = FileReader0.make()
   let file =
     switch Dom.InputEvent.type_(e) {
     | "change" => {
         Dom.InputEvent.target(e)
-        ->EventTarget.files
+        ->EventTarget0.files
         ->FileList.item(0)
       }
     | _ => {
@@ -22,7 +22,7 @@ let readFileAsText: readFileParam => unit = ({ e, onLoad }) => {
           ->Dom.DataTransfer.items
           ->items => switch Dom.DataTransferItemList.get(items, 0) {
             | Some(item) => switch Dom.DataTransferItem.kind(item)->Dom.DataTransferItem.kindToString {
-              | "file" => DataTransferItem.getAsFile(item)
+              | "file" => DataTransferItem0.getAsFile(item)
               | _ => None
               }
             | None =>
@@ -38,9 +38,9 @@ let readFileAsText: readFileParam => unit = ({ e, onLoad }) => {
     | None => Js.Exn.raiseError("No_file")
     }
 
-  FileReader.addEventListener(reader, "load", _e => {
-    onLoad(. { result: FileReader.result(reader), file })
+  FileReader0.addEventListener(reader, "load", _e => {
+    onLoad(. { result: FileReader0.result(reader), file })
   }, { once: true })
 
-  FileReader.readAsText(reader, file)
+  FileReader0.readAsText(reader, file)
 }

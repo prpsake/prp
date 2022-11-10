@@ -5,6 +5,9 @@ body {
   margin: 0;
 }
 
+my-app {
+  display: contents;
+}
 
 @media only screen {
   body {
@@ -14,11 +17,11 @@ body {
     overflow: hidden;
   }
 
-  qr-bill {
+  my-qr-bill {
     position: relative;
   }
 
-  qr-bill:after {
+  my-qr-bill:after {
     display: block;
     content: "";
     position: absolute;
