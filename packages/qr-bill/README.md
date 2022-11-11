@@ -68,7 +68,7 @@ customElements.define("my-qr-bill", CompiledComponent)
 
 const qrBill: CompiledComponent = document.createElement("qr-bill")
 
-myApi.get(`/${id}`).then((data: Data.QrBillInit) => {
+myApi.get(`/${id}`).then((data: Data.DataQrBillInit) => {
     qrBill.data = Helpers.modelQR({
       data,
       validate: true,
@@ -82,7 +82,7 @@ myApi.get(`/${id}`).then((data: Data.QrBillInit) => {
 
 ```typescript 
 {
-  lang?: "fr" | "it" | "de" | "en"
+  language?: "fr" | "it" | "de" | "en"
   currency: "CHF" | "EUR"
   amount?: string
   iban: string

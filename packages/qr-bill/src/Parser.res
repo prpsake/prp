@@ -89,7 +89,7 @@ let parseJson: Js.Dict.t<Js.Json.t> => Data.qrBillInit =
       let iban = dataGet("iban")->parseString(Data.defaultQrBillInit.iban)
       let reference = dataGet("reference")->parseString(Data.defaultQrBillInit.reference)
       {
-        lang: dataGet("lang")->parseString(Data.defaultQrBillInit.lang),
+        lang: dataGet("language")->parseString(Data.defaultQrBillInit.lang),
         currency: dataGet("currency")->parseString(Data.defaultQrBillInit.currency),
         amount: dataGet("amount")->parseFloatString(Data.defaultQrBillInit.amount),
         iban,

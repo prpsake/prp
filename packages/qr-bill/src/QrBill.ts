@@ -1,8 +1,39 @@
-import styles from "./styles.css"
-import { html, define } from "hybrids"
+// @ts-ignore
+import style from "./style.css"
+import {html, define, Component} from "hybrids"
 import { translations as tr } from "./Translations.mjs"
 import * as QRCode from "./QRCode.mjs"
 
+
+export interface QrBill {
+  tag: unknown
+  language: "it" | "fr" | "de" | "en"
+  currency: "CHF" | "EUR"
+  amount: string
+  iban: string
+  referenceType: string
+  reference: string
+  message: string
+  messageCode: string
+  creditorAddressType: string
+  creditorName: string
+  creditorAddressLine1: string
+  creditorAddressLine2: string
+  creditorCountryCode: string
+  debtorAddressType: string
+  debtorName: string
+  debtorAddressLine1: string
+  debtorAddressLine2: string
+  debtorCountryCode: string
+  qrCodeString: string
+  showQRCode: boolean
+  showAmount: boolean
+  showDebtor: boolean
+  showAdditionalInfo: boolean
+  showReference: boolean
+  reduceContent: boolean
+  data: Omit<QrBill, "data">
+}
 
 /* NB:
    stroke-width 0.4 (mm) is a visual approximation.
@@ -75,21 +106,11 @@ const svgQRCode =
   </svg>`
 
 
-const coerceValue =
-  coerceFn =>
-  defaultValue => ({
-    value: defaultValue,
-    set: (_, value) => typeof value === typeof defaultValue ? value : coerceFn(value)
-  })
+const QrBill: Component<QrBill> = {
+  tag: undefined,
+  language: "de",
 
-
-const coerceBoolFromNumStr = coerceValue(v => Boolean(v|0))
-
-
-export const object = {
-  lang: "en",
-
-  currency: "",
+  currency: "CHF",
   amount: "",
   iban: "",
   referenceType: "",
@@ -129,7 +150,7 @@ export const object = {
   },
 
   render: ({
-    lang,
+    language,
 
     currency,
     amount,
@@ -160,10 +181,10 @@ export const object = {
 
   <div class="w-62 p-5 border-t border-r border-dashed border-black scissors-br">
 
-    <div class="h-7 font-bold text-11 leading-none">${tr[lang].receiptTitle}</div>
+    <div class="h-7 font-bold text-11 leading-none">${tr[language].receiptTitle}</div>
 
     <div class="h-56">
-      <div class="font-bold text-6 leading-9">${tr[lang].creditorHeading}</div>
+      <div class="font-bold text-6 leading-9">${tr[language].creditorHeading}</div>
       <div class="text-8 leading-9 mb-line-9">
         <div>${iban}</div>
         <div>${creditorName}</div>
@@ -172,14 +193,14 @@ export const object = {
       </div>
 
       ${showReference && html`
-        <div class="font-bold text-6 leading-9">${tr[lang].referenceHeading}</div>
+        <div class="font-bold text-6 leading-9">${tr[language].referenceHeading}</div>
         <div class="text-8 leading-9 mb-line-9">
           <div>${reference}</div>
         </div>
       `}
 
       <div class="font-bold text-6 leading-9">
-        ${showDebtor ? tr[lang].debtorHeading : tr[lang].debtorFieldHeading}
+        ${showDebtor ? tr[language].debtorHeading : tr[language].debtorFieldHeading}
       </div>
       ${showDebtor ? html`
         <div class="text-8 leading-9">
@@ -192,12 +213,12 @@ export const object = {
 
     <div class="h-14 flex">
       <div class="flex-shrink w-22">
-        <div class="font-bold text-6 leading-9">${tr[lang].currencyHeading}</div>
+        <div class="font-bold text-6 leading-9">${tr[language].currencyHeading}</div>
         <div class="text-8 leading-9">${currency}</div>
       </div>
 
       <div class=${{ "flex-grow": true, flex: !showAmount }}>
-        <div class="font-bold text-6 leading-9">${tr[lang].amountHeading}</div>
+        <div class="font-bold text-6 leading-9">${tr[language].amountHeading}</div>
         ${showAmount ?
           html`<div class="text-8 leading-9">${amount}</div>` :
           svgBlankField(30, 10, { marginTop: "2pt", marginLeft: "4pt" })
@@ -205,17 +226,17 @@ export const object = {
       </div>
     </div>
 
-    <div class="h-18 font-bold text-6 text-right">${tr[lang].acceptancePointHeading}</div>
+    <div class="h-18 font-bold text-6 text-right">${tr[language].acceptancePointHeading}</div>
   </div>
 
   <div class="w-148 p-5 border-t border-dashed border-black scissors-tr">
     <div class="h-85 flex">
       <div class="w-51">
-        <div class="h-7 font-bold text-11 leading-none">${tr[lang].paymentPartTitle}</div>
+        <div class="h-7 font-bold text-11 leading-none">${tr[language].paymentPartTitle}</div>
 
         <div class="h-56 py-5 pr-5">
           ${showQRCode ?
-            svgQRCode(qrCodeString, showQRCode) :
+            svgQRCode(qrCodeString) :
             svgBlankField(46, 46)
           }
         </div>
@@ -223,20 +244,20 @@ export const object = {
         ${showAmount ? html`
           <div class="h-22 flex">
             <div class="flex-shrink w-22">
-              <div class="font-bold text-8 leading-11">${tr[lang].currencyHeading}</div>
+              <div class="font-bold text-8 leading-11">${tr[language].currencyHeading}</div>
               <div class="text-10 leading-11">${currency}</div>
             </div>
 
             <div class="flex-grow">
-              <div class="font-bold text-8 leading-11">${tr[lang].amountHeading}</div>
+              <div class="font-bold text-8 leading-11">${tr[language].amountHeading}</div>
               <div class="text-10 leading-11">${amount}</div>
             </div>
           </div>
         ` : html`
           <div class="h-22">
             <div class="flex font-bold text-8 leading-11">
-              <div class="mr-line-7">${tr[lang].currencyHeading}</div>
-              <div>${tr[lang].amountHeading}</div>
+              <div class="mr-line-7">${tr[language].currencyHeading}</div>
+              <div>${tr[language].amountHeading}</div>
             </div>
             <div class="flex">
               <div class="text-10 leading-11 mr-line-9">${currency}</div>
@@ -247,7 +268,7 @@ export const object = {
       </div>
 
       <div class="w-87">
-        <div class="font-bold text-8 leading-11">${tr[lang].creditorHeading}</div>
+        <div class="font-bold text-8 leading-11">${tr[language].creditorHeading}</div>
         <div class="text-10 leading-11 mb-line-11">
           <div>${iban}</div>
           <div>${creditorName}</div>
@@ -256,14 +277,14 @@ export const object = {
         </div>
 
         ${showReference && html`
-          <div class="font-bold text-8 leading-11">${tr[lang].referenceHeading}</div>
+          <div class="font-bold text-8 leading-11">${tr[language].referenceHeading}</div>
           <div class="text-10 leading-11 mb-line-11">
             <div>${reference}</div>
           </div>
         `}
 
         ${showAdditionalInfo && html`
-          <div class="font-bold text-8 leading-11">${tr[lang].additionalInfoHeading}</div>
+          <div class="font-bold text-8 leading-11">${tr[language].additionalInfoHeading}</div>
           <div class="text-10 leading-11 mb-line-11">
             ${message && html`<div>${message}</div>`}
             ${messageCode && html`<div>${messageCode}</div>`}
@@ -271,7 +292,7 @@ export const object = {
         `}
 
         <div class="font-bold text-8 leading-11">
-          ${showDebtor ? tr[lang].debtorHeading : tr[lang].debtorFieldHeading}
+          ${showDebtor ? tr[language].debtorHeading : tr[language].debtorFieldHeading}
         </div>
         ${showDebtor ? html`
           <div class="text-10 leading-11">
@@ -286,8 +307,8 @@ export const object = {
     <div class="h-10"></div>
   </div>
 
-  `.style(styles)
+  `.style(style)
 }
 
-
-export const compiled = define.compile(object)
+export default define(QrBill)
+export const HybridElement = define.compile<QrBill>(QrBill)

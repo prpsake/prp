@@ -1,4 +1,4 @@
-export type QrBillBase = {
+export type DataQrBillBase = {
   lang?: "fr" | "it" | "de" | "en"
   currency: "CHF" | "EUR"
   amount?: string | number
@@ -10,7 +10,7 @@ export type QrBillBase = {
 }
 
 
-export type QrBillAddress = {
+export type DataQrBillAddress = {
   // NB(28.10.22): By swiss-qr-bill-spec `addressType` can also be "S" (separated address items) but only "K" (combined
   // address items) are handled at the moment. See Parser.res and Validator.res.
   addressType?: "K"
@@ -24,13 +24,13 @@ export type QrBillAddress = {
 }
 
 
-export type QrBillInit = QrBillBase & {
-  creditor: QrBillAddress
-  debtor?: QrBillAddress
+export type DataQrBillInit = DataQrBillBase & {
+  creditor: DataQrBillAddress
+  debtor?: DataQrBillAddress
 }
 
 
-export type QrBill = QrBillBase & {
+export type DataQrBill = DataQrBillBase & {
   creditorName: string
   creditorCountryCode: string
   creditorAddressLine1: string
@@ -42,7 +42,7 @@ export type QrBill = QrBillBase & {
 }
 
 
-export type QrBillComponent = QrBill & {
+export type DataQrBillComponent = DataQrBill & {
   qrCodeString: string
   showQRCode: boolean
   showAmount: boolean
@@ -53,14 +53,14 @@ export type QrBillComponent = QrBill & {
 }
 
 
-export const defaultAddressData: QrBillAddress
-export const defaultData: QrBillInit
+export const defaultAddressData: DataQrBillAddress
+export const defaultData: DataQrBillInit
 
 
 /**
  * Transform and extend the qr-bill data for the hybrids web component.
  *
- * @param {QrBillInit} data - The input data to be transformed.
- * @return {QrBillComponent} - The transformed data.
+ * @param {DataQrBillInit} data - The input data to be transformed.
+ * @return {DataQrBillComponent} - The transformed data.
  */
-export function component(data: QrBillInit): QrBillComponent
+export function component(data: DataQrBillInit): DataQrBillComponent

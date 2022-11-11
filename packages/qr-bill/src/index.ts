@@ -1,4 +1,4 @@
-export * as Component from "./Component.js"
+export * as QrBill from "./QrBill"
 export * as Parser from "./Parser.mjs"
 export * as Validator from "./Validator.mjs"
 export * as Formatter from "./Formatter.mjs"

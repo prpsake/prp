@@ -31,7 +31,7 @@ type qrBillInit = {
 }
 
 //type qrBill = {
-//  lang: string,
+//  language: string,
 //  currency: string,
 //  amount: string,
 //  iban: string,
@@ -100,7 +100,7 @@ let defaultQrBillAddress: qrBillAddress = {
 }
 
 let defaultQrBillInit: qrBillInit = {
-  lang: Default({key: "lang", val: "en"}),
+  lang: Default({key: "language", val: "en"}),
   currency: None,
   amount: None,
   iban: None,

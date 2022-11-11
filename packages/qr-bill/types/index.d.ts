@@ -1,5 +1,10 @@
 declare module "@prpsake/qr-bill"
-export * as Component from "./Component"
+declare module "*.css" {
+  const style: string
+  export default style
+}
+
+export * as QrBill from "../src/QrBill"
 export * as Parser from "./Parser"
 export * as Validator from "./Validator"
 export * as Formatter from "./Formatter"

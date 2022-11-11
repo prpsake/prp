@@ -11,7 +11,7 @@ export default ({ mode }) => {
       target: "esnext",
       minify: false,
       lib: {
-        entry: path.resolve(__dirname, "src/api.js"),
+        entry: path.resolve(__dirname, "src/index.ts"),
         fileName: "index",
         formats: ["es"],
       }

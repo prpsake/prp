@@ -31,7 +31,7 @@ type qrBillInit = {
 }
 
 //type qrBill = {
-//  lang: string,
+//  language: string,
 //  currency: string,
 //  amount: string,
 //  iban: string,

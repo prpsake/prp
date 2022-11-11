@@ -3,10 +3,10 @@ import { Model, define, store, html } from "hybrids"
 import "./style.css"
 
 interface MyApp {
-  myQrBill: Data.QrBillComponent
+  qrBill: Data.QrBillComponent
 }
 
-const MyQrBill: Model<Data.QrBillComponent> = {
+const QrBill: Model<Data.QrBillComponent> = {
   lang: "de",
   currency: "CHF",
   amount: "",
@@ -49,10 +49,10 @@ define<Data.QrBillComponent>({
 
 define<MyApp>({
   tag: "my-app",
-  myQrBill: store(MyQrBill),
-  content: ({ myQrBill }) => html`
-    ${store.ready(myQrBill) && html`
-      <my-qr-bill data=${myQrBill}></my-qr-bill>
+  qrBill: store(QrBill),
+  content: ({ qrBill }) => html`
+    ${store.ready(qrBill) && html`
+      <my-qr-bill data=${qrBill}></my-qr-bill>
     `}
   `
 })
