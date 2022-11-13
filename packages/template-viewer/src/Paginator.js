@@ -11,14 +11,14 @@ export function preview ({ host }) {
     const pageElm = host.querySelector(".view").firstElementChild.shadowRoot
 
     host.previewElm.innerHTML = ""
-    document.head.querySelectorAll("style").forEach(elm => elm.remove())
+    document.head.querySelectorAll("styleApp").forEach(elm => elm.remove())
     store.set(Session, {
       lang: pageElm.host.data.lang,
       title: pageElm.host.data.title
     })
 
     previewer
-    .preview(pageElm.innerHTML, [{ styles: host.session.styles }], host.previewElm)
+    .preview(pageElm.innerHTML, [{ styles: host.session.style }], host.previewElm)
     .then(res => {
       //console.log(res)
       host.previewElm.classList.replace("opacity-0", "opacity-100")

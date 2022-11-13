@@ -6,11 +6,11 @@ import {
 } from "hybrids"
 
 
-import { Data } from "@prpsake/qr-bill";
+import { Data as QrBillData } from "@prpsake/qr-bill";
 
 
 type PRPModel<M> = {
-  qr?: Data.QRBill & Data.QRBillControl | ((data: M) => Data.QRBill & Data.QRBillControl)
+  qrBill?: QrBillData.Comp | ((data: M) => QrBillData.Comp)
   connect?: Promise<any | void>
 }
 
@@ -35,11 +35,11 @@ type Template<M> = {
  * import { defineWith } from "@prpsake/template-viewer"
  * import * as estimate from "./templates/estimate"
  * import * as invoice from "./templates/invoice"
- * import styles from "./style.css"
+ * import style from "./style.css"
  *
  * defineWith({
  *   templates: { estimate, invoice },
- *   styles
+ *   style
  * })
  *
  * @example
@@ -48,23 +48,23 @@ type Template<M> = {
  *
  * defineWith({
  *   templates: { estimate, invoice },
- *   styles,
+ *   style,
  *   tag: "my-template-viewer",
- *   tagQR: "my-qr-bill",
+ *   tagQrBill: "my-qr-bill",
  *   previewSelector: "#my-template-view"
  * })
  *
  * @param {Record<string, Template<unknown>>} param.templates - The template modules.
  * @param {string} param.styles - The styles for the templates.
  * @param {string} [param.tag="template-viewer"] - The tag to be used for the template-viewer custom element.
- * @param {string} [param.tagQR="qr-bill"] - The tag to be used for the qr-bill custom element.
+ * @param {string} [param.tagQrBill="qr-bill"] - The tag to be used for the qr-bill custom element.
  * @param {string} [param.previewSelector="#template-view"] - The selector to be used for the preview element.
  */
 export function defineWith(param: {
   templates: Record<string, Template<unknown>>
-  styles: string
+  style: string
   tag?: string
-  tagQR?: string
+  tagQrBill?: string
   previewSelector?: string
 }): void
 
@@ -111,4 +111,4 @@ export const html: typeof hybridsHtml
 export const svg: typeof hybridsSvg
 
 
-export { modelQR } from "@prpsake/qr-bill/types/Helpers"
+export * from "@prpsake/qr-bill"

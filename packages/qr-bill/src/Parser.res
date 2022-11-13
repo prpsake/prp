@@ -64,7 +64,7 @@ let chooseAddressType =
   (streetNumber === Data.None || postalCode === Data.None ? "K" : "S")
   ->val => Data.User({ key: "addressType", val })
 
-let parseJson: Js.Dict.t<Js.Json.t> => Data.init =
+let parse: Js.Dict.t<Js.Json.t> => Data.init =
   str =>
   try {
     let json =

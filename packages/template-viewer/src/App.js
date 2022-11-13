@@ -1,7 +1,7 @@
-import stylesApp from "./styles.css"
+import styleApp from "./style.css"
 
 import { store, define, router, html } from "hybrids"
-import { Component as QRBill } from "@prpsake/qr-bill"
+import QrBill from "@prpsake/qr-bill"
 import { BlobReader } from "@prpsake/utils"
 
 import Session from "./Session.js"
@@ -109,30 +109,30 @@ const App = ({
         </div>
       </div>
     </aside>
-  `.style(stylesApp)
+  `.style(styleApp)
 })
 
 
 export function defineWith({
   templates,
-  styles,
+  style,
   tag = "template-viewer",
-  tagQR = "qr-bill",
+  tagQrBill = "qr-bill",
   previewSelector = "#template-view"
 }) {
   if (!(typeof tag === "string" && typeof previewSelector === "string")) {
     return
   }
 
-  if (typeof tagQR === "string") {
+  if (typeof tagQrBill === "string") {
     define({
-      tag: tagQR,
+      ...QrBill,
+      tag: tagQrBill,
       class: "absolute bottom-0 left-0",
-      ...QRBill
     })
   }
 
-  store.set(Session, { styles }).then(() => {
+  store.set(Session, { style }).then(() => {
     const templatesConnected = modelsFromTemplates({ templates })
 
     define({

@@ -2,7 +2,7 @@ import { store } from "hybrids"
 
 
 export default {
-  styles: "",
+  style: "",
   useFile: false,
   file: "invoice-sample.json",
   lang: "",

@@ -1,1 +1,1 @@
-let parseJson: Js.Dict.t<Js.Json.t> => Data.init
+let parse: Js.Dict.t<Js.Json.t> => Data.init

@@ -1,4 +1,4 @@
-import path from "path"
+import { resolve } from "path"
 import { defineConfig } from "vite"
 
 
@@ -9,9 +9,9 @@ export default ({ mode }) => {
     publicDir: "public",
     build: {
       target: "esnext",
-      minify: false,
+      minify: true,
       lib: {
-        entry: path.resolve(__dirname, "src/index.ts"),
+        entry: resolve(__dirname, "src/api.js"),
         fileName: "index",
         formats: ["es"],
       }

@@ -1,14 +1,25 @@
-import { html, modelQR, type Model, type View } from "@prpsake/template-viewer"
+import {
+  html,
+  Parser,
+  Validator,
+  Data,
+  type Model,
+  type View
+} from "@prpsake/template-viewer"
 import InvoiceBase from "../models/InvoiceBase";
 
 
 export const model: Model<InvoiceBase> = {
   ...InvoiceBase,
-  qr: data => modelQR({
-    data: {...data, iban: data.creditor.iban},
-    validate: true,
-    format: true
-  })
+  qrBill: data => {
+    return [Parser.parse({
+      ...data,
+      iban: data.creditor.iban
+    })]
+    .map(Validator.validate)
+    .map(Data.comp)
+    [0]
+  }
 }
 
 
@@ -128,7 +139,7 @@ export const view: View<InvoiceBase> = ({ data }) => html`
       </footer>
     </section>
     <section class="page-payment-methods">
-      <qr-bill data=${data.qr}></qr-bill>
+      <qr-bill data=${data.qrBill}></qr-bill>
     </section>
   </main>
 `

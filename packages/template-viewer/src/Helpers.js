@@ -7,9 +7,9 @@ import Session from "./Session"
 export function modelsFromTemplates({templates}) {
   return Obj.map(
     templates,
-    ([key, template]) => {
-      return [key, {
-        view: template.view,
+    ([key, template]) => [
+      key,
+      { view: template.view,
         model: {
           templates: [""],
           ...(Obj.omitProp(template.model, "connect")),
@@ -28,8 +28,8 @@ export function modelsFromTemplates({templates}) {
             }
           }
         }
-      }]
-    }
+      }
+    ]
   )
 }
 

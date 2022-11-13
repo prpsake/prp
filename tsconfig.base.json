@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "qr-bill": ["packages/qr-bill/src/index.ts"]
+      "qr-bill": ["packages/qr-bill/src/index.ts"],
+      "template-viewer": ["packages/template-viewer/src/api.js"]
     }
   },
   "exclude": ["node_modules", "tmp"]

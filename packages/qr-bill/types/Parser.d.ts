@@ -2,9 +2,9 @@ import {Init} from "./Data";
 
 
 /**
- * Parse the qr-bill JSON string.
+ * Parse a json string object or plain object.
  *
- * @param {string} str - The JSON string.
+ * @param {string | object} x - A JSON string object or plain object.
  * @return {Init} - The parsed qr-bill data.
  */
-export function parseJson(str: string): Init
+export function parse(x: string | object): Init
