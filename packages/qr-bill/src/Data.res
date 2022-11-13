@@ -37,27 +37,6 @@ type init = {
   debtor: opt<initAddress>,
 }
 
-//type qrBill = {
-//  language: string,
-//  currency: string,
-//  amount: string,
-//  iban: string,
-//  referenceType: string,
-//  reference: string,
-//  message: string,
-//  messageCode: string,
-//  creditorAddressType: string,
-//  creditorName: string,
-//  creditorAddressLine1: string,
-//  creditorAddressLine2: string,
-//  creditorCountryCode: string,
-//  debtorAddressType: string,
-//  debtorName: string,
-//  debtorAddressLine1: string,
-//  debtorAddressLine2: string,
-//  debtorCountryCode: string,
-//}
-
 type compAddress = {
   addressType: string,
   name: string,

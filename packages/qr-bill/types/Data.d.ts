@@ -1,12 +1,16 @@
+type OptSome<V> = { key: string, val: V}
+
+type OptErr<V> = {
+  type: string,
+  key: string,
+  val: V,
+  msg: string
+}
+
 type Opt<V> =
-  | { TAG: 0, _0: { key: string, val: V } } // User
-  | { TAG: 1, _0: { key: string, val: V } } // Default
-  | { TAG: 2, _0: { // Error
-      type: string
-      key: string
-      val: V
-      msg: string
-    }}
+  | { TAG: 0, _0: OptSome<V> } // User
+  | { TAG: 1, _0: OptSome<V> } // Default
+  | { TAG: 2, _0: OptErr<V> } // Error
   | undefined // None
 
 type Language = "fr" | "it" | "de" | "en"
