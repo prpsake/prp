@@ -1,12 +1,10 @@
-// @ts-ignore
-import style from "./style.css"
-import {html, define, Component} from "hybrids"
-import { translations as tr } from "./Translations.mjs"
+import {html, define, Component } from "hybrids"
+import {translations as tr} from "./Translations.mjs"
 import * as QRCode from "./QRCode.mjs"
+import style from "./style.css"
 
-
-export interface QrBill {
-  tag: unknown
+interface QrBill {
+  tag: string
   language: "it" | "fr" | "de" | "en"
   currency: "CHF" | "EUR"
   amount: string
@@ -107,7 +105,7 @@ const svgQRCode =
 
 
 const QrBill: Component<QrBill> = {
-  tag: undefined,
+  tag: "qr-bill",
   language: "de",
 
   currency: "CHF",
@@ -310,5 +308,9 @@ const QrBill: Component<QrBill> = {
   `.style(style)
 }
 
-export default define(QrBill)
-export const HybridElement = define.compile<QrBill>(QrBill)
+const HybridElement = define.compile(QrBill)
+
+export {
+  HybridElement,
+  QrBill
+}

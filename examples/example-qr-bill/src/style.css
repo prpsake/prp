@@ -5,6 +5,10 @@ body {
   margin: 0;
 }
 
+my-app {
+  display: contents;
+}
+
 @media only screen {
   body {
     display: grid;

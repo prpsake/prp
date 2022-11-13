@@ -1,33 +1,40 @@
-type dataOptionVal<'a> = {key: string, val: 'a}
+type optSome<'a> = {key: string, val: 'a}
 
-type dataOption<'a> =
-  | User(dataOptionVal<'a>)
-  | Default(dataOptionVal<'a>)
-  | Error({@as("type") _type: string, key: string, val: string, msg: string})
-  | None
-
-type qrBillAddress = {
-  addressType: dataOption<string>,
-  name: dataOption<string>,
-  street: dataOption<string>,
-  streetNumber: dataOption<string>,
-  postOfficeBox: dataOption<string>,
-  postalCode: dataOption<string>,
-  locality: dataOption<string>,
-  countryCode: dataOption<string>,
+type optErr<'a> = {
+  @as("type") _type: string,
+  key: string,
+  val: 'a,
+  msg: string
 }
 
-type qrBillInit = {
-  lang: dataOption<string>,
-  currency: dataOption<string>,
-  amount: dataOption<string>,
-  iban: dataOption<string>,
-  referenceType: dataOption<string>,
-  reference: dataOption<string>,
-  message: dataOption<string>,
-  messageCode: dataOption<string>,
-  creditor: dataOption<qrBillAddress>,
-  debtor: dataOption<qrBillAddress>,
+type opt<'a> =
+  | User(optSome<'a>)
+  | Default(optSome<'a>)
+  | Error(optErr<'a>)
+  | None
+
+type initAddress = {
+  addressType: opt<string>,
+  name: opt<string>,
+  street: opt<string>,
+  streetNumber: opt<string>,
+  postOfficeBox: opt<string>,
+  postalCode: opt<string>,
+  locality: opt<string>,
+  countryCode: opt<string>,
+}
+
+type init = {
+  language: opt<string>,
+  currency: opt<string>,
+  amount: opt<string>,
+  iban: opt<string>,
+  referenceType: opt<string>,
+  reference: opt<string>,
+  message: opt<string>,
+  messageCode: opt<string>,
+  creditor: opt<initAddress>,
+  debtor: opt<initAddress>,
 }
 
 //type qrBill = {
@@ -49,10 +56,9 @@ type qrBillInit = {
 //  debtorAddressLine1: string,
 //  debtorAddressLine2: string,
 //  debtorCountryCode: string,
-//  qrCodeString: string,
 //}
 
-type qrBillComponentAddress = {
+type compAddress = {
   addressType: string,
   name: string,
   addressLine1: string,
@@ -60,8 +66,8 @@ type qrBillComponentAddress = {
   countryCode: string,
 }
 
-type qrBillComponent = {
-  lang: string,
+type comp = {
+  language: string,
   currency: string,
   amount: string,
   iban: string,
@@ -88,7 +94,7 @@ type qrBillComponent = {
   reduceContent: bool,
 }
 
-let defaultQrBillAddress: qrBillAddress = {
+let initAddressDefaults: initAddress = {
   addressType: Default({key: "addressType", val: ""}),
   name: Default({key: "name", val: ""}),
   street: Default({key: "street", val: ""}),
@@ -99,8 +105,8 @@ let defaultQrBillAddress: qrBillAddress = {
   countryCode: Default({key: "countryCode", val: ""}),
 }
 
-let defaultQrBillInit: qrBillInit = {
-  lang: Default({key: "language", val: "en"}),
+let initDefaults: init = {
+  language: Default({key: "language", val: "en"}),
   currency: None,
   amount: None,
   iban: None,
@@ -108,11 +114,39 @@ let defaultQrBillInit: qrBillInit = {
   reference: None,
   message: None,
   messageCode: None,
-  creditor: Default({key: "creditor", val: defaultQrBillAddress}),
-  debtor: Default({key: "debtor", val: defaultQrBillAddress}),
+  creditor: Default({key: "creditor", val: initAddressDefaults}),
+  debtor: Default({key: "debtor", val: initAddressDefaults}),
 }
 
-let fold: dataOption<string> => string = o =>
+let compDefaults: comp = {
+  language: "en",
+  currency: "CHF",
+  amount: "",
+  iban: "",
+  referenceType: "",
+  reference: "",
+  message: "",
+  messageCode: "",
+  creditorAddressType: "K",
+  creditorName: "",
+  creditorCountryCode: "",
+  creditorAddressLine1: "",
+  creditorAddressLine2: "",
+  debtorAddressType: "K",
+  debtorName: "",
+  debtorAddressLine1: "",
+  debtorAddressLine2: "",
+  debtorCountryCode: "",
+  qrCodeString: "",
+  showQRCode: false,
+  showAmount: false,
+  showDebtor: false,
+  showAdditionalInfo: false,
+  showReference: false,
+  reduceContent: false,
+}
+
+let fold: opt<string> => string = o =>
   switch o {
   | User({val}) => val
   | Default({val}) => val
@@ -123,7 +157,7 @@ let fold: dataOption<string> => string = o =>
   | None => ""
   }
 
-let componentQrCodeString: qrBillComponent => string =
+let componentQrCodeString: comp => string =
   d =>
   [
     // header
@@ -172,11 +206,11 @@ let componentQrCodeString: qrBillComponent => string =
   ]
   ->Js.Array2.joinWith("\n")
 
-let componentAddress: dataOption<qrBillAddress> => qrBillComponentAddress =
+let compAddress: opt<initAddress> => compAddress =
   d =>
   switch d {
   | User({val}) => val
-  | _ => defaultQrBillAddress
+  | _ => initAddressDefaults
   }->ad => {
     let addressLine1 = switch ad.postOfficeBox {
     | User({val}) => val
@@ -193,15 +227,15 @@ let componentAddress: dataOption<qrBillAddress> => qrBillComponentAddress =
     }
   }
 
-let component: qrBillInit => qrBillComponent =
+let comp: init => comp =
   d =>
-  ( componentAddress(d.creditor),
-    componentAddress(d.debtor),
+  ( compAddress(d.creditor),
+    compAddress(d.debtor),
   )->((
     creditor,
     debtor
   )) => ({
-    lang: d.lang->fold,
+    language: d.language->fold,
     currency: d.currency->fold,
     amount: d.amount->fold,
     iban: d.iban->fold,
@@ -242,4 +276,3 @@ let component: qrBillInit => qrBillComponent =
       reduceContent: false,
     }
   }
-

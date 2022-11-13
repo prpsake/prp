@@ -1,10 +1,10 @@
-import {DataQrBillInit} from "./Data";
+import {Init} from "./Data";
 
 
 /**
  * Parse the qr-bill JSON string.
  *
  * @param {string} str - The JSON string.
- * @return {DataQrBillInit} - The parsed qr-bill data.
+ * @return {Init} - The parsed qr-bill data.
  */
-export function parseJson(str: string): DataQrBillInit
+export function parseJson(str: string): Init

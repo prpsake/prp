@@ -1,4 +1,4 @@
-let dictGet: Js.Dict.t<Js.Json.t> => string => Data.dataOption<'a> =
+let dictGet: Js.Dict.t<Js.Json.t> => string => Data.opt<'a> =
   d =>
   key =>
   switch Js.Dict.get(d, key) {
@@ -6,9 +6,7 @@ let dictGet: Js.Dict.t<Js.Json.t> => string => Data.dataOption<'a> =
   | None => Data.None
   }
 
-
-
-let parseString: Data.dataOption<Js.Json.t> => Data.dataOption<string> => Data.dataOption<string> =
+let parseString: Data.opt<Js.Json.t> => Data.opt<string> => Data.opt<string> =
   o =>
   dfo =>
   switch o {
@@ -25,9 +23,7 @@ let parseString: Data.dataOption<Js.Json.t> => Data.dataOption<string> => Data.d
   | _ => dfo
   }
 
-
-
-let parseFloatString: Data.dataOption<Js.Json.t> => Data.dataOption<string> => Data.dataOption<string> =
+let parseFloatString: Data.opt<Js.Json.t> => Data.opt<string> => Data.opt<string> =
   o =>
   dfo =>
   switch o {
@@ -46,13 +42,11 @@ let parseFloatString: Data.dataOption<Js.Json.t> => Data.dataOption<string> => D
   | _ => dfo
   }
 
-
-
 let chooseReferenceType =
   reference =>
   iban =>
   switch reference {
-  | Data.None => Data.defaultQrBillInit.referenceType
+  | Data.None => Data.initDefaults.referenceType
   | _ =>
     switch iban {
     | Data.User({ val }) =>
@@ -60,11 +54,9 @@ let chooseReferenceType =
       ->Js.String2.substring(~from=4, ~to_=5)
       ->x => (x == "3" ? "QRR" : "SCOR")
       ->x => Data.User({ key: "referenceType", val: x })
-    | _ => Data.defaultQrBillInit.referenceType
+    | _ => Data.initDefaults.referenceType
     }
   }
-
-
 
 let chooseAddressType =
   streetNumber =>
@@ -72,9 +64,7 @@ let chooseAddressType =
   (streetNumber === Data.None || postalCode === Data.None ? "K" : "S")
   ->val => Data.User({ key: "addressType", val })
 
-
-
-let parseJson: Js.Dict.t<Js.Json.t> => Data.qrBillInit =
+let parseJson: Js.Dict.t<Js.Json.t> => Data.init =
   str =>
   try {
     let json =
@@ -86,17 +76,17 @@ let parseJson: Js.Dict.t<Js.Json.t> => Data.qrBillInit =
     switch Js.Json.classify(json) {
     | JSONObject(d) =>
       let dataGet = dictGet(d)
-      let iban = dataGet("iban")->parseString(Data.defaultQrBillInit.iban)
-      let reference = dataGet("reference")->parseString(Data.defaultQrBillInit.reference)
+      let iban = dataGet("iban")->parseString(Data.initDefaults.iban)
+      let reference = dataGet("reference")->parseString(Data.initDefaults.reference)
       {
-        lang: dataGet("language")->parseString(Data.defaultQrBillInit.lang),
-        currency: dataGet("currency")->parseString(Data.defaultQrBillInit.currency),
-        amount: dataGet("amount")->parseFloatString(Data.defaultQrBillInit.amount),
+        language: dataGet("language")->parseString(Data.initDefaults.language),
+        currency: dataGet("currency")->parseString(Data.initDefaults.currency),
+        amount: dataGet("amount")->parseFloatString(Data.initDefaults.amount),
         iban,
         referenceType: chooseReferenceType(reference, iban),
         reference,
-        message: dataGet("message")->parseString(Data.defaultQrBillInit.message),
-        messageCode: dataGet("messageCode")->parseString(Data.defaultQrBillInit.messageCode),
+        message: dataGet("message")->parseString(Data.initDefaults.message),
+        messageCode: dataGet("messageCode")->parseString(Data.initDefaults.messageCode),
         creditor:
           switch Js.Dict.get(d, "creditor") {
           | Some(x) =>
@@ -118,9 +108,9 @@ let parseJson: Js.Dict.t<Js.Json.t> => Data.qrBillInit =
                   countryCode: addressDataGet("countryCode")->parseString(Data.None)
                 }
               })
-            | _ => Data.defaultQrBillInit.creditor
+            | _ => Data.initDefaults.creditor
             }
-          | None => Data.defaultQrBillInit.creditor
+          | None => Data.initDefaults.creditor
           },
         debtor:
           switch Js.Dict.get(d, "debtor") {
@@ -143,13 +133,13 @@ let parseJson: Js.Dict.t<Js.Json.t> => Data.qrBillInit =
                   countryCode: addressDataGet("countryCode")->parseString(Data.None)
                 }
               })
-            | _ => Data.defaultQrBillInit.debtor
+            | _ => Data.initDefaults.debtor
             }
-          | None => Data.defaultQrBillInit.debtor
+          | None => Data.initDefaults.debtor
           },
       }
-    | _ => Data.defaultQrBillInit //failwith("Expected an object")
+    | _ => Data.initDefaults //failwith("Expected an object")
     }
   } catch {
-  | _ => Data.defaultQrBillInit
+  | _ => Data.initDefaults
   }

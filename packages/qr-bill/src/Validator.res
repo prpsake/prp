@@ -53,10 +53,10 @@ let mod10FromIntString: string => string = str => {
 }
 
 let validateWithRexp: (
-  Data.dataOption<string>,
+  Data.opt<string>,
   string => option<array<option<string>>>,
   string,
-) => Data.dataOption<string> = (o, fn, msg) =>
+) => Data.opt<string> = (o, fn, msg) =>
   switch o {
   | Data.User({key, val}) =>
     switch fn(val) {
@@ -70,7 +70,7 @@ let validateWithRexp: (
   | t => t
   }
 
-let validateWithPred: (Data.dataOption<'a>, string => bool, string) => Data.dataOption<'a> = (
+let validateWithPred: (Data.opt<'a>, string => bool, string) => Data.opt<'a> = (
   o,
   fn,
   msg,
@@ -81,7 +81,7 @@ let validateWithPred: (Data.dataOption<'a>, string => bool, string) => Data.data
   | t => t
   }
 
-let validateIban: Data.dataOption<string> => Data.dataOption<string> = o =>
+let validateIban: Data.opt<string> => Data.opt<string> = o =>
   switch o {
   | Data.User({key, val}) => {
       let codeA = Js.String2.charCodeAt(`A`, 0)
@@ -115,7 +115,7 @@ let validateIban: Data.dataOption<string> => Data.dataOption<string> = o =>
   | t => t
   }
 
-let validateQRR: Data.dataOptionVal<string> => Data.dataOption<string> = ({key, val}) => {
+let validateQRR: Data.optSome<string> => Data.opt<string> = ({key, val}) => {
   let valTrim = Formatter.removeWhitespace(val)
   mod10FromIntString(valTrim)->(
     a =>
@@ -136,16 +136,16 @@ let validateQRR: Data.dataOptionVal<string> => Data.dataOption<string> = ({key, 
   )
 }
 
-let validateSCOR: Data.dataOptionVal<string> => Data.dataOption<string> = ov =>
+let validateSCOR: Data.optSome<string> => Data.opt<string> = ov =>
   Data.User(ov)->validateWithRexp(//TODO: missing actual validation
   x =>
     Formatter.removeWhitespace(x)->Js.String2.match_(%re("/^\S{5,25}$/"))
   , "must be 5 to 25 characters long")
 
 let validateReference: (
-  Data.dataOption<string>,
-  Data.dataOption<string>,
-) => Data.dataOption<string> = (reference, referenceType) =>
+  Data.opt<string>,
+  Data.opt<string>,
+) => Data.opt<string> = (reference, referenceType) =>
   switch reference {
   | Data.User({key, val}) =>
     switch referenceType {
@@ -166,8 +166,8 @@ let validateReference: (
   | t => t
   }
 
-let validateAddressData: Data.dataOption<Data.qrBillAddress> => Data.dataOption<
-  Data.qrBillAddress,
+let validateAddressData: Data.opt<Data.initAddress> => Data.opt<
+  Data.initAddress,
 > = o =>
   switch o {
   | Data.User({key, val: ad}) =>
@@ -211,15 +211,15 @@ let validateAddressData: Data.dataOption<Data.qrBillAddress> => Data.dataOption<
   | t => t
   }
 
-let validate: Data.qrBillInit => Data.qrBillInit = d =>
+let validate: Data.init => Data.init = d =>
   d.referenceType
   ->validateWithRexp(
     x => Formatter.removeWhitespace(x)->Js.String2.match_(%re("/^(QRR|SCOR|NON)$/")),
     "must be either QRR, SCOR or NON",
   )
   ->(
-    (referenceType): Data.qrBillInit => {
-      lang: d.lang->validateWithRexp(
+    (referenceType): Data.init => {
+      language: d.language->validateWithRexp(
         x => Formatter.removeWhitespace(x)->Js.String2.match_(%re("/^(en|de|fr|it)$/")),
         "must be either en, de, fr, or it",
       ),

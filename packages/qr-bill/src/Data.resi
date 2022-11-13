@@ -1,67 +1,44 @@
-type dataOptionVal<'a> = {key: string, val: 'a}
+type optSome<'a> = {key: string, val: 'a}
 
-type dataOption<'a> =
-  | User(dataOptionVal<'a>)
-  | Default(dataOptionVal<'a>)
-  | Error({@as("type") _type: string, key: string, val: string, msg: string})
+type optErr<'a> = {
+  @as("type") _type: string,
+  key: string,
+  val: 'a,
+  msg: string
+}
+
+type opt<'a> =
+  | User(optSome<'a>)
+  | Default(optSome<'a>)
+  | Error(optErr<'a>)
   | None
 
-type qrBillAddress = {
-  addressType: dataOption<string>,
-  name: dataOption<string>,
-  street: dataOption<string>,
-  streetNumber: dataOption<string>,
-  postOfficeBox: dataOption<string>,
-  postalCode: dataOption<string>,
-  locality: dataOption<string>,
-  countryCode: dataOption<string>,
+type initAddress = {
+  addressType: opt<string>,
+  name: opt<string>,
+  street: opt<string>,
+  streetNumber: opt<string>,
+  postOfficeBox: opt<string>,
+  postalCode: opt<string>,
+  locality: opt<string>,
+  countryCode: opt<string>,
 }
 
-type qrBillInit = {
-  lang: dataOption<string>,
-  currency: dataOption<string>,
-  amount: dataOption<string>,
-  iban: dataOption<string>,
-  referenceType: dataOption<string>,
-  reference: dataOption<string>,
-  message: dataOption<string>,
-  messageCode: dataOption<string>,
-  creditor: dataOption<qrBillAddress>,
-  debtor: dataOption<qrBillAddress>,
+type init = {
+  language: opt<string>,
+  currency: opt<string>,
+  amount: opt<string>,
+  iban: opt<string>,
+  referenceType: opt<string>,
+  reference: opt<string>,
+  message: opt<string>,
+  messageCode: opt<string>,
+  creditor: opt<initAddress>,
+  debtor: opt<initAddress>,
 }
 
-//type qrBill = {
-//  language: string,
-//  currency: string,
-//  amount: string,
-//  iban: string,
-//  referenceType: string,
-//  reference: string,
-//  message: string,
-//  messageCode: string,
-//  creditorAddressType: string,
-//  creditorName: string,
-//  creditorAddressLine1: string,
-//  creditorAddressLine2: string,
-//  creditorCountryCode: string,
-//  debtorAddressType: string,
-//  debtorName: string,
-//  debtorAddressLine1: string,
-//  debtorAddressLine2: string,
-//  debtorCountryCode: string,
-//  qrCodeString: string,
-//}
-
-//type qrBillComponentAddress = {
-//  addressType: string,
-//  name: string,
-//  addressLine1: string,
-//  addressLine2: string,
-//  countryCode: string,
-//}
-
-type qrBillComponent = {
-  lang: string,
+type comp = {
+  language: string,
   currency: string,
   amount: string,
   iban: string,
@@ -88,6 +65,8 @@ type qrBillComponent = {
   reduceContent: bool,
 }
 
-let defaultQrBillInit: qrBillInit
+let initDefaults: init
 
-let component: qrBillInit => qrBillComponent
+let compDefaults: comp
+
+let comp: init => comp

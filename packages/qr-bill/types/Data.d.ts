@@ -1,48 +1,64 @@
-export type DataQrBillBase = {
-  lang?: "fr" | "it" | "de" | "en"
-  currency: "CHF" | "EUR"
-  amount?: string | number
+type Opt<V> =
+  | { TAG: 0, _0: { key: string, val: V } } // User
+  | { TAG: 1, _0: { key: string, val: V } } // Default
+  | { TAG: 2, _0: { // Error
+      type: string
+      key: string
+      val: V
+      msg: string
+    }}
+  | undefined // None
+
+type Language = "fr" | "it" | "de" | "en"
+type Currency = "CHF" | "EUR"
+
+// NB(28.10.22): By swiss-qr-bill-spec `addressType` can also be "S" (separated address items) but only "K" (combined
+// address items) are handled at the moment. See Parser.res and Validator.res.
+type AddressType = "K" // | "S"
+
+export type InitAddress = {
+  addressType: Opt<AddressType>
+  name: Opt<string>
+  street: Opt<string>
+  streetNumber: Opt<string>
+  postOfficeBox: Opt<string>
+  postalCode: Opt<string>
+  locality: Opt<string>
+  countryCode: Opt<string>
+}
+
+export type Init = {
+  language: Opt<Language>
+  currency: Opt<Currency>
+  amount: Opt<string>
+  iban: Opt<string>
+  referenceType: Opt<string>
+  reference: Opt<string>
+  message: Opt<string>
+  messageCode: Opt<string>
+  creditor: Opt<InitAddress>
+  debtor: Opt<InitAddress>
+}
+
+export type Comp = {
+  language: Language
+  currency: Currency
+  amount: string
   iban: string
-  referenceType?: string
-  reference?: string
-  message?: string
-  messageCode?: string
-}
-
-
-export type DataQrBillAddress = {
-  // NB(28.10.22): By swiss-qr-bill-spec `addressType` can also be "S" (separated address items) but only "K" (combined
-  // address items) are handled at the moment. See Parser.res and Validator.res.
-  addressType?: "K"
-  name: string
-  street?: string
-  streetNumber?: string | number
-  postOfficeBox?: string | number
-  postalCode: string | number
-  locality: string
-  countryCode: string
-}
-
-
-export type DataQrBillInit = DataQrBillBase & {
-  creditor: DataQrBillAddress
-  debtor?: DataQrBillAddress
-}
-
-
-export type DataQrBill = DataQrBillBase & {
+  referenceType: string
+  reference: string
+  message: string
+  messageCode: string
+  creditorAddressType: AddressType
   creditorName: string
   creditorCountryCode: string
   creditorAddressLine1: string
   creditorAddressLine2: string
+  debtorAddressType: AddressType
   debtorName: string
   debtorAddressLine1: string
   debtorAddressLine2: string
   debtorCountryCode: string
-}
-
-
-export type DataQrBillComponent = DataQrBill & {
   qrCodeString: string
   showQRCode: boolean
   showAmount: boolean
@@ -52,15 +68,14 @@ export type DataQrBillComponent = DataQrBill & {
   reduceContent: boolean
 }
 
-
-export const defaultAddressData: DataQrBillAddress
-export const defaultData: DataQrBillInit
-
+export const initAddressDefaults: InitAddress
+export const initDefaults: Init
+export const compDefaults: Comp
 
 /**
  * Transform and extend the qr-bill data for the hybrids web component.
  *
- * @param {DataQrBillInit} data - The input data to be transformed.
- * @return {DataQrBillComponent} - The transformed data.
+ * @param {Init} data - The input data to be transformed.
+ * @return {Comp} - The transformed data.
  */
-export function component(data: DataQrBillInit): DataQrBillComponent
+export function comp(data: Init): Comp
