@@ -12,7 +12,7 @@ const QrBillModel: Model<QrBill> = {
     fetch("/data/qr-bill-sample.json")
     .then(resp => resp.json())
     .then(json =>
-      [Parser.parseJson(json)]
+      [Parser.parse(json)]
       .map(Validator.validate)
       .map(Data.comp)
       [0]
