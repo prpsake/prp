@@ -11,12 +11,11 @@ const QrBillModel: Model<QrBill> = {
   [store.connect]: () =>
     fetch("/data/qr-bill-sample.json")
     .then(resp => resp.json())
-    .then(json =>
-      [Parser.parse(json)]
-      .map(Validator.validate)
-      .map(Data.comp)
-      [0]
-    )
+    .then(json => {
+      const parsedData = Parser.parse(json)
+      const validatedData = Validator.validate(parsedData)
+      return Data.comp(validatedData)
+    })
     .catch(console.log)
 }
 

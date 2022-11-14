@@ -1,6 +1,6 @@
 declare module "@prpsake/qr-bill"
 
-export { HybridElement, QrBill as default } from "../src/QrBill"
+export { comp, HybridElement, QrBill as default } from "../src/QrBill"
 export * as Parser from "./Parser"
 export * as Validator from "./Validator"
 export * as Formatter from "./Formatter"
