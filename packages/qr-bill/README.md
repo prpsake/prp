@@ -49,6 +49,10 @@ define<MyApp>({
 })
 ```
 
+```html
+<my-app></my-app>
+```
+
 ### Example usage without hybrids
 
 ```typescript
