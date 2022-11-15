@@ -9,8 +9,6 @@
     "@nrwl/workspace": "15.0.4",
     "@types/node": "^18.11.9",
     "autoprefixer": "^10.4.13",
-    "execa": "^6.1.0",
-    "gentype": "^4.5.0",
     "hybrids": "^8.1.5",
     "nx": "15.0.4",
     "postcss": "^8.4.18",

@@ -1,5 +1,4 @@
 import type { Init, Comp } from "../types/Data"
-
 import {html, define, Component } from "hybrids"
 import {translations as tr} from "./Translations.mjs"
 import * as QRCode from "./QRCode.mjs"
@@ -313,24 +312,9 @@ const QrBill: Component<QrBill> = {
   `.style(style)
 }
 
-/**
- * Parse, validate and transform the data for the component.
- *
- * @param {string | Record<string, any>} x - The data.
- * @return {Comp} - The transformed data for the component.
- */
-const comp: (x: string | Record<string, any>) => Comp =
-  x => {
-    const parsedData: Init = Parser.parse(x)
-    const validatedData: Init = Validator.validate(parsedData)
-    const data: Comp = Data.comp(validatedData)
-    return data
-  }
-
 const HybridElement = define.compile(QrBill)
 
 export {
-  comp,
   HybridElement,
   QrBill
 }

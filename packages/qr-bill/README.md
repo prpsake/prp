@@ -15,46 +15,36 @@ pnpm add @prpsake/qr-bill hybrids
 
 ### Example usage with [hybrids](https://hybrids.js.org)
 
-```javascript
-// components/my-qr-bill.js
-import { define } from "hybrids"
-import { Component } from "@prpsake/qr-bill"
+```typescript
+import QrBill, { Data, Helpers } from "@prpsake/qr-bill"
+import { Model, define, store, html } from "hybrids"
+import "./style.css"
 
-export default define({
-  tag: "my-qr-bill",
-  ...Component
-})
-```
-
-```javascript
-// models/my-qr-bill.js
-import { store } from "hybrids"
-import { Helpers } from "@prpsake/qr-bill"
-export default {
-  // ...
-  [store.connect]: async id => 
-    myApi.get(`/${id}`)
-      .then(data => Helpers.modelQR({
-        data,
-        validate: true,
-        format: true
-      }))
+interface MyApp {
+  qrBill: QrBill
 }
-```
 
-```javascript
-// my-app.js
-import { define, store, html } from "hybrids"
-import MyQRBill from "./models/my-qr-bill.js"
-import "./components/my-qr-bill.js"
+const QrBillModel: Model<QrBill> = {
+  ...Data.compDefaults,
+  [store.connect]: () =>
+    fetch("/data/qr-bill-sample.json")
+      .then(resp => resp.json())
+      .then(Helpers.compFromJson)
+      .catch(console.log)
+}
 
 define({
+  ...QrBill,
+  tag: "my-qr-bill"
+})
+
+define<MyApp>({
   tag: "my-app",
-  data: store(MyQRBill),
-  render: ({ data }) => html`
-    ${store.ready(data) && html`
-      <my-qr-bill data=${data}></my-qr-bill>
-    `}  
+  qrBill: store(QrBillModel),
+  content: ({ qrBill }) => html`
+    ${store.ready(qrBill) && html`
+      <my-qr-bill data=${qrBill}></my-qr-bill>
+    `}
   `
 })
 ```
@@ -62,27 +52,27 @@ define({
 ### Example usage without hybrids
 
 ```typescript
-import { CompiledComponent, Data, Helpers } from "@prpsake/qr-bill"
+import { HybridElement, Helpers } from "@prpsake/qr-bill"
+import "./style.css"
 
-customElements.define("my-qr-bill", CompiledComponent)
+const myQrBill: HybridElement = document.createElement("my-qr-bill")
 
-const qrBill: CompiledComponent = document.createElement("qr-bill")
+customElements.define("my-qr-bill", HybridElement)
 
-myApi.get(`/${id}`).then((data: Data.DataQrBillInit) => {
-    qrBill.data = Helpers.modelQR({
-      data,
-      validate: true,
-      format: true
-    })
-    document.body.appendChild(qrBill)
+fetch("/data/qr-bill-sample.json")
+  .then(resp => resp.json())
+  .then(json => {
+    myQrBill.data = Helpers.compFromJson(json)
+    document.body.appendChild(myQrBill)
   })
+  .catch(console.log)
 ```
 
 ## Model
 
 ```typescript 
 {
-  language?: "fr" | "it" | "de" | "en"
+  language?: "fr" | "it" | "de" | "en" // default: "en"
   currency: "CHF" | "EUR"
   amount?: string
   iban: string
