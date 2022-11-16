@@ -1,10 +1,6 @@
-import type { Init, Comp } from "../types/Data"
 import {html, define, Component } from "hybrids"
 import {translations as tr} from "./Translations.mjs"
 import * as QRCode from "./QRCode.mjs"
-import * as Parser from "./Parser.mjs"
-import * as Validator from "./Validator.mjs"
-import * as Data from "./Data.mjs"
 import style from "./style.css"
 
 interface QrBill {
