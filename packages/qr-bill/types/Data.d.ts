@@ -16,7 +16,7 @@ type Opt<V> =
 type Language = "fr" | "it" | "de" | "en"
 type Currency = "CHF" | "EUR"
 
-// NB(28.10.22): By swiss-qr-bill-spec `addressType` can also be "S" (separated address items) but only "K" (combined
+// NB(28.10.22): By swiss-qr-bill-spec `addressType` can also be "S" (structured address items) but only "K" (combined
 // address items) are handled at the moment. See Parser.res and Validator.res.
 type AddressType = "K" // | "S"
 
