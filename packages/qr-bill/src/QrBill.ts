@@ -1,37 +1,18 @@
-import {html, define, Component } from "hybrids"
+import type { Comp } from "../types/Data"
+
+import {html, define, store, Component, Model, HybridElement} from "hybrids"
 import {translations as tr} from "./Translations.mjs"
 import * as QRCode from "./QRCode.mjs"
+import * as Data from "./Data.mjs"
 import style from "./style.css"
 
+interface QrBillModel extends Comp {}
 interface QrBill {
   tag: string
-  language: "it" | "fr" | "de" | "en"
-  currency: "CHF" | "EUR"
-  amount: string
-  iban: string
-  referenceType: string
-  reference: string
-  message: string
-  messageCode: string
-  creditorAddressType: string
-  creditorName: string
-  creditorAddressLine1: string
-  creditorAddressLine2: string
-  creditorCountryCode: string
-  debtorAddressType: string
-  debtorName: string
-  debtorAddressLine1: string
-  debtorAddressLine2: string
-  debtorCountryCode: string
-  qrCodeString: string
-  showQRCode: boolean
-  showAmount: boolean
-  showDebtor: boolean
-  showAdditionalInfo: boolean
-  showReference: boolean
-  reduceContent: boolean
-  data: Omit<QrBill, "data">
+  data?: QrBillModel
 }
+
+const QrBillModel: Model<QrBillModel> = Data.compDefaults
 
 /* NB:
    stroke-width 0.4 (mm) is a visual approximation.
@@ -103,80 +84,31 @@ const svgQRCode =
       d="M328.37,241.63L241.63,241.63L241.63,328.37L328.37,328.37L328.37,241.63ZM325.069,244.931L244.931,244.931L244.931,325.069L325.069,325.069L325.069,244.931ZM293.014,275.572L293.014,257.187L277.458,257.187L277.458,275.572L259.073,275.572L259.073,291.128L277.458,291.128L277.458,309.041L293.014,309.041L293.014,291.128L310.927,291.128L310.927,275.572L293.014,275.572Z"/>
   </svg>`
 
-
-const QrBill: Component<QrBill> = {
-  tag: "qr-bill",
-  language: "de",
-
-  currency: "CHF",
-  amount: "",
-  iban: "",
-  referenceType: "",
-  reference: "",
-  message: "",
-  messageCode: "",
-
-  creditorAddressType: "", // QUESTION: Use case if other than 'K'? Delete if none.
-  creditorName: "",
-  creditorAddressLine1: "",
-  creditorAddressLine2: "",
-  creditorCountryCode: "",
-
-  debtorAddressType: "", // QUESTION: Use case if other than 'K'? Delete if none.
-  debtorName: "",
-  debtorAddressLine1: "",
-  debtorAddressLine2: "",
-  debtorCountryCode: "",
-
-  qrCodeString: "",
-
-  showQRCode: false,
-  showAmount: false,
-  showReference: false,
-  showDebtor: false,
-  showAdditionalInfo: false,
-
-  reduceContent: false,
-
-  data: {
-    set: (host, values = {}) => {
-      Object.entries(values).forEach(([key, value]) => {
-        host[key] = value
-      })
-      return values
-    }
-  },
-
-  render: ({
-    language,
-
-    currency,
-    amount,
-    iban,
-    reference,
-    message,
-    messageCode,
-
-    creditorName,
-    creditorAddressLine1,
-    creditorAddressLine2,
-
-    debtorName,
-    debtorAddressLine1,
-    debtorAddressLine2,
-
-    qrCodeString,
-
-    showQRCode,
-    showAmount,
-    showReference,
-    showAdditionalInfo,
-    showDebtor,
-
-    reduceContent
-
-  }) => html`
-
+const htmlQrBill = ({
+  language,
+  currency,
+  amount,
+  iban,
+  // referenceType: "", // QUESTION: Use case? Delete if none.
+  reference,
+  message,
+  messageCode,
+  // creditorAddressType: "", // QUESTION: Use case if other than 'K'? Delete if none.
+  creditorName,
+  creditorAddressLine1,
+  creditorAddressLine2,
+  // debtorAddressType: "", // QUESTION: Use case if other than 'K'? Delete if none.
+  debtorName,
+  debtorAddressLine1,
+  debtorAddressLine2,
+  qrCodeString,
+  showQRCode,
+  showAmount,
+  showReference,
+  showAdditionalInfo,
+  showDebtor,
+  reduceContent,
+}: QrBillModel) => html`
   <div class="w-62 p-5 border-t border-r border-dashed border-black scissors-br">
 
     <div class="h-7 font-bold text-11 leading-none">${tr[language].receiptTitle}</div>
@@ -186,7 +118,8 @@ const QrBill: Component<QrBill> = {
       <div class="text-8 leading-9 mb-line-9">
         <div>${iban}</div>
         <div>${creditorName}</div>
-        ${!reduceContent && html`<div>${creditorAddressLine1}</div>`}
+        ${!reduceContent && html`
+          <div>${creditorAddressLine1}</div>`}
         <div>${creditorAddressLine2}</div>
       </div>
 
@@ -203,10 +136,11 @@ const QrBill: Component<QrBill> = {
       ${showDebtor ? html`
         <div class="text-8 leading-9">
           <div>${debtorName}</div>
-          ${!reduceContent && html`<div>${debtorAddressLine1}</div>`}
+          ${!reduceContent && html`
+            <div>${debtorAddressLine1}</div>`}
           <div>${debtorAddressLine2}</div>
         </div>
-      ` : svgBlankField(52, 20, { marginTop: ".8pt" })}
+      ` : svgBlankField(52, 20, {marginTop: ".8pt"})}
     </div>
 
     <div class="h-14 flex">
@@ -215,11 +149,11 @@ const QrBill: Component<QrBill> = {
         <div class="text-8 leading-9">${currency}</div>
       </div>
 
-      <div class=${{ "flex-grow": true, flex: !showAmount }}>
+      <div class=${{"flex-grow": true, flex: !showAmount}}>
         <div class="font-bold text-6 leading-9">${tr[language].amountHeading}</div>
         ${showAmount ?
           html`<div class="text-8 leading-9">${amount}</div>` :
-          svgBlankField(30, 10, { marginTop: "2pt", marginLeft: "4pt" })
+          svgBlankField(30, 10, {marginTop: "2pt", marginLeft: "4pt"})
         }
       </div>
     </div>
@@ -259,7 +193,7 @@ const QrBill: Component<QrBill> = {
             </div>
             <div class="flex">
               <div class="text-10 leading-11 mr-line-9">${currency}</div>
-              ${svgBlankField(40, 15, { marginTop: "1.6pt" })}
+              ${svgBlankField(40, 15, {marginTop: "1.6pt"})}
             </div>
           </div>
         `}
@@ -298,19 +232,41 @@ const QrBill: Component<QrBill> = {
             <div>${debtorAddressLine1}</div>
             <div>${debtorAddressLine2}</div>
           </div>
-        ` : svgBlankField(65, 25, { marginTop: "1.1pt" })}
+        ` : svgBlankField(65, 25, {marginTop: "1.1pt"})}
       </div>
 
     </div>
     <div class="h-10"></div>
   </div>
+`
 
+const QrBillBase = {
+  tag: "qr-bill",
+  data: { set: (host, values = {}) => values },
+}
+
+const QrBill: Component<QrBill> = {
+  ...QrBillBase,
+  render: (
+    { data},
+    error = store.error(data),
+    pending = store.pending(data),
+    ready = store.ready(data)
+  ) => html`
+    ${!(error || pending) ?
+      htmlQrBill(data) :
+      (ready && htmlQrBill(data))
+    }
   `.style(style)
 }
 
-const HybridElement = define.compile(QrBill)
+const QrBillHybridElement: HybridElement<QrBill> = define.compile({
+  ...QrBillBase,
+  render: ({ data }) => htmlQrBill(data).style(style)
+})
 
 export {
-  HybridElement,
-  QrBill
+  QrBill,
+  QrBillModel,
+  QrBillHybridElement
 }

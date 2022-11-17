@@ -1,9 +1,9 @@
-import { HybridElement, Helpers } from "@prpsake/qr-bill"
+import { QrBillHybridElement, Helpers } from "@prpsake/qr-bill"
 import "./style.css"
 
-const myQrBill: HybridElement = document.createElement("my-qr-bill")
+const myQrBill: QrBillHybridElement = document.createElement("my-qr-bill")
 
-customElements.define("my-qr-bill", HybridElement)
+customElements.define("my-qr-bill", QrBillHybridElement)
 
 fetch("/data/qr-bill-sample.json")
   .then(resp => resp.json())

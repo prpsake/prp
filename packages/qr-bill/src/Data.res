@@ -245,7 +245,7 @@ let comp: init => comp =
       ...cd,
       amount: cd.amount->Formatter.moneyFromNumberStr2,
       iban: cd.iban->Formatter.blockStr4,
-      referenceType: cd.referenceType->Formatter.referenceBlockStr,
+      reference: cd.reference->Formatter.referenceBlockStr,
       qrCodeString: qrCodeString,
       showQRCode: qrCodeString != "",
       showAmount: cd.amount != "",
