@@ -47,18 +47,15 @@ pnpm add @prpsake/qr-bill hybrids
 
 ```typescript
 // 
-import QrBill, { Data, Helpers } from "@prpsake/qr-bill"
-import { Model, define, store, html } from "hybrids"
+import QrBill, {QrBillModel, Helpers} from "@prpsake/qr-bill"
+import {type Model, define, store} from "hybrids"
 import "./style.css"
 
-interface MyApp {
-  qrBill: QrBill
-}
 
-const QrBillModel: Model<QrBill> = {
-  ...Data.compDefaults,
+const MyQrBillModel: Model<QrBillModel> = {
+  ...QrBillModel,
   [store.connect]: () =>
-    fetch("qr-bill-sample.json")
+    fetch("/data/qr-bill-sample.json")
       .then(resp => resp.json())
       .then(Helpers.compFromJson)
       .catch(console.log)
@@ -66,35 +63,26 @@ const QrBillModel: Model<QrBill> = {
 
 define({
   ...QrBill,
-  tag: "my-qr-bill"
-})
-
-define<MyApp>({
-  tag: "my-app",
-  qrBill: store(QrBillModel),
-  content: ({ qrBill }) => html`
-    ${store.ready(qrBill) && html`
-      <my-qr-bill data=${qrBill}></my-qr-bill>
-    `}
-  `
+  tag: "my-qr-bill",
+  data: store(MyQrBillModel)
 })
 ```
 
 ```html
-<my-app></my-app>
+<my-qr-bill></my-qr-bill>
 ```
 
 ### Example without hybrids
 
 ```typescript
-import { HybridElement, Helpers } from "@prpsake/qr-bill"
+import { QrBillHybridElement, Helpers } from "@prpsake/qr-bill"
 import "./style.css"
 
-const myQrBill: HybridElement = document.createElement("my-qr-bill")
+const myQrBill: QrBillHybridElement = document.createElement("my-qr-bill")
 
-customElements.define("my-qr-bill", HybridElement)
+customElements.define("my-qr-bill", QrBillHybridElement)
 
-fetch("qr-bill-sample.json")
+fetch("/data/qr-bill-sample.json")
   .then(resp => resp.json())
   .then(json => {
     myQrBill.data = Helpers.compFromJson(json)
