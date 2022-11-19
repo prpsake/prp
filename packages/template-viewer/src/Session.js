@@ -5,7 +5,7 @@ export default {
   style: "",
   useFile: false,
   file: "invoice-sample.json",
-  lang: "",
+  language: "",
   title: "",
   viewVertical: false,
   [store.connect]: {
@@ -22,7 +22,7 @@ export default {
       return values
     },
     observe: (_id, values, _lastValues) => {
-      if (values.lang) document.documentElement.lang = values.lang
+      if (values.language) document.documentElement.lang = values.language
       if (values.title) document.title =
           import.meta.env.PROD
           ? values.title

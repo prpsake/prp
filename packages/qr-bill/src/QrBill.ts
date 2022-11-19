@@ -7,8 +7,8 @@ import * as Data from "./Data.mjs"
 import style from "./style.css"
 
 interface QrBillModel extends Comp {}
-interface QrBill {
-  tag: string
+interface QrBill extends QrBillModel {
+  tag: string,
   data?: QrBillModel
 }
 
@@ -110,7 +110,6 @@ const htmlQrBill = ({
   reduceContent,
 }: QrBillModel) => html`
   <div class="w-62 p-5 border-t border-r border-dashed border-black scissors-br">
-
     <div class="h-7 font-bold text-11 leading-none">${tr[language].receiptTitle}</div>
 
     <div class="h-56">
@@ -242,7 +241,15 @@ const htmlQrBill = ({
 
 const QrBillBase = {
   tag: "qr-bill",
-  data: { set: (host, values = {}) => values },
+  ...Data.compDefaults,
+  data: {
+    set: (host, values = {}) => {
+      Object.entries(values).map(([key, value]) => {
+        host[key] = value
+      })
+      return values
+    }
+  },
 }
 
 const QrBill: Component<QrBill> = {
@@ -251,7 +258,7 @@ const QrBill: Component<QrBill> = {
     { data},
     error = store.error(data),
     pending = store.pending(data),
-    ready = store.ready(data)
+    ready = store.ready(data),
   ) => html`
     ${!(error || pending) ?
       htmlQrBill(data) :

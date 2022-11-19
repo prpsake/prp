@@ -9,9 +9,9 @@ export default ({ mode }) => {
     publicDir: "public",
     build: {
       target: "esnext",
-      minify: true,
+      minify: false,
       lib: {
-        entry: resolve(__dirname, "src/api.js"),
+        entry: resolve(__dirname, "src/index.js"),
         fileName: "index",
         formats: ["es"],
       }

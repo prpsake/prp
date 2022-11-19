@@ -8,7 +8,7 @@ interface InvoiceBase {
   subject: string
   date: string
   due: string
-  lang: string
+  language: string
   currency: string
   amount: string
   reference: string
@@ -36,7 +36,7 @@ const InvoiceBase: Model<InvoiceBase> = {
   subject: "",
   date: "",
   due: "",
-  lang: "",
+  language: "en",
   currency: "",
   amount: "",
   reference: "",

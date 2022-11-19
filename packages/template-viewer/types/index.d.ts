@@ -6,11 +6,11 @@ import {
 } from "hybrids"
 
 
-import { Data as QrBillData } from "@prpsake/qr-bill";
+import { QrBillModel } from "@prpsake/qr-bill";
 
 
 type PRPModel<M> = {
-  qrBill?: QrBillData.Comp | ((data: M) => QrBillData.Comp)
+  qrBill?: QrBillModel | ((data: M) => QrBillModel)
   connect?: Promise<any | void>
 }
 
@@ -50,22 +50,19 @@ type Template<M> = {
  *   templates: { estimate, invoice },
  *   style,
  *   tag: "my-template-viewer",
- *   tagQrBill: "my-qr-bill",
- *   previewSelector: "#my-template-view"
+ *   tagQrBill: "my-qr-bill"
  * })
  *
  * @param {Record<string, Template<unknown>>} param.templates - The template modules.
  * @param {string} param.styles - The styles for the templates.
  * @param {string} [param.tag="template-viewer"] - The tag to be used for the template-viewer custom element.
  * @param {string} [param.tagQrBill="qr-bill"] - The tag to be used for the qr-bill custom element.
- * @param {string} [param.previewSelector="#template-view"] - The selector to be used for the preview element.
  */
 export function defineWith(param: {
   templates: Record<string, Template<unknown>>
   style: string
   tag?: string
   tagQrBill?: string
-  previewSelector?: string
 }): void
 
 

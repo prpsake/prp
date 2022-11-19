@@ -18,44 +18,41 @@ if (import.meta.hot) {
   })
 }
 
-
-const App = ({
-  previewSelector,
+const TemplateViewer = ({
   pages,
   baseUrl = "",
   onFileInput,
   onFileDrop
 }) => ({
   session: store(Session),
-  class: "bottom-0 right-0 w-96 font-sans text-system-fg prp-template-viewer-app", // NB: position fixed is set in previewer#preview
   previewElm: {
     value: undefined,
     connect: (host, key) => {
-      host[key] = document.querySelector(previewSelector)
-      host[key].classList.add("relative", "overscroll-x-contain", "opacity-0", "transition-opacity", "duration-300")
-      host[key].classList.toggle("preview-sm", !host.session.viewVertical)
-
-      if (typeof onFileDrop === "function") {
-        host[key].addEventListener("dragover", e => e.preventDefault())
-        host[key].addEventListener("drop", onFileDrop(host))
-      }
-
-      const observer = new MutationObserver((mutations) => {
-        for (const mutation of mutations) {
-          if (mutation.addedNodes[0]?.tagName?.startsWith("VIEW-")) {
-            preview({ host })
-            break
-          }
+      (new MutationObserver((mutations) => {
+        for (const mutation of mutations)
+        if (mutation.addedNodes[0]?.tagName?.startsWith("VIEW-")) {
+          host[key] = host.querySelector(".template-view")
+          preview({ host })
+          break
         }
-      })
-
-      observer.observe(host, {subtree: true, childList: true})
+      }))
+      .observe(host, {subtree: true, childList: true})
     }
   },
   view: router(pages, { url: `/${baseUrl}` }),
   content: ({ session, view }) => html`
     <div class="hidden view">${view}</div>
-    <aside class="p-8">
+
+    <div
+      class=${[
+        "template-view", "relative", "overscroll-x-contain", "opacity-100", "transition-opacity", "duration-300",
+        session.viewVertical ? "" : "preview-sm"
+      ]}
+      onDragOver=${e => e.preventDefault()}
+      onDrop=${onFileDrop}>
+    </div>
+
+    <aside class="fixed bottom-0 right-0 p-8 w-96 font-sans text-system-fg prp-template-viewer-app">
       <div class="flex flex-col items-end">
         <div>
           <ul class="text-right">
@@ -117,13 +114,8 @@ export function defineWith({
   templates,
   style,
   tag = "template-viewer",
-  tagQrBill = "qr-bill",
-  previewSelector = "#template-view"
+  tagQrBill = "qr-bill"
 }) {
-  if (!(typeof tag === "string" && typeof previewSelector === "string")) {
-    return
-  }
-
   if (typeof tagQrBill === "string") {
     define({
       ...QrBill,
@@ -137,8 +129,7 @@ export function defineWith({
 
     define({
       tag,
-      ...(App({
-        previewSelector,
+      ...(TemplateViewer({
         baseUrl: Object.keys(templates)[0],
         pages: viewsFromTemplates({ templates: templatesConnected }),
         onFileInput: onFileInputFn({ templates: templatesConnected }),
@@ -150,11 +141,9 @@ export function defineWith({
 
 
 function onFileDropFn ({ templates }) {
-  return function onFileDropFn_ (host) {
-    return function onFileDrop (e) {
-      e.preventDefault()
-      readTemplateJsonData({ host, e, templates })
-    }
+  return function onFileDrop (host, e) {
+    e.preventDefault()
+    readTemplateJsonData({ host, e, templates })
   }
 }
 

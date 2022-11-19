@@ -1,5 +1,5 @@
 import QrBill, {QrBillModel, Helpers} from "@prpsake/qr-bill"
-import { type Model, define, store } from "hybrids"
+import { type Model, define, store, html } from "hybrids"
 import "./style.css"
 
 
