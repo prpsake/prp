@@ -1,4 +1,4 @@
-import { QrBillHybridElement, Helpers } from "@prpsake/qr-bill"
+import {QrBillHybridElement, Helpers} from "@prpsake/qr-bill"
 import "./style.css"
 
 const myQrBill: QrBillHybridElement = document.querySelector("my-qr-bill")

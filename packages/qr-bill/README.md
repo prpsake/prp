@@ -46,9 +46,8 @@ pnpm add @prpsake/qr-bill hybrids
 ### Example with [hybrids](https://hybrids.js.org)
 
 ```typescript
-// 
-import QrBill, {QrBillModel, Helpers} from "@prpsake/qr-bill"
-import {type Model, define, store} from "hybrids"
+import {QrBill, QrBillModel, Helpers} from "@prpsake/qr-bill"
+import {type Model, define, store, html} from "hybrids"
 import "./style.css"
 
 
@@ -61,10 +60,12 @@ const MyQrBillModel: Model<QrBillModel> = {
       .catch(console.log)
 }
 
-define({
-  ...QrBill,
+define<QrBill>({
   tag: "my-qr-bill",
-  data: store(MyQrBillModel)
+  data: store(MyQrBillModel),
+  render: ({ data }) => html`
+    ${store.ready(data) && QrBill.render(data)}
+  `
 })
 ```
 

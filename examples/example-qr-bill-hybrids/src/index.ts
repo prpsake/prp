@@ -1,5 +1,5 @@
-import QrBill, {QrBillModel, Helpers} from "@prpsake/qr-bill"
-import {type Model, define, store} from "hybrids"
+import {QrBill, QrBillModel, Helpers} from "@prpsake/qr-bill"
+import {type Model, define, store, html} from "hybrids"
 import "./style.css"
 
 
@@ -12,19 +12,10 @@ const MyQrBillModel: Model<QrBillModel> = {
       .catch(console.log)
 }
 
-define({
-  ...QrBill,
+define<QrBill>({
   tag: "my-qr-bill",
-  data: {
-    value: undefined,
-    connect: host => {
-      store
-      .resolve(MyQrBillModel)
-      .then(data => {
-        Object.entries(data).map(([key, value]) => {
-          host[key] = value
-        })
-      })
-    }
-  }
+  data: store(MyQrBillModel),
+  render: ({ data }) => html`
+    ${store.ready(data) && QrBill.render(data)}
+  `
 })

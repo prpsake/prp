@@ -7,7 +7,7 @@ export default ({ mode }) => defineConfig({
     publicDir: "public",
     build: {
       target: "esnext",
-      minify: false, // "esbuild"
+      minify: true,
       rollupOptions: {
         external: ["hybrids"]
       },

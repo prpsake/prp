@@ -1,12 +1,10 @@
 import styleApp from "./style.css"
-
-import { store, define, router, html } from "hybrids"
-import QrBill from "@prpsake/qr-bill"
-import { BlobReader } from "@prpsake/utils"
-
+import {store, define, router, html} from "hybrids"
+import {QrBill} from "@prpsake/qr-bill"
+import {BlobReader} from "@prpsake/utils"
+import {preview} from "./Paginator.js"
+import {modelsFromTemplates, viewsFromTemplates} from "./Helpers"
 import Session from "./Session.js"
-import { preview } from "./Paginator.js"
-import { modelsFromTemplates, viewsFromTemplates } from "./Helpers";
 
 
 if (import.meta.env.EXP_ROUTER_DEBUG) router.debug()

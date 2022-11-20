@@ -1,6 +1,6 @@
 import type { Comp } from "../types/Data"
 
-import {html, define, Descriptor, Component, Model, HybridElement} from "hybrids"
+import {html, define, Component, Model, HybridElement} from "hybrids"
 import {translations as tr} from "./Translations.mjs"
 import * as QRCode from "./QRCode.mjs"
 import * as Data from "./Data.mjs"
@@ -9,8 +9,7 @@ import style from "./style.css"
 interface QrBillModel extends Comp {}
 interface QrBill extends QrBillModel {
   tag: string,
-  data?: QrBillModel,
-  //store?: Descriptor<QrBill, QrBillModel extends {id: any} ? (QrBillModel | undefined) : QrBillModel>
+  data: QrBillModel,
 }
 
 const QrBillModel: Model<QrBillModel> = Data.compDefaults
@@ -248,8 +247,8 @@ const QrBill: Component<QrBill> = {
 
     </div>
     <div class="h-10"></div>
-  </div>
-`.style(style)}
+  </div>`.style(style)
+}
 
 const QrBillHybridElement: HybridElement<QrBill> = define.compile(QrBill)
 
