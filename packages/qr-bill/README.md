@@ -2,13 +2,14 @@
 
 > Swiss QR-Bill Web Component
 
-This package contains a swiss qr-bill web component. It is primarily created for use in the @prpsake/template-viewer package, but can also be used standalone.
+This package contains a swiss qr-bill web component. Intended primarily for the @prpsake/template-viewer package, it can also be used independently.
 
 ![@prpsake-example-qr-bill-1](https://user-images.githubusercontent.com/22403007/202928330-53dbb68a-443c-4f1e-8fd8-593315cab572.png)
 
 ## Installation
 
 Replace `pnpm` with `npm` or `yarn` as you wish.
+The `@prpsake/qr-bill` package needs [`hybrids`](https://hybrids.js.org), even if you don't use hybrids directly.
 ```bash
 pnpm add @prpsake/qr-bill hybrids
 ```
