@@ -77,7 +77,7 @@ define<QrBill>({
 <my-qr-bill></my-qr-bill>
 ```
 
-The imported stylesheet (`import "./style.css"`) is not part of the package. It is shown here to refer to the additional styles used in the full example mentioned above. They handle a few reset, component positioning, page and print styles, respectively some screen-only-styles. See [here](https://github.com/prpsake/prp/blob/main/examples/example-qr-bill-hybrids/src/style.css).
+The imported stylesheet (`import "./style.css"`) is not part of the package. It is shown here to refer to the additional styles used in the full example mentioned above. it contains a few reset, component positioning, page and print styles, respectively some screen-only-styles. See [here](https://github.com/prpsake/prp/blob/main/examples/example-qr-bill-hybrids/src/style.css).
 
 ### Example without hybrids
 
