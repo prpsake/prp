@@ -1,6 +1,6 @@
 import type { Comp } from "../types/Data"
 
-import {html, define, store, Component, Model, HybridElement} from "hybrids"
+import {html, define, Descriptor, Component, Model, HybridElement} from "hybrids"
 import {translations as tr} from "./Translations.mjs"
 import * as QRCode from "./QRCode.mjs"
 import * as Data from "./Data.mjs"
@@ -9,7 +9,8 @@ import style from "./style.css"
 interface QrBillModel extends Comp {}
 interface QrBill extends QrBillModel {
   tag: string,
-  data?: QrBillModel
+  data?: QrBillModel,
+  //store?: Descriptor<QrBill, QrBillModel extends {id: any} ? (QrBillModel | undefined) : QrBillModel>
 }
 
 const QrBillModel: Model<QrBillModel> = Data.compDefaults
@@ -84,31 +85,42 @@ const svgQRCode =
       d="M328.37,241.63L241.63,241.63L241.63,328.37L328.37,328.37L328.37,241.63ZM325.069,244.931L244.931,244.931L244.931,325.069L325.069,325.069L325.069,244.931ZM293.014,275.572L293.014,257.187L277.458,257.187L277.458,275.572L259.073,275.572L259.073,291.128L277.458,291.128L277.458,309.041L293.014,309.041L293.014,291.128L310.927,291.128L310.927,275.572L293.014,275.572Z"/>
   </svg>`
 
-const htmlQrBill = ({
-  language,
-  currency,
-  amount,
-  iban,
-  // referenceType: "", // QUESTION: Use case? Delete if none.
-  reference,
-  message,
-  messageCode,
-  // creditorAddressType: "", // QUESTION: Use case if other than 'K'? Delete if none.
-  creditorName,
-  creditorAddressLine1,
-  creditorAddressLine2,
-  // debtorAddressType: "", // QUESTION: Use case if other than 'K'? Delete if none.
-  debtorName,
-  debtorAddressLine1,
-  debtorAddressLine2,
-  qrCodeString,
-  showQRCode,
-  showAmount,
-  showReference,
-  showAdditionalInfo,
-  showDebtor,
-  reduceContent,
-}: QrBillModel) => html`
+const QrBill: Component<QrBill> = {
+  tag: "qr-bill",
+  ...Data.compDefaults,
+  data: {
+    set: (host, values = {}) => {
+      Object.entries(values).map(([key, value]) => {
+        host[key] = value
+      })
+      return values
+    }
+  },
+  render: ({
+   language,
+   currency,
+   amount,
+   iban,
+   // referenceType: "", // QUESTION: Use case? Delete if none.
+   reference,
+   message,
+   messageCode,
+   // creditorAddressType: "", // QUESTION: Use case if other than 'K'? Delete if none.
+   creditorName,
+   creditorAddressLine1,
+   creditorAddressLine2,
+   // debtorAddressType: "", // QUESTION: Use case if other than 'K'? Delete if none.
+   debtorName,
+   debtorAddressLine1,
+   debtorAddressLine2,
+   qrCodeString,
+   showQRCode,
+   showAmount,
+   showReference,
+   showAdditionalInfo,
+   showDebtor,
+   reduceContent,
+ }: QrBillModel) => html`
   <div class="w-62 p-5 border-t border-r border-dashed border-black scissors-br">
     <div class="h-7 font-bold text-11 leading-none">${tr[language].receiptTitle}</div>
 
@@ -237,40 +249,9 @@ const htmlQrBill = ({
     </div>
     <div class="h-10"></div>
   </div>
-`
+`.style(style)}
 
-const QrBillBase = {
-  tag: "qr-bill",
-  ...Data.compDefaults,
-  data: {
-    set: (host, values = {}) => {
-      Object.entries(values).map(([key, value]) => {
-        host[key] = value
-      })
-      return values
-    }
-  },
-}
-
-const QrBill: Component<QrBill> = {
-  ...QrBillBase,
-  render: (
-    { data},
-    error = store.error(data),
-    pending = store.pending(data),
-    ready = store.ready(data),
-  ) => html`
-    ${!(error || pending) ?
-      htmlQrBill(data) :
-      (ready && htmlQrBill(data))
-    }
-  `.style(style)
-}
-
-const QrBillHybridElement: HybridElement<QrBill> = define.compile({
-  ...QrBillBase,
-  render: ({ data }) => htmlQrBill(data).style(style)
-})
+const QrBillHybridElement: HybridElement<QrBill> = define.compile(QrBill)
 
 export {
   QrBill,

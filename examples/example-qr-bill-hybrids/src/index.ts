@@ -1,5 +1,5 @@
 import QrBill, {QrBillModel, Helpers} from "@prpsake/qr-bill"
-import { type Model, define, store, html } from "hybrids"
+import {type Model, define, store} from "hybrids"
 import "./style.css"
 
 
@@ -15,5 +15,16 @@ const MyQrBillModel: Model<QrBillModel> = {
 define({
   ...QrBill,
   tag: "my-qr-bill",
-  data: store(MyQrBillModel)
+  data: {
+    value: undefined,
+    connect: host => {
+      store
+      .resolve(MyQrBillModel)
+      .then(data => {
+        Object.entries(data).map(([key, value]) => {
+          host[key] = value
+        })
+      })
+    }
+  }
 })

@@ -48,8 +48,8 @@ const TemplateViewer = ({
         "template-view", "relative", "overscroll-x-contain", "opacity-100", "transition-opacity", "duration-300",
         session.viewVertical ? "" : "preview-sm"
       ]}
-      onDragOver=${e => e.preventDefault()}
-      onDrop=${onFileDrop}>
+      ondragover=${e => e.preventDefault()}
+      ondrop=${onFileDrop}>
     </div>
 
     <aside class="fixed bottom-0 right-0 p-8 w-96 font-sans text-system-fg prp-template-viewer-app">
