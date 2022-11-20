@@ -29,32 +29,27 @@ const svgBlankField = (width = 3, height = 3, styles = {}) =>
       width: `${width}mm`,
       height: `${height}mm`,
       ...styles,
-    }}
-  >
+    }}>
     <path
       shape-rendering="crispEdges"
       vector-effect="non-scaling-stroke"
       stroke-width="1"
-      d="M 3,0 h -3 v 3"
-    />
+      d="M 3,0 h -3 v 3" />
     <path
       shape-rendering="crispEdges"
       vector-effect="non-scaling-stroke"
       stroke-width="1"
-      d="M ${width - 3},0 h 3 v 3"
-    />
+      d="M ${width - 3},0 h 3 v 3" />
     <path
       shape-rendering="crispEdges"
       vector-effect="non-scaling-stroke"
       stroke-width="1"
-      d="M 3,${height} h -3 v -3"
-    />
+      d="M 3,${height} h -3 v -3" />
     <path
       shape-rendering="crispEdges"
       vector-effect="non-scaling-stroke"
       stroke-width="1"
-      d="M ${width - 3},${height} h 3 v -3"
-    />
+      d="M ${width - 3},${height} h 3 v -3" />
   </svg>`;
 
 const svgQRCode = (str) =>
@@ -62,8 +57,7 @@ const svgQRCode = (str) =>
     width="100%"
     height="100%"
     viewBox="0 0 570 570"
-    class="block text-black fill-current"
-  >
+    class="block text-black fill-current">
     <path
       x="0"
       y="0"
@@ -73,15 +67,13 @@ const svgQRCode = (str) =>
         width: 570,
         height: 570,
         padding: 0,
-      })}"
-    />
+      })}" />
     <rect x="245" y="245" width="80" height="80" />
     <path
       fill="#fff"
       fill-rule="evenodd"
       shape-rendering="crispEdges"
-      d="M328.37,241.63L241.63,241.63L241.63,328.37L328.37,328.37L328.37,241.63ZM325.069,244.931L244.931,244.931L244.931,325.069L325.069,325.069L325.069,244.931ZM293.014,275.572L293.014,257.187L277.458,257.187L277.458,275.572L259.073,275.572L259.073,291.128L277.458,291.128L277.458,309.041L293.014,309.041L293.014,291.128L310.927,291.128L310.927,275.572L293.014,275.572Z"
-    />
+      d="M328.37,241.63L241.63,241.63L241.63,328.37L328.37,328.37L328.37,241.63ZM325.069,244.931L244.931,244.931L244.931,325.069L325.069,325.069L325.069,244.931ZM293.014,275.572L293.014,257.187L277.458,257.187L277.458,275.572L259.073,275.572L259.073,291.128L277.458,291.128L277.458,309.041L293.014,309.041L293.014,291.128L310.927,291.128L310.927,275.572L293.014,275.572Z" />
   </svg>`;
 
 const QrBill: Component<QrBill> = {
@@ -121,8 +113,7 @@ const QrBill: Component<QrBill> = {
     reduceContent,
   }: QrBillModel) =>
     html` <div
-        class="w-62 p-5 border-t border-r border-dashed border-black scissors-br"
-      >
+        class="w-62 p-5 border-t border-r border-dashed border-black scissors-br">
         <div class="h-7 font-bold text-11 leading-none">
           ${tr[language].receiptTitle}
         </div>
