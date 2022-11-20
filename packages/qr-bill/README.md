@@ -4,6 +4,8 @@
 
 This package contains a swiss qr-bill web component. It is primarily created for use in the @prpsake/template-viewer package, but can also be used standalone.
 
+![](../../../../../Desktop/@prpsake-example-qr-bill-1.png)
+
 ## Installation
 
 Replace `pnpm` with `npm` or `yarn` as you wish.
