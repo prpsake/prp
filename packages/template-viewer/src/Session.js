@@ -1,5 +1,4 @@
-import { store } from "hybrids"
-
+import {store} from "hybrids";
 
 export default {
   style: "",
@@ -11,22 +10,22 @@ export default {
   [store.connect]: {
     get: () => {
       if (sessionStorage.getItem("prp:template:session")) {
-        const jsonString = sessionStorage.getItem("prp:template:session")
-        return JSON.parse(jsonString)
+        const jsonString = sessionStorage.getItem("prp:template:session");
+        return JSON.parse(jsonString);
       }
-      return {}
+      return {};
     },
     set: (_id, values, _keys) => {
-      const jsonString = JSON.stringify(values)
-      sessionStorage.setItem("prp:template:session", jsonString)
-      return values
+      const jsonString = JSON.stringify(values);
+      sessionStorage.setItem("prp:template:session", jsonString);
+      return values;
     },
     observe: (_id, values, _lastValues) => {
-      if (values.language) document.documentElement.lang = values.language
-      if (values.title) document.title =
-          import.meta.env.PROD
+      if (values.language) document.documentElement.lang = values.language;
+      if (values.title)
+        document.title = import.meta.env.PROD
           ? values.title
-          : `[${import.meta.env.MODE.toUpperCase()}] ${values.title}`
-    }
-  }
-}
+          : `[${import.meta.env.MODE.toUpperCase()}] ${values.title}`;
+    },
+  },
+};

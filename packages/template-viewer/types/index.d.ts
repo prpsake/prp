@@ -2,28 +2,27 @@ import {
   type Model as HybridsModel,
   type UpdateFunctionWithMethods,
   html as hybridsHtml,
-  svg as hybridsSvg
-} from "hybrids"
+  svg as hybridsSvg,
+} from "hybrids";
 
-
-import { QrBillModel } from "@prpsake/qr-bill";
-
+import {QrBillModel} from "@prpsake/qr-bill";
 
 type PRPModel<M> = {
-  qrBill?: QrBillModel | ((data: M) => QrBillModel)
-  connect?: Promise<any | void>
-}
+  qrBill?: QrBillModel | ((data: M) => QrBillModel);
+  connect?: Promise<any | void>;
+};
 
-
-export type Model<M> = HybridsModel<M> & PRPModel<M>
-export type View<M> = ({data}: { data: Omit<M & PRPModel<M>, "connect"> }) => UpdateFunctionWithMethods<any>
-
+export type Model<M> = HybridsModel<M> & PRPModel<M>;
+export type View<M> = ({
+  data,
+}: {
+  data: Omit<M & PRPModel<M>, "connect">;
+}) => UpdateFunctionWithMethods<any>;
 
 type Template<M> = {
-  model: Model<M>,
-  view: View<M>
-}
-
+  model: Model<M>;
+  view: View<M>;
+};
 
 /**
  * Register the template-viewer custom element with template modules and their styles.
@@ -59,12 +58,11 @@ type Template<M> = {
  * @param {string} [param.tagQrBill="qr-bill"] - The tag to be used for the qr-bill custom element.
  */
 export function defineWith(param: {
-  templates: Record<string, Template<unknown>>
-  style: string
-  tag?: string
-  tagQrBill?: string
-}): void
-
+  templates: Record<string, Template<unknown>>;
+  style: string;
+  tag?: string;
+  tagQrBill?: string;
+}): void;
 
 /**
  * Define a html template.
@@ -82,8 +80,7 @@ export function defineWith(param: {
  * @param {...unknown} args
  * @return {UpdateFunctionWithMethods<E>}
  */
-export const html: typeof hybridsHtml
-
+export const html: typeof hybridsHtml;
 
 /**
  * Define a svg template. Use the svg tag function for svg child elements with dynamic content.
@@ -105,7 +102,6 @@ export const html: typeof hybridsHtml
  * @param {...unknown} args
  * @return {UpdateFunctionWithMethods<E>}
  */
-export const svg: typeof hybridsSvg
+export const svg: typeof hybridsSvg;
 
-
-export * from "@prpsake/qr-bill"
+export * from "@prpsake/qr-bill";

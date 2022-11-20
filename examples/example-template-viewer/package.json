@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo run example template viewer test && exit 0",
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "lint": "eslint . --ext .ts,.tsx"
   },
   "keywords": [],
   "author": "",

@@ -4,8 +4,7 @@
  * @param {string} str - A string
  * @return {string} - The string without whitespace
  */
-export function removeWhitespace(str: string): string
-
+export function removeWhitespace(str: string): string;
 
 /**
  * Format a string into space-separated groups of maximal 3 visible chars from the left.
@@ -18,8 +17,7 @@ export function removeWhitespace(str: string): string
  * @param {string} str - A string.
  * @return {string} - The string without whitespace.
  */
-export function blockStr3(str: string): string
-
+export function blockStr3(str: string): string;
 
 /**
  * Format a string into space-separated groups of maximal 4 visible chars from the left.
@@ -32,8 +30,7 @@ export function blockStr3(str: string): string
  * @param {string} str - A string.
  * @return {string} - The formatted string.
  */
-export function blockStr4(str: string): string
-
+export function blockStr4(str: string): string;
 
 /**
  * Format a string into space-separated groups of maximal 5 visible chars from the left.
@@ -46,11 +43,8 @@ export function blockStr4(str: string): string
  * @param {string} str - A string.
  * @return {string} - The formatted string.
  */
-export function blockStr5(str: string): string
+export function blockStr5(str: string): string;
 
+export function referenceBlockStr(str: string): string;
 
-export function referenceBlockStr(str: string): string
-
-
-export function moneyFromNumberStr2(str: string): string
-
+export function moneyFromNumberStr2(str: string): string;

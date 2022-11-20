@@ -1,4 +1,4 @@
-import {html, Model, View} from "@prpsake/template-viewer"
+import {type Model, type View, html} from "@prpsake/template-viewer"
 import InvoiceBase from "../models/InvoiceBase"
 
 

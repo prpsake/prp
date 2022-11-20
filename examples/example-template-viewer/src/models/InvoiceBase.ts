@@ -1,4 +1,4 @@
-import {Model} from "@prpsake/template-viewer";
+import {type Model} from "@prpsake/template-viewer";
 import Party from "./Party";
 
 

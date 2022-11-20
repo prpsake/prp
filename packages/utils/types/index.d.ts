@@ -1,2 +1,2 @@
-export * as BlobReader from "./BlobReader"
-export * as Obj from "./Obj"
+export * as BlobReader from "./BlobReader";
+export * as Obj from "./Obj";
