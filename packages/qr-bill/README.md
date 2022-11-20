@@ -47,6 +47,7 @@ pnpm add @prpsake/qr-bill hybrids
 ```
 
 ### Example with [hybrids](https://hybrids.js.org)
+You can find the full example in the [examples/example-qr-bill-hybrids](https://github.com/prpsake/prp/tree/main/examples/example-qr-bill-hybrids) folder of this repo.
 
 ```typescript
 import {QrBill, QrBillModel, Helpers} from "@prpsake/qr-bill"
@@ -75,6 +76,8 @@ define<QrBill>({
 ```html
 <my-qr-bill></my-qr-bill>
 ```
+
+The imported stylesheet (`import "./style.css"`) is not part of the package. It is shown here to refer to the additional styles used in the full example mentioned above. They handle a few reset, component positioning, page and print styles, respectively some screen-only-styles. See [here](https://github.com/prpsake/prp/blob/main/examples/example-qr-bill-hybrids/src/style.css).
 
 ### Example without hybrids
 
