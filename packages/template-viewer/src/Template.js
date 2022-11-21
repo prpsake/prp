@@ -1,6 +1,5 @@
 import {define, html, router, store} from "hybrids";
 import {Obj} from "@prpsake/utils";
-
 import Session from "./Session";
 
 export function modelsFromTemplates({templates}) {
@@ -37,7 +36,10 @@ export const viewsFromTemplates = ({templates}) => {
       tag: "view-" + key,
       data: store(template.model),
       session: store(Session),
-      render: ({data, session}) => (store.ready(data) && store.ready(session) ? template.view({data}) : html``),
+      render: ({data, session}) =>
+        store.ready(data) && store.ready(session)
+          ? template.view({data})
+          : html``,
     });
   });
 };
