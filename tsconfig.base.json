@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "core": ["packages/core/src/index.js"],
       "qr-bill": ["packages/qr-bill/src/index.ts"],
       "template-viewer": ["packages/template-viewer/src/index.ts"]
     }

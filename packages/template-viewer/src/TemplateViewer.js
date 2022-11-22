@@ -1,9 +1,10 @@
 import styleApp from "./style.css";
 import {store, define, router, html} from "hybrids";
 import {QrBill} from "@prpsake/qr-bill";
-import {BlobReader} from "@prpsake/utils";
+import {PRP} from "@prpsake/core";
+import {connect} from "./Model.js";
+import {defineWith as defineViewWith} from "./View.js";
 import {preview} from "./Paginator.js";
-import {modelsFromTemplates, viewsFromTemplates} from "./Template.js";
 import Session from "./Session.js";
 
 if (import.meta.env.EXP_ROUTER_DEBUG) router.debug();
@@ -15,15 +16,19 @@ if (import.meta.hot) {
   });
 }
 
-const TemplateViewer = ({pages, baseUrl = "", onFileInput, onFileDrop}) => ({
+const TemplateViewer = ({views, baseUrl = "", onFileInput, onFileDrop}) => ({
   session: store(Session),
   previewElm: {
     value: undefined,
     connect: (host, key) => {
+      // NB(22.11.22): Currently this mutation observer not only handles the
+      // initial preview, but also successive previews via nav-link, which
+      // is not super obvious. For the latter, successive previews might be
+      // handled via click-event in the future.
       new MutationObserver((mutations, observer) => {
         for (const mutation of mutations)
           if (mutation.addedNodes[0]?.tagName?.startsWith("VIEW-")) {
-            observer.disconnect();
+            //observer.disconnect();
             host[key] = host.querySelector(".template-view");
             preview({host});
             break;
@@ -32,7 +37,7 @@ const TemplateViewer = ({pages, baseUrl = "", onFileInput, onFileDrop}) => ({
     },
   },
 
-  view: router(pages, {url: `/${baseUrl}`}),
+  view: router(views, {url: `/${baseUrl}`}),
   content: ({session, view}) =>
     html`
       <div class="hidden view">${view}</div>
@@ -55,14 +60,14 @@ const TemplateViewer = ({pages, baseUrl = "", onFileInput, onFileDrop}) => ({
         <div class="flex flex-col items-end">
           <div>
             <ul class="text-right">
-              ${pages.map(
-                (page) => html`
+              ${views.map(
+                (v) => html`
                   <li class="mb-2">
                     <a
                       class="inline-block px-2 py-1 drop-shadow-sm rounded-md bg-action-bg hover:bg-action-hover-bg font-light text-sm text-gray-200 select-none"
-                      href="${router.url(page)}"
-                      >${page[router.connect].url.substring(1)}</a
-                    >
+                      href="${router.url(v)}">
+                      ${v[router.connect].url.substring(1)}
+                    </a>
                   </li>
                 `,
               )}
@@ -136,13 +141,24 @@ export function defineWith({
   }
 
   store.set(Session, {style}).then(() => {
-    const templatesConnected = modelsFromTemplates({templates});
+    const templatesConnected = PRP.Object.map(
+      templates,
+      ([key, {view, model}]) => [
+        key,
+        {
+          view,
+          model: connect(model),
+        },
+      ],
+    );
 
     define({
       tag,
       ...TemplateViewer({
         baseUrl: Object.keys(templates)[0],
-        pages: viewsFromTemplates({templates: templatesConnected}),
+        views: Object.entries(templatesConnected).map(([key, {view, model}]) =>
+          defineViewWith({key, view, model}),
+        ),
         onFileInput: onFileInputFn({templates: templatesConnected}),
         onFileDrop: onFileDropFn({templates: templatesConnected}),
       }),
@@ -171,7 +187,7 @@ function toggleMode(host, _e) {
 }
 
 function readTemplateJsonData({host, e, templates}) {
-  BlobReader.readFileAsText({
+  PRP.FileReader.readFileAsText({
     e,
     onLoad: ({result, file}) => {
       try {

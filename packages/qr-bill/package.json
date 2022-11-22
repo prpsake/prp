@@ -22,7 +22,7 @@
     "release": "pnpm publish --no-git-checks"
   },
   "devDependencies": {
-    "@prpsake/utils": "*"
+    "@prpsake/core": "*"
   },
   "optionalDependencies": {
     "hybrids": "^8.1.5"

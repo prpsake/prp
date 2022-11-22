@@ -1,5 +1,6 @@
 {
-  "name": "qr-bill",
+  "name": "@prpsake/qr-bill",
+  "namespace": true,
   "sources": [
     {
       "dir": "src",
@@ -13,5 +14,5 @@
     }
   ],
   "suffix": ".mjs",
-  "bs-dependencies": ["@prpsake/utils"]
+  "bs-dependencies": ["@prpsake/core"]
 }

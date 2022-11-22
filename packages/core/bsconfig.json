@@ -1,5 +1,6 @@
 {
-  "name": "@prpsake/utils",
+  "name": "@prpsake/core",
+  "namespace": true,
   "sources": [
     {
       "dir": "src",

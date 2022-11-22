@@ -1,5 +1,4 @@
 import type {Comp} from "../types/Data";
-
 import {html, define, Component, Model, HybridElement} from "hybrids";
 import {translations as tr} from "./Translations.mjs";
 import * as QRCode from "./QRCode.mjs";
@@ -68,7 +67,11 @@ const svgQRCode = (str) =>
         height: 570,
         padding: 0,
       })}" />
-    <rect x="245" y="245" width="80" height="80" />
+    <rect
+      x="245"
+      y="245"
+      width="80"
+      height="80" />
     <path
       fill="#fff"
       fill-rule="evenodd"
