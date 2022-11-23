@@ -1,7 +1,7 @@
 import styleApp from "./style.css";
 import {store, define, router, html} from "hybrids";
 import {QrBill} from "@prpsake/qr-bill";
-import {PRP} from "@prpsake/core";
+import {Webapi} from "@prpsake/core";
 import {connect} from "./Model.js";
 import {defineWith as defineViewWith} from "./View.js";
 import {preview} from "./Paginator.js";
@@ -141,7 +141,7 @@ export function defineWith({
   }
 
   store.set(Session, {style}).then(() => {
-    const templatesConnected = PRP.Object.map(
+    const templatesConnected = Webapi.Object.map(
       templates,
       ([key, {view, model}]) => [
         key,
@@ -187,7 +187,7 @@ function toggleMode(host, _e) {
 }
 
 function readTemplateJsonData({host, e, templates}) {
-  PRP.FileReader.readFileAsText({
+  Webapi.FileReader.readFileAsText({
     e,
     onLoad: ({result, file}) => {
       try {

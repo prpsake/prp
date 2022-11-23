@@ -1,5 +1,5 @@
 import {store} from "hybrids";
-import {PRP} from "@prpsake/core";
+import {Webapi} from "@prpsake/core";
 import Session from "./Session.js";
 
 // NB(21.11.22): typing: there exist models with or without store connect symbol
@@ -7,7 +7,7 @@ import Session from "./Session.js";
 export function connect(model) {
   return {
     templates: [""],
-    ...PRP.Object.omitProp(model, "connect"),
+    ...Webapi.Object.omitProp(model, "connect"),
     [store.connect]: {
       offline: true,
       set: (_id, values) => values,
