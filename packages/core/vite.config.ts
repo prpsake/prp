@@ -9,7 +9,7 @@ export default ({mode}) => {
       target: "esnext",
       minify: true,
       lib: {
-        entry: resolve(__dirname, "src/index.js"),
+        entry: resolve(__dirname, "src/index.ts"),
         fileName: "index",
         formats: ["es"],
       },

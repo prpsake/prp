@@ -5,6 +5,7 @@
 /lib/
 /src/**/*.bs.js
 /src/**/*.mjs
+/src/**/*.gen.ts
 .bsb.lock
 .merlin
 
