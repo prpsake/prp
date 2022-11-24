@@ -181,9 +181,7 @@ function onFileInputFn({templates}) {
 
 function toggleMode(host, _e) {
   const {viewVertical} = store.get(Session);
-  store.set(Session, {viewVertical: !viewVertical}).then((session) => {
-    host.previewElm.classList.toggle("preview-sm", !session.viewVertical);
-  });
+  store.set(Session, {viewVertical: !viewVertical});
 }
 
 function readTemplateJsonData({host, e, templates}) {

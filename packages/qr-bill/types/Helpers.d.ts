@@ -1,9 +1,9 @@
-import {Comp} from "./Data";
+import {QrBillModel} from "../src";
 
 /**
  * Parse, validate and transform the data for the component.
  *
  * @param {string | Record<string, any>} x - The data.
- * @return {Comp} - The transformed data for the component.
+ * @return {QrBillModel} - The transformed data for the component.
  */
-export function compFromJson(x: string | Record<string, any>): Comp;
+export function jsonToQrBillModel(x: string | Record<string, any>): QrBillModel;

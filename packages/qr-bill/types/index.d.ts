@@ -6,4 +6,4 @@ export * as Validator from "./Validator";
 export * as Formatter from "./Formatter";
 export * as Data from "./Data";
 export * as QRCode from "./QRCode";
-export * as Helpers from "./Helpers";
+export * from "./Helpers";
