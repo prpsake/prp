@@ -38,11 +38,11 @@ type init = {
 }
 
 type compAddress = {
-  addressType: string,
-  name: string,
-  addressLine1: string,
-  addressLine2: string,
-  countryCode: string,
+  addressType: opt<string>,
+  name: opt<string>,
+  addressLine1: opt<string>,
+  addressLine2: opt<string>,
+  countryCode: opt<string>,
 }
 
 type comp = {
@@ -71,6 +71,7 @@ type comp = {
   showAdditionalInfo: bool,
   showReference: bool,
   reduceContent: bool,
+  error: array<optErr<string>>
 }
 
 let initAddressDefaults: initAddress = {
@@ -123,14 +124,13 @@ let compDefaults: comp = {
   showAdditionalInfo: false,
   showReference: false,
   reduceContent: false,
+  error: []
 }
 
 let fold: opt<string> => string = o =>
   switch o {
-  | User({val}) => val
-  | Default({val}) => val
-  | Error(_) => ""
-  | None => ""
+  | User({val}) | Default({val}) => val
+  | Error(_) | None => ""
   }
 
 let concat: (. opt<string>, opt<string>, string, string) => opt<string> =
@@ -219,38 +219,18 @@ let compAddress: opt<initAddress> => compAddress =
   | _ => initAddressDefaults
   }->ad => {
     let addressLine1 = switch ad.postOfficeBox {
-    | User({val}) => val
-    | _ => (ad.street->fold ++ " " ++ ad.streetNumber->fold)->Js.String2.trim
+    | User(_) => ad.postOfficeBox
+    | _ => concat(. ad.street, ad.streetNumber, "addressLine1", " ")
     }
 
-    let addressLine2 = (ad.postalCode->fold ++ " " ++ ad.locality->fold)->Js.String2.trim
+    let addressLine2 = concat(. ad.postalCode, ad.locality, "addressLine2", " ")
+
     {
-      addressType: "K",
-      name: ad.name->fold,
+      addressType: Default({key: "addressType", val: "K"}),
+      name: ad.name,
       addressLine1: addressLine1,
       addressLine2: addressLine2,
-      countryCode: ad.countryCode->fold
-    }
-  }
-
-let compAddress_: opt<initAddress> => compAddress =
-  d =>
-  switch d {
-  | User({val}) => val
-  | _ => initAddressDefaults
-  }->ad => {
-    let addressLine1 = switch ad.postOfficeBox {
-    | User({val}) => val
-    | _ => (ad.street->fold ++ " " ++ ad.streetNumber->fold)->Js.String2.trim
-    }
-
-    let addressLine2 = (ad.postalCode->fold ++ " " ++ ad.locality->fold)->Js.String2.trim
-    {
-      addressType: "K",
-      name: ad.name->fold,
-      addressLine1: addressLine1,
-      addressLine2: addressLine2,
-      countryCode: ad.countryCode->fold
+      countryCode: ad.countryCode
     }
   }
 
@@ -270,16 +250,16 @@ let comp: init => comp =
       reference: d.reference->fold,
       message: d.message->fold,
       messageCode: d.messageCode->fold,
-      creditorAddressType: creditor.addressType,
-      creditorName: creditor.name,
-      creditorAddressLine1: creditor.addressLine1,
-      creditorAddressLine2: creditor.addressLine2,
-      creditorCountryCode: creditor.countryCode,
-      debtorAddressType: debtor.addressType,
-      debtorName: debtor.name,
-      debtorAddressLine1: debtor.addressLine1,
-      debtorAddressLine2: debtor.addressLine2,
-      debtorCountryCode: debtor.countryCode,
+      creditorAddressType: creditor.addressType->fold,
+      creditorName: creditor.name->fold,
+      creditorAddressLine1: creditor.addressLine1->fold,
+      creditorAddressLine2: creditor.addressLine2->fold,
+      creditorCountryCode: creditor.countryCode->fold,
+      debtorAddressType: debtor.addressType->fold,
+      debtorName: debtor.name->fold,
+      debtorAddressLine1: debtor.addressLine1->fold,
+      debtorAddressLine2: debtor.addressLine2->fold,
+      debtorCountryCode: debtor.countryCode->fold,
       qrCodeString: "",
       showQRCode: false,
       showAmount: false,
@@ -287,6 +267,34 @@ let comp: init => comp =
       showAdditionalInfo: false,
       showReference: false,
       reduceContent: false,
+      error: [
+        d.language,
+        d.currency,
+        d.amount,
+        d.iban,
+        d.referenceType,
+        d.reference,
+        d.message,
+        d.messageCode,
+        creditor.addressType,
+        creditor.name,
+        creditor.addressLine1,
+        creditor.addressLine2,
+        creditor.countryCode,
+        debtor.addressType,
+        debtor.name,
+        debtor.addressLine1,
+        debtor.addressLine2,
+        debtor.countryCode,
+      ]
+      ->Js.Array2.filter(x => switch x {
+        | Error(_) => true
+        | _ => false
+        })
+      ->Js.Array2.map(x => switch x {
+        | Error(e) => e
+        | _ => {_type: "", key: "", val: "", msg: ""}
+        })
     })->cd => {
       let qrCodeString = compQrCodeString(cd)
       {
@@ -300,7 +308,6 @@ let comp: init => comp =
         showDebtor: cd.debtorName != "" && cd.debtorAddressLine1 != "" && cd.debtorAddressLine2 != "",
         showAdditionalInfo: cd.message != "" || cd.messageCode != "",
         showReference: cd.referenceType == "QRR" || cd.referenceType == "SCOR",
-        reduceContent: false,
       }
     }
   }

@@ -63,6 +63,7 @@ type comp = {
   showAdditionalInfo: bool,
   showReference: bool,
   reduceContent: bool,
+  error: array<optErr<string>>
 }
 
 let initDefaults: init

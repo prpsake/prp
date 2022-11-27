@@ -70,6 +70,7 @@ export type Comp = {
   showAdditionalInfo: boolean;
   showReference: boolean;
   reduceContent: boolean;
+  error: OptErr<string>[];
 };
 
 export const initAddressDefaults: InitAddress;
