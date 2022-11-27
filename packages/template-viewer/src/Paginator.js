@@ -11,7 +11,6 @@ export function preview({host, onSuccess, onError = console.log}) {
 
       host.previewElm.innerHTML = "";
       document.head.querySelectorAll("styleApp").forEach((elm) => elm.remove());
-
       Promise.all([
         store
           .set(Session, {
@@ -19,16 +18,22 @@ export function preview({host, onSuccess, onError = console.log}) {
             title: viewElm.host.data.title,
           })
           .then((data) => data),
-        previewer.preview(viewElm.innerHTML, [{styles: host.session.style}], host.previewElm).then((data) => data),
+        previewer
+          .preview(
+            viewElm.innerHTML,
+            [{styles: host.session.style}],
+            host.previewElm,
+          )
+          .then((data) => data),
       ])
         .then(([session, previewer]) => {
           onSuccess?.({session, previewer});
-          host.previewElm.classList.replace("opacity-0", "opacity-100");
+          host.showPreview = true;
         })
         .catch(onError);
     },
     {once: true},
   );
 
-  host.previewElm.classList.replace("opacity-100", "opacity-0");
+  host.showPreview = false;
 }

@@ -1,5 +1,5 @@
-import type {Comp} from "../types/Data";
-import {html, define, Component, Model, HybridElement} from "hybrids";
+import type {Comp, Opt, OptErr} from "../types/Data";
+import {html, define, dispatch, Component, Model, HybridElement} from "hybrids";
 import {translations as tr} from "./Translations.mjs";
 import * as QRCode from "./QRCode.mjs";
 import * as Data from "./Data.mjs";
@@ -9,6 +9,9 @@ interface QrBillModel extends Comp {}
 interface QrBill extends QrBillModel {
   tag: string;
   data: QrBillModel;
+  // QUESTION: Determine what's more convenient. `error` as property or/and
+  // passed as detail in custom event?
+  // error?: OptErr<unknown>[];
 }
 
 const QrBillModel: Model<QrBillModel> = Data.compDefaults;
@@ -58,8 +61,6 @@ const svgQRCode = (str) =>
     viewBox="0 0 570 570"
     class="block text-black fill-current">
     <path
-      x="0"
-      y="0"
       shape-rendering="crispEdges"
       d="${QRCode.pathDataFromString(str, {
         ecl: "M",
@@ -83,13 +84,44 @@ const QrBill: Component<QrBill> = {
   tag: "qr-bill",
   ...Data.compDefaults,
   data: {
-    set: (host, values = {}) => {
-      Object.entries(values).map(([key, value]) => {
-        host[key] = value;
+    set: (host, options: {[key: string]: Opt<unknown>} = {}) => {
+      let value: QrBillModel = Data.compDefaults;
+      let error: OptErr<unknown>[] = [];
+
+      Object.entries(options).forEach(([key, option]) => {
+        if (typeof option !== "number") {
+          switch (option.TAG) {
+            case 0: // User
+            case 1: {
+              // Default
+              host[key] = value[key] = option._0.val;
+              break;
+            }
+            case 2: {
+              // Error
+              error.push(option._0);
+              break;
+            }
+          }
+        }
       });
-      return values;
+
+      if (error.length) {
+        // QUESTION: Determine what's more convenient. `error` as property or/and
+        // passed as detail in custom event?
+        // host.error = error;
+        dispatch(host, "error", {detail: error});
+      }
+
+      return value;
     },
   },
+  // QUESTION: Determine what's more convenient. `error` as property or/and
+  // passed as detail in custom event?
+  // error: {
+  //   value: [],
+  //   set: (host, values: OptErr<unknown>[]) => values,
+  // },
   render: ({
     language,
     currency,

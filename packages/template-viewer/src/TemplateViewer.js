@@ -36,22 +36,23 @@ const TemplateViewer = ({views, baseUrl = "", onFileInput, onFileDrop}) => ({
       }).observe(host, {subtree: true, childList: true});
     },
   },
-
   view: router(views, {url: `/${baseUrl}`}),
-  content: ({session, view}) =>
+  showPreview: false,
+  content: ({session, view, showPreview}) =>
     html`
       <div class="hidden view">${view}</div>
 
       <div
-        class=${[
-          "template-view",
-          "relative",
-          "overscroll-x-contain",
-          "opacity-100",
-          "transition-opacity",
-          "duration-300",
-          session.viewVertical ? "" : "preview-sm",
-        ]}
+        class=${{
+          "template-view": true,
+          relative: true,
+          "overscroll-x-contain": true,
+          "opacity-100": showPreview,
+          "opacity-0": !showPreview,
+          "transition-opacity": true,
+          "duration-300": true,
+          "preview-sm": !session.viewVertical,
+        }}
         ondragover=${(e) => e.preventDefault()}
         ondrop=${onFileDrop}></div>
 

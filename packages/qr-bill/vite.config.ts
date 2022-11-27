@@ -1,15 +1,15 @@
-import { resolve } from "path"
-import { defineConfig } from "vite"
-import createReScriptPlugin from "@jihchi/vite-plugin-rescript"
+import {resolve} from "path";
+import {defineConfig} from "vite";
+import createReScriptPlugin from "@jihchi/vite-plugin-rescript";
 
-
-export default ({ mode }) => defineConfig({
+export default ({mode}) =>
+  defineConfig({
     publicDir: "public",
     build: {
       target: "esnext",
       minify: true,
       rollupOptions: {
-        external: ["hybrids"]
+        external: ["hybrids"],
       },
       lib: {
         entry: resolve(__dirname, "./src/index.ts"),
@@ -17,7 +17,5 @@ export default ({ mode }) => defineConfig({
         formats: ["es"],
       },
     },
-    plugins: [
-      createReScriptPlugin(),
-    ]
-  })
+    plugins: [createReScriptPlugin()],
+  });

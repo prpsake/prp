@@ -11,7 +11,7 @@ type Opt<V> =
   | {TAG: 0; _0: OptSome<V>} // User
   | {TAG: 1; _0: OptSome<V>} // Default
   | {TAG: 2; _0: OptErr<V>} // Error
-  | undefined; // None
+  | 0; // None
 
 type Language = "fr" | "it" | "de" | "en";
 type Currency = "CHF" | "EUR";

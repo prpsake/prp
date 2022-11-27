@@ -1,11 +1,9 @@
-import { resolve } from "path"
-import { defineConfig } from "vite"
+import {resolve} from "path";
+import {defineConfig} from "vite";
+//import createReScriptPlugin from "@jihchi/vite-plugin-rescript";
 
-
-
-export default ({ mode }) => {
-  return defineConfig({
-    envPrefix: ["EXP_"],
+export default ({mode}) =>
+  defineConfig({
     publicDir: "public",
     build: {
       target: "esnext",
@@ -14,7 +12,7 @@ export default ({ mode }) => {
         entry: resolve(__dirname, "src/index.js"),
         fileName: "index",
         formats: ["es"],
-      }
-    }
-  })
-}
+      },
+    },
+    //plugins: [createReScriptPlugin()],
+  });
