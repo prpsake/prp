@@ -89,7 +89,7 @@ const QrBill: Component<QrBill> = {
     },
   },
   data: {
-    set: (host, values = {}) => {
+    set: (host, values: QrBillModel = Data.compDefaults) => {
       Object.entries(values).forEach(([key, value]) => {
         host[key] = value;
       });

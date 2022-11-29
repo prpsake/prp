@@ -98,6 +98,8 @@ let initDefaults: init = {
   debtor: Default({key: "debtor", val: initAddressDefaults}),
 }
 
+let compErrorDefaults: optErr<string> = {_type: "", key: "", val: "", msg: ""}
+
 let compDefaults: comp = {
   language: "en",
   currency: "CHF",
@@ -124,7 +126,7 @@ let compDefaults: comp = {
   showAdditionalInfo: false,
   showReference: false,
   reduceContent: false,
-  error: []
+  error: [compErrorDefaults]
 }
 
 let fold: opt<string> => string = o =>
@@ -293,7 +295,7 @@ let comp: init => comp =
         })
       ->Js.Array2.map(x => switch x {
         | Error(e) => e
-        | _ => {_type: "", key: "", val: "", msg: ""}
+        | _ => compErrorDefaults // NB/QUESTION: never used but needs to be here (?)
         })
     })->cd => {
       let qrCodeString = compQrCodeString(cd)

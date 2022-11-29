@@ -1,9 +1,13 @@
 import {QrBillHybridElement, jsonToQrBillModel} from "@prpsake/qr-bill";
 import "./style.css";
 
+customElements.define("my-qr-bill", QrBillHybridElement);
+
 const myQrBill: QrBillHybridElement = document.querySelector("my-qr-bill");
 
-customElements.define("my-qr-bill", QrBillHybridElement);
+myQrBill.addEventListener("error", (e) => {
+  e.detail.forEach(console.log);
+});
 
 fetch("/data/qr-bill-sample.json")
   .then((resp) => resp.json())
