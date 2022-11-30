@@ -50,27 +50,26 @@ pnpm add @prpsake/qr-bill hybrids
 You can find the full example in the [examples/example-qr-bill-hybrids](https://github.com/prpsake/prp/tree/main/examples/example-qr-bill-hybrids) folder of this repo.
 
 ```typescript
-import {QrBill, QrBillModel, Helpers} from "@prpsake/qr-bill"
-import {type Model, define, store, html} from "hybrids"
-import "./style.css"
-
+import {QrBill, QrBillModel, jsonToQrBillModel} from "@prpsake/qr-bill";
+import {type Model, define, store, html} from "hybrids";
+import "./style.css";
 
 const MyQrBillModel: Model<QrBillModel> = {
   ...QrBillModel,
-  [store.connect]: () =>
-    fetch("/data/qr-bill-sample.json")
-      .then(resp => resp.json())
-      .then(Helpers.compFromJson)
-      .catch(console.log)
-}
+  [store.connect]: {
+    get: () =>
+      fetch("/data/qr-bill-sample.json")
+        .then((resp) => resp.json())
+        .then(jsonToQrBillModel)
+        .catch(console.log),
+  },
+};
 
 define<QrBill>({
   tag: "my-qr-bill",
   data: store(MyQrBillModel),
-  render: ({ data }) => html`
-    ${store.ready(data) && QrBill.render(data)}
-  `
-})
+  render: ({data}) => html` ${store.ready(data) && QrBill.render(data)} `,
+});
 ```
 
 ```html
@@ -82,20 +81,27 @@ The imported stylesheet (`import "./style.css"`) is not part of the package. It 
 ### Example without hybrids
 
 ```typescript
-import { QrBillHybridElement, Helpers } from "@prpsake/qr-bill"
-import "./style.css"
+import {QrBillHybridElement, jsonToQrBillModel} from "@prpsake/qr-bill";
+import "./style.css";
 
-const myQrBill: QrBillHybridElement = document.createElement("my-qr-bill")
+customElements.define("my-qr-bill", QrBillHybridElement);
 
-customElements.define("my-qr-bill", QrBillHybridElement)
+const myQrBill: QrBillHybridElement = document.querySelector("my-qr-bill");
+
+myQrBill.addEventListener("error", (e) => {
+  e.detail.forEach(console.log);
+});
 
 fetch("/data/qr-bill-sample.json")
-  .then(resp => resp.json())
-  .then(json => {
-    myQrBill.data = Helpers.compFromJson(json)
-    document.body.appendChild(myQrBill)
+  .then((resp) => resp.json())
+  .then((json) => {
+    myQrBill.data = jsonToQrBillModel(json);
   })
-  .catch(console.log)
+  .catch(console.log);
+```
+
+```html
+<my-qr-bill></my-qr-bill>
 ```
 
 ## Model
