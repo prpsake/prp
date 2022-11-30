@@ -1,8 +1,6 @@
 import {
+  jsonToQrBillModel,
   html,
-  Parser,
-  Validator,
-  Data,
   type Model,
   type View,
 } from "@prpsake/template-viewer";
@@ -10,16 +8,7 @@ import InvoiceBase from "../models/InvoiceBase";
 
 export const model: Model<InvoiceBase> = {
   ...InvoiceBase,
-  qrBill: (data) => {
-    return [
-      Parser.parse({
-        ...data,
-        iban: data.creditor.iban,
-      }),
-    ]
-      .map(Validator.validate)
-      .map(Data.comp)[0];
-  },
+  qrBill: (data) => jsonToQrBillModel({...data, iban: data.creditor.iban}),
 };
 
 export const view: View<InvoiceBase> = ({data}) => html`
