@@ -4,11 +4,13 @@ import "./style.css";
 
 const MyQrBillModel: Model<QrBillModel> = {
   ...QrBillModel,
-  [store.connect]: () =>
-    fetch("/data/qr-bill-sample.json")
-      .then((resp) => resp.json())
-      .then(jsonToQrBillModel)
-      .catch(console.log),
+  [store.connect]: {
+    get: () =>
+      fetch("/data/qr-bill-sample.json")
+        .then((resp) => resp.json())
+        .then(jsonToQrBillModel)
+        .catch(console.log),
+  },
 };
 
 define<QrBill>({

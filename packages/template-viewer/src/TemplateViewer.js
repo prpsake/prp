@@ -37,7 +37,7 @@ const TemplateViewer = ({views, baseUrl = "", onFileInput, onFileDrop}) => ({
     },
   },
   view: router(views, {url: `/${baseUrl}`}),
-  showPreview: false,
+  showPreview: true,
   content: ({session, view, showPreview}) =>
     html`
       <div class="hidden view">${view}</div>

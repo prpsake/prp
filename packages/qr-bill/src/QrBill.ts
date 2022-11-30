@@ -81,16 +81,14 @@ const QrBill: Component<QrBill> = {
   tag: "qr-bill",
   ...Data.compDefaults,
   error: {
-    set: (host, values: OptErr<string>[] = []) => {
-      if (values.length > 0) {
-        dispatch(host, "error", {detail: values});
-      }
-      return values;
-    },
+    set: (_host, value: OptErr<string>[] = []) => value,
   },
   data: {
     set: (host, values: QrBillModel = Data.compDefaults) => {
       Object.entries(values).forEach(([key, value]) => {
+        if (key === "error" && Array.isArray(value) && value.length > 0) {
+          dispatch(host, "error", {detail: value});
+        }
         host[key] = value;
       });
       return values;
