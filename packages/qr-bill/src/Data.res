@@ -87,7 +87,7 @@ let initAddressDefaults: initAddress = {
 
 let initDefaults: init = {
   language: Default({key: "language", val: "en"}),
-  currency: None,
+  currency: Default({key: "language", val: "CHF"}),
   amount: None,
   iban: None,
   referenceType: Default({key: "referenceType", val: "NON"}),

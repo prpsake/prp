@@ -166,6 +166,61 @@ let validateReference: (
   | t => t
   }
 
+/**
+
+Mandatory         M
+Dependent         D     Mandatory if parent group is set
+Additional        A     Must be set if not empty
+Optional          O     Must be set but may be empty (string)
+DoNotDeliver      X     Must be set empty
+
+creditor          M
+debtor            O
+
+INIT DATA:
+
+iban              M           as implemented (!check parsing)
+addressType       M     K | S
+name              M     70
+street            O     70    S
+                        x     K: x = 70 - (streetNumber ? streetNumber + 1 : 0)
+streetNumber      O     16    S
+                        x     K: x = 70 - (street ? street + 1 : 0)
+postOfficeBox     O     70    if set, ignore street and streetNumber
+postalCode        D     16    S: w/o countrycode -> must be integer-like
+                        0     K
+locality          D     35    S
+                        0     K
+country           M     2
+amount            O           if set, as implemented (!check number), else empty
+currency          M           as implemented
+referenceType     M     QRR | SCOR | NON
+reference         D           as implemented (!check parsing)
+message           O     140   as implemented
+messageCode       A     140   as implemented
+
+
+QR-BILL DATA:
+
+iban              M           as implemented (!check parsing)
+addressLine1      O     70    S: street OR postOfficeBox
+                        70    K: street_streetNumber OR postOfficeBox
+addressLine2      O     16    S: streetNumber
+                  M     70    K: postalCode_locality
+postalCode        D     16    S: w/o countrycode -> must be integer-like
+                        0     K
+locality          D     35    S
+                        0     K
+country           M     2
+amount            O           if set, as implemented, else empty
+currency          M           as implemented
+referenceType     M     QRR | SCOR | NON
+reference         D           as implemented (!check parsing)
+message           O     140   as implemented
+messageCode       A     140   as implemented
+
+
+*/
 let validateAddressData: Data.opt<Data.initAddress> => Data.opt<
   Data.initAddress,
 > = o =>
@@ -175,7 +230,7 @@ let validateAddressData: Data.opt<Data.initAddress> => Data.opt<
       key,
       val: {
         addressType: ad.addressType->validateWithRexp(
-          x => Js.String2.trim(x)->Js.String2.match_(%re("/^(K|S){1}$/")),
+          x => Js.String2.trim(x)->Js.String2.match_(%re("/^(K|S)$/")),
           "must be either K or S",
         ),
         name: ad.name->validateWithRexp(
