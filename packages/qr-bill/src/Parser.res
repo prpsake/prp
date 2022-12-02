@@ -59,10 +59,16 @@ let chooseReferenceType =
   }
 
 let chooseAddressType =
-  streetNumber =>
+  maybeAddressType =>
   postalCode =>
-  (streetNumber === Data.None || postalCode === Data.None ? "K" : "S")
-  ->val => Data.User({ key: "addressType", val })
+  switch maybeAddressType {
+  | Data.None =>
+    Data.User({
+      key: "addressType",
+      val: (postalCode === Data.None ? "K" : "S")
+    })
+  | t => t
+  }
 
 let parse: Js.Dict.t<Js.Json.t> => Data.init =
   str =>
@@ -91,17 +97,19 @@ let parse: Js.Dict.t<Js.Json.t> => Data.init =
           switch Js.Dict.get(d, "creditor") {
           | Some(x) =>
             switch Js.Json.classify(x) {
-            | JSONObject(d) =>
-              let addressDataGet = dictGet(d)
-              let streetNumber = addressDataGet("streetNumber")->parseString(Data.None)
+            | JSONObject(ad) =>
+              let addressDataGet = dictGet(ad)
               let postalCode = addressDataGet("postalCode")->parseString(Data.None)
               Data.User({
                 key: "creditor",
                 val: {
-                  addressType: chooseAddressType(streetNumber, postalCode),
+                  addressType:
+                    addressDataGet("addressType")
+                    ->parseString(Data.None)
+                    ->chooseAddressType(postalCode),
                   name: addressDataGet("name")->parseString(Data.None),
                   street: addressDataGet("street")->parseString(Data.None),
-                  streetNumber,
+                  streetNumber: addressDataGet("streetNumber")->parseString(Data.None),
                   postOfficeBox: addressDataGet("postOfficeBox")->parseString(Data.None),
                   postalCode,
                   locality: addressDataGet("locality")->parseString(Data.None),
@@ -116,17 +124,19 @@ let parse: Js.Dict.t<Js.Json.t> => Data.init =
           switch Js.Dict.get(d, "debtor") {
           | Some(x) =>
             switch Js.Json.classify(x) {
-            | JSONObject(d) =>
-              let addressDataGet = dictGet(d)
-              let streetNumber = addressDataGet("streetNumber")->parseString(Data.None)
+            | JSONObject(ad) =>
+              let addressDataGet = dictGet(ad)
               let postalCode = addressDataGet("postalCode")->parseString(Data.None)
               Data.User({
                 key: "debtor",
                 val: {
-                  addressType: chooseAddressType(streetNumber, postalCode),
+                  addressType:
+                    addressDataGet("addressType")
+                    ->parseString(Data.None)
+                    ->chooseAddressType(postalCode),
                   name: addressDataGet("name")->parseString(Data.None),
                   street: addressDataGet("street")->parseString(Data.None),
-                  streetNumber,
+                  streetNumber: addressDataGet("streetNumber")->parseString(Data.None),
                   postOfficeBox: addressDataGet("postOfficeBox")->parseString(Data.None),
                   postalCode,
                   locality: addressDataGet("locality")->parseString(Data.None),
