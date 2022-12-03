@@ -38,10 +38,10 @@ export const view: View<InvoiceBase> = ({data}) => html`
       <div class="flex-auto">
         <p class="font-medium italic">${data.creditor.name}</p>
         <p class="font-extralight">
-          ${data.creditor.street} ${data.creditor.streetNumber}
+          ${data.creditor.street} ${data.creditor.houseNumber}
         </p>
         <p class="font-extralight">
-          ${data.creditor.postalCode} ${data.creditor.locality}
+          ${data.creditor.postCode} ${data.creditor.locality}
         </p>
         <br />
         <dl>
@@ -75,8 +75,8 @@ export const view: View<InvoiceBase> = ({data}) => html`
     <div class="flex-auto pt-20 pb-28 font-extralight text-sm">
       <p>${data.debtor.organisation}</p>
       <p>${data.debtor.person}</p>
-      <p>${data.debtor.street} ${data.debtor.streetNumber}</p>
-      <p>${data.debtor.postalCode} ${data.debtor.locality}</p>
+      <p>${data.debtor.street} ${data.debtor.houseNumber}</p>
+      <p>${data.debtor.postCode} ${data.debtor.locality}</p>
     </div>
   </header>
   <main class="flex font-mono text-template-fg">
