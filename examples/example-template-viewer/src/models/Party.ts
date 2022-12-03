@@ -1,35 +1,31 @@
 interface Party {
-  name: string
-  organisation: string
-  street: string
-  streetNumber: string
-  postOfficeBox: string
-  postalCode: string
-  locality: string
-  countryCode: string
-  person: string
-  email: string
-  threema: string
-  iban: string
-  uid: string
+  name: string;
+  organisation: string;
+  street: string;
+  houseNumber: string;
+  postCode: string;
+  locality: string;
+  countryCode: string;
+  person: string;
+  email: string;
+  threema: string;
+  iban: string;
+  uid: string;
 }
-
 
 const Party: Party = {
   name: "",
   organisation: "",
   street: "",
-  streetNumber: "",
-  postOfficeBox: "",
-  postalCode: "",
+  houseNumber: "",
+  postCode: "",
   locality: "",
   countryCode: "",
   person: "",
   email: "",
   threema: "",
   iban: "",
-  uid: ""
-}
+  uid: "",
+};
 
-
-export default Party
+export default Party;
