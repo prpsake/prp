@@ -7,16 +7,16 @@
   "creditor": {
     "name": "Andere Org",
     "street": "Hustensaft",
-    "streetNumber": "9",
-    "postalCode": "9000",
+    "houseNumber": "9",
+    "postCode": "9000",
     "locality": "Da",
     "countryCode": "CH"
   },
   "debtor": {
     "name": "Eine Org",
     "street": "Geleepistole",
-    "streetNumber": "1",
-    "postalCode": "1000",
+    "houseNumber": "1",
+    "postCode": "1000",
     "locality": "Dort",
     "countryCode": "CH"
   }
