@@ -2,8 +2,8 @@ let dictGet: Js.Dict.t<Js.Json.t> => string => Data.opt<'a> =
   d =>
   key =>
   switch Js.Dict.get(d, key) {
-  | Some(val) => Data.User({ key, val })
-  | None => Data.None
+  | Some(val) => Data.User({key, val})
+  | None => Data.Default({key, val: Js.Json.null})
   }
 
 let parseString: Data.opt<Js.Json.t> => Data.opt<string> => Data.opt<string> =
@@ -27,7 +27,7 @@ let parseFloatString: Data.opt<Js.Json.t> => Data.opt<string> => Data.opt<string
   o =>
   dfo =>
   switch o {
-  | Data.User({ key, val }) =>
+  | Data.User({key, val}) =>
     switch Js.Json.classify(val) {
     | JSONString(s) =>
       switch Js.String.trim(s) {
@@ -43,31 +43,50 @@ let parseFloatString: Data.opt<Js.Json.t> => Data.opt<string> => Data.opt<string
   }
 
 let chooseReferenceType =
+  referenceType =>
   reference =>
   iban =>
-  switch reference {
-  | Data.None => Data.initDefaults.referenceType
-  | _ =>
-    switch iban {
-    | Data.User({ val }) =>
-      Formatter.removeWhitespace(val)
-      ->Js.String2.substring(~from=4, ~to_=5)
-      ->x => (x == "3" ? "QRR" : "SCOR")
-      ->x => Data.User({ key: "referenceType", val: x })
-    | _ => Data.initDefaults.referenceType
+  switch referenceType {
+  | Data.Default(_) =>
+    switch reference {
+    | Data.Default(_) => referenceType
+    | _ =>
+      switch iban {
+      | Data.User({key, val}) =>
+        Formatter.removeWhitespace(val)
+        ->Js.String2.substring(~from=4, ~to_=5)
+        ->x => (x == "3" ? "QRR" : "SCOR")
+        ->x => Data.User({key, val: x})
+      | _ => referenceType
+      }
     }
+  | _ => referenceType
   }
 
-let chooseAddressType =
-  maybeAddressType =>
-  postalCode =>
-  switch maybeAddressType {
-  | Data.None =>
-    Data.User({
-      key: "addressType",
-      val: (postalCode === Data.None ? "K" : "S")
-    })
-  | t => t
+let parseAddress: Data.opt<Js.Json.t> => Data.opt<Data.address> => Data.opt<Data.address> =
+  o =>
+  dfo =>
+  switch o {
+  | Data.User({key, val}) =>
+    switch Js.Json.classify(val) {
+    | JSONObject(d) =>
+      let dataGet = dictGet(d)
+      let defaults = Data.initMandatoryAddressDefaults
+      Data.User({
+        key,
+        val: {
+          addressType: defaults.addressType,
+          name: dataGet("name")->parseString(defaults.name),
+          street: dataGet("street")->parseString(defaults.street),
+          houseNumber: dataGet("houseNumber")->parseString(defaults.houseNumber),
+          postCode: dataGet("postCode")->parseString(defaults.postCode),
+          locality: dataGet("locality")->parseString(defaults.locality),
+          countryCode: dataGet("countryCode")->parseString(defaults.countryCode)
+        }
+      })
+    | _ => dfo
+    }
+  | _ => dfo
   }
 
 let parse: Js.Dict.t<Js.Json.t> => Data.init =
@@ -82,71 +101,23 @@ let parse: Js.Dict.t<Js.Json.t> => Data.init =
     switch Js.Json.classify(json) {
     | JSONObject(d) =>
       let dataGet = dictGet(d)
-      let iban = dataGet("iban")->parseString(Data.initDefaults.iban)
-      let reference = dataGet("reference")->parseString(Data.initDefaults.reference)
+      let defaults = Data.initDefaults
+      let iban = dataGet("iban")->parseString(defaults.iban)
+      let reference = dataGet("reference")->parseString(defaults.reference)
       {
-        language: dataGet("language")->parseString(Data.initDefaults.language),
-        currency: dataGet("currency")->parseString(Data.initDefaults.currency),
-        amount: dataGet("amount")->parseFloatString(Data.initDefaults.amount),
+        language: dataGet("language")->parseString(defaults.language),
+        currency: dataGet("currency")->parseString(defaults.currency),
+        amount: dataGet("amount")->parseFloatString(defaults.amount),
         iban,
-        referenceType: chooseReferenceType(reference, iban),
+        referenceType:
+          dataGet("referenceType")
+          ->parseString(defaults.referenceType)
+          ->chooseReferenceType(reference, iban),
         reference,
-        message: dataGet("message")->parseString(Data.initDefaults.message),
-        messageCode: dataGet("messageCode")->parseString(Data.initDefaults.messageCode),
-        creditor:
-          switch Js.Dict.get(d, "creditor") {
-          | Some(x) =>
-            switch Js.Json.classify(x) {
-            | JSONObject(ad) =>
-              let addressDataGet = dictGet(ad)
-              let postalCode = addressDataGet("postalCode")->parseString(Data.None)
-              Data.User({
-                key: "creditor",
-                val: {
-                  addressType:
-                    addressDataGet("addressType")
-                    ->parseString(Data.None)
-                    ->chooseAddressType(postalCode),
-                  name: addressDataGet("name")->parseString(Data.None),
-                  street: addressDataGet("street")->parseString(Data.None),
-                  streetNumber: addressDataGet("streetNumber")->parseString(Data.None),
-                  postOfficeBox: addressDataGet("postOfficeBox")->parseString(Data.None),
-                  postalCode,
-                  locality: addressDataGet("locality")->parseString(Data.None),
-                  countryCode: addressDataGet("countryCode")->parseString(Data.None)
-                }
-              })
-            | _ => Data.initDefaults.creditor
-            }
-          | None => Data.initDefaults.creditor
-          },
-        debtor:
-          switch Js.Dict.get(d, "debtor") {
-          | Some(x) =>
-            switch Js.Json.classify(x) {
-            | JSONObject(ad) =>
-              let addressDataGet = dictGet(ad)
-              let postalCode = addressDataGet("postalCode")->parseString(Data.None)
-              Data.User({
-                key: "debtor",
-                val: {
-                  addressType:
-                    addressDataGet("addressType")
-                    ->parseString(Data.None)
-                    ->chooseAddressType(postalCode),
-                  name: addressDataGet("name")->parseString(Data.None),
-                  street: addressDataGet("street")->parseString(Data.None),
-                  streetNumber: addressDataGet("streetNumber")->parseString(Data.None),
-                  postOfficeBox: addressDataGet("postOfficeBox")->parseString(Data.None),
-                  postalCode,
-                  locality: addressDataGet("locality")->parseString(Data.None),
-                  countryCode: addressDataGet("countryCode")->parseString(Data.None)
-                }
-              })
-            | _ => Data.initDefaults.debtor
-            }
-          | None => Data.initDefaults.debtor
-          },
+        message: dataGet("message")->parseString(defaults.message),
+        messageCode: dataGet("messageCode")->parseString(defaults.messageCode),
+        creditor: dataGet("creditor")->parseAddress(defaults.creditor),
+        debtor: dataGet("debtor")->parseAddress(defaults.debtor),
       }
     | _ => Data.initDefaults //failwith("Expected an object")
     }

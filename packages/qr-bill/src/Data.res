@@ -11,15 +11,13 @@ type opt<'a> =
   | User(optSome<'a>)
   | Default(optSome<'a>)
   | Error(optErr<'a>)
-  | None
 
-type initAddress = {
+type address = {
   addressType: opt<string>,
   name: opt<string>,
   street: opt<string>,
-  streetNumber: opt<string>,
-  postOfficeBox: opt<string>,
-  postalCode: opt<string>,
+  houseNumber: opt<string>,
+  postCode: opt<string>,
   locality: opt<string>,
   countryCode: opt<string>,
 }
@@ -33,16 +31,8 @@ type init = {
   reference: opt<string>,
   message: opt<string>,
   messageCode: opt<string>,
-  creditor: opt<initAddress>,
-  debtor: opt<initAddress>,
-}
-
-type compAddress = {
-  addressType: opt<string>,
-  name: opt<string>,
-  addressLine1: opt<string>,
-  addressLine2: opt<string>,
-  countryCode: opt<string>,
+  creditor: opt<address>,
+  debtor: opt<address>,
 }
 
 type comp = {
@@ -56,13 +46,17 @@ type comp = {
   messageCode: string,
   creditorAddressType: string,
   creditorName: string,
+  creditorStreet: string,
+  creditorHouseNumber: string,
+  creditorPostCode: string,
+  creditorLocality: string,
   creditorCountryCode: string,
-  creditorAddressLine1: string,
-  creditorAddressLine2: string,
   debtorAddressType: string,
   debtorName: string,
-  debtorAddressLine1: string,
-  debtorAddressLine2: string,
+  debtorStreet: string,
+  debtorHouseNumber: string,
+  debtorPostCode: string,
+  debtorLocality: string,
   debtorCountryCode: string,
   qrCodeString: string,
   showQRCode: bool,
@@ -74,50 +68,93 @@ type comp = {
   error: array<optErr<string>>
 }
 
-let initAddressDefaults: initAddress = {
+let initMandatoryAddressDefaults: address = {
+  addressType: Default({key: "addressType", val: "S"}),
+  name: Error({
+    _type: "CONSTRAINT",
+    key: "name",
+    val: "",
+    msg: "must be set"
+  }),
+  street: Default({key: "street", val: ""}),
+  houseNumber: Default({key: "houseNumber", val: ""}),
+  postCode: Default({key: "postCode", val: ""}),
+  locality: Error({
+    _type: "CONSTRAINT",
+    key: "locality",
+    val: "",
+    msg: "must be set"
+  }),
+  countryCode: Error({
+    _type: "CONSTRAINT",
+    key: "countryCode",
+    val: "",
+    msg: "must be set"
+  }),
+}
+
+let initOptionalAddressDefaults: address = {
   addressType: Default({key: "addressType", val: ""}),
   name: Default({key: "name", val: ""}),
   street: Default({key: "street", val: ""}),
-  streetNumber: Default({key: "streetNumber", val: ""}),
-  postOfficeBox: Default({key: "postOfficeBox", val: ""}),
-  postalCode: Default({key: "postalCode", val: ""}),
+  houseNumber: Default({key: "houseNumber", val: ""}),
+  postCode: Default({key: "postCode", val: ""}),
   locality: Default({key: "locality", val: ""}),
   countryCode: Default({key: "countryCode", val: ""}),
 }
 
 let initDefaults: init = {
   language: Default({key: "language", val: "en"}),
-  currency: Default({key: "language", val: "CHF"}),
-  amount: None,
-  iban: None,
+  currency: Error({
+    _type: "CONSTRAINT",
+    key: "currency",
+    val: "",
+    msg: "must be set"
+  }),
+  amount: Default({key: "amount", val: ""}),
+  iban: Error({
+    _type: "CONSTRAINT",
+    key: "iban",
+    val: "",
+    msg: "must be set"
+  }),
   referenceType: Default({key: "referenceType", val: "NON"}),
-  reference: None,
-  message: None,
-  messageCode: None,
-  creditor: Default({key: "creditor", val: initAddressDefaults}),
-  debtor: Default({key: "debtor", val: initAddressDefaults}),
+  reference: Default({key: "reference", val: ""}),
+  message: Default({key: "message", val: ""}),
+  messageCode: Default({key: "messageCode", val: ""}),
+  creditor: Error({
+    _type: "CONSTRAINT",
+    key: "creditor",
+    val: initMandatoryAddressDefaults,
+    msg: "must be set"
+  }),
+  debtor: Default({key: "debtor", val: initOptionalAddressDefaults}),
 }
 
 let compErrorDefaults: optErr<string> = {_type: "", key: "", val: "", msg: ""}
 
 let compDefaults: comp = {
   language: "en",
-  currency: "CHF",
+  currency: "",
   amount: "",
   iban: "",
-  referenceType: "",
+  referenceType: "NON",
   reference: "",
   message: "",
   messageCode: "",
-  creditorAddressType: "K",
+  creditorAddressType: "S",
   creditorName: "",
+  creditorStreet: "",
+  creditorHouseNumber: "",
+  creditorPostCode: "",
+  creditorLocality: "",
   creditorCountryCode: "",
-  creditorAddressLine1: "",
-  creditorAddressLine2: "",
-  debtorAddressType: "K",
+  debtorAddressType: "",
   debtorName: "",
-  debtorAddressLine1: "",
-  debtorAddressLine2: "",
+  debtorStreet: "",
+  debtorHouseNumber: "",
+  debtorPostCode: "",
+  debtorLocality: "",
   debtorCountryCode: "",
   qrCodeString: "",
   showQRCode: false,
@@ -129,40 +166,18 @@ let compDefaults: comp = {
   error: [compErrorDefaults]
 }
 
-let fold: opt<string> => string = o =>
+let foldString: opt<string> => string = o =>
   switch o {
-  | User({val}) | Default({val}) => val
-  | Error(_) | None => ""
+  | User({val})
+  | Default({val}) => val
+  | Error(_) => ""
   }
 
-let concat: (. opt<string>, opt<string>, string, string) => opt<string> =
-  (. o1, o2, key, joint) =>
-  switch (o1, o2) {
-  | (User(s1), User(s2) | Default(s2))
-  | (Default(s1), User(s2)) => User({
-      key: key,
-      val: s1.val ++ joint ++ s2.val
-    })
-  | (Default(s1), Default(s2)) => Default({
-      key: key,
-      val: s1.val ++ joint ++ s2.val
-    })
-  | (Error(e), User(s) | Default(s))
-  | (User(s) | Default(s), Error(e)) => Error({
-      _type: e.key ++ ":" ++ e._type,
-      key: key,
-      val: e.key ++ ":" ++ e.val ++ ";" ++ s.key ++ ":" ++ s.val,
-      msg: e.key ++ ":" ++ e.msg
-    })
-  | (Error(e1), Error(e2)) => Error({
-      _type: e1.key ++ ":" ++ e1._type ++ ";" ++ e2.key ++ ":" ++ e2._type,
-      key: key,
-      val: e1.key ++ ":" ++ e1.val ++ ";" ++ e2.key ++ ":" ++ e2.val,
-      msg: e1.key ++ ":" ++ e1.msg ++ ";" ++ e2.key ++ ":" ++ e2.msg
-    })
-  | (None, None) => None
-  | (None, _) => o2
-  | (_, None) => o1
+let foldAddress: opt<address> => address = o =>
+  switch o {
+  | User({val})
+  | Default({val})
+  | Error({val}) => val
   }
 
 let compQrCodeString: comp => string =
@@ -177,10 +192,10 @@ let compQrCodeString: comp => string =
     // creditor
     d.creditorAddressType,
     d.creditorName,
-    d.creditorAddressLine1,
-    d.creditorAddressLine2,
-    "",
-    "",
+    d.creditorStreet,
+    d.creditorHouseNumber,
+    d.creditorPostCode,
+    d.creditorLocality,
     d.creditorCountryCode,
     // ultimate creditor (future FEATURE)
     "",
@@ -196,10 +211,10 @@ let compQrCodeString: comp => string =
     // ultimate debtor
     d.debtorAddressType,
     d.debtorName,
-    d.debtorAddressLine1,
-    d.debtorAddressLine2,
-    "",
-    "",
+    d.debtorStreet,
+    d.debtorHouseNumber,
+    d.debtorPostCode,
+    d.debtorLocality,
     d.debtorCountryCode,
     // reference
     d.referenceType,
@@ -208,60 +223,50 @@ let compQrCodeString: comp => string =
     d.message,
     "EPD",
     d.messageCode,
-    // alternative information (IMPLEMENT)
+    // IMPLEMENT: alternative information
     "",
     "",
   ]
   ->Js.Array2.joinWith("\n")
 
-let compAddress: opt<initAddress> => compAddress =
-  d =>
-  switch d {
-  | User({val}) => val
-  | _ => initAddressDefaults
-  }->ad => {
-    let addressLine1 = switch ad.postOfficeBox {
-    | User(_) => ad.postOfficeBox
-    | _ => concat(. ad.street, ad.streetNumber, "addressLine1", " ")
-    }
-
-    let addressLine2 = concat(. ad.postalCode, ad.locality, "addressLine2", " ")
-
-    {
-      addressType: Default({key: "addressType", val: "K"}),
-      name: ad.name,
-      addressLine1: addressLine1,
-      addressLine2: addressLine2,
-      countryCode: ad.countryCode
-    }
+let compPostCode: string => string => string =
+  countryCode =>
+  postCode =>
+  switch countryCode {
+  | "CH" | "" => postCode
+  | _ => countryCode ++ "-" ++ postCode
   }
 
 let comp: init => comp =
   d => {
-    ( compAddress(d.creditor),
-      compAddress(d.debtor),
+    ( foldAddress(d.creditor),
+      foldAddress(d.debtor),
     )->((
       creditor,
       debtor
     )) => ({
-      language: d.language->fold,
-      currency: d.currency->fold,
-      amount: d.amount->fold,
-      iban: d.iban->fold,
-      referenceType: d.referenceType->fold,
-      reference: d.reference->fold,
-      message: d.message->fold,
-      messageCode: d.messageCode->fold,
-      creditorAddressType: creditor.addressType->fold,
-      creditorName: creditor.name->fold,
-      creditorAddressLine1: creditor.addressLine1->fold,
-      creditorAddressLine2: creditor.addressLine2->fold,
-      creditorCountryCode: creditor.countryCode->fold,
-      debtorAddressType: debtor.addressType->fold,
-      debtorName: debtor.name->fold,
-      debtorAddressLine1: debtor.addressLine1->fold,
-      debtorAddressLine2: debtor.addressLine2->fold,
-      debtorCountryCode: debtor.countryCode->fold,
+      language: d.language->foldString,
+      currency: d.currency->foldString,
+      amount: d.amount->foldString,
+      iban: d.iban->foldString,
+      referenceType: d.referenceType->foldString,
+      reference: d.reference->foldString,
+      message: d.message->foldString,
+      messageCode: d.messageCode->foldString,
+      creditorAddressType: creditor.addressType->foldString,
+      creditorName: creditor.name->foldString,
+      creditorStreet: creditor.street->foldString,
+      creditorHouseNumber: creditor.houseNumber->foldString,
+      creditorPostCode: creditor.postCode->foldString,
+      creditorLocality: creditor.locality->foldString,
+      creditorCountryCode: creditor.countryCode->foldString,
+      debtorAddressType: debtor.addressType->foldString,
+      debtorName: debtor.name->foldString,
+      debtorStreet: debtor.street->foldString,
+      debtorHouseNumber: debtor.houseNumber->foldString,
+      debtorPostCode: debtor.postCode->foldString,
+      debtorLocality: debtor.locality->foldString,
+      debtorCountryCode: debtor.countryCode->foldString,
       qrCodeString: "",
       showQRCode: false,
       showAmount: false,
@@ -280,13 +285,17 @@ let comp: init => comp =
         d.messageCode,
         creditor.addressType,
         creditor.name,
-        creditor.addressLine1,
-        creditor.addressLine2,
+        creditor.street,
+        creditor.houseNumber,
+        creditor.postCode,
+        creditor.locality,
         creditor.countryCode,
         debtor.addressType,
         debtor.name,
-        debtor.addressLine1,
-        debtor.addressLine2,
+        debtor.street,
+        debtor.houseNumber,
+        debtor.postCode,
+        debtor.locality,
         debtor.countryCode,
       ]
       ->Js.Array2.filter(x => switch x {
@@ -295,19 +304,24 @@ let comp: init => comp =
         })
       ->Js.Array2.map(x => switch x {
         | Error(e) => e
-        | _ => compErrorDefaults // NB/QUESTION: never used but needs to be here (?)
+        | _ => compErrorDefaults // NB: never reached
         })
     })->cd => {
-      let qrCodeString = compQrCodeString(cd)
-      {
+      if Js.Array2.length(cd.error) > 0 {
+        cd.qrCodeString
+      } else {
+        compQrCodeString(cd)
+      }->qrCodeString => {
         ...cd,
         amount: cd.amount->Formatter.moneyFromNumberStr2,
         iban: cd.iban->Formatter.blockStr4,
         reference: cd.reference->Formatter.referenceBlockStr,
-        qrCodeString: qrCodeString,
+        creditorPostCode: compPostCode(cd.creditorCountryCode, cd.creditorPostCode),
+        debtorPostCode: compPostCode(cd.debtorCountryCode, cd.debtorPostCode),
+        qrCodeString,
         showQRCode: qrCodeString != "",
         showAmount: cd.amount != "",
-        showDebtor: cd.debtorName != "" && cd.debtorAddressLine1 != "" && cd.debtorAddressLine2 != "",
+        showDebtor: cd.debtorName != "",
         showAdditionalInfo: cd.message != "" || cd.messageCode != "",
         showReference: cd.referenceType == "QRR" || cd.referenceType == "SCOR",
       }

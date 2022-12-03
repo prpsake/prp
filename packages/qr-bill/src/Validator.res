@@ -9,6 +9,7 @@ TODO: simplify
 let mod97FromString: string => int = str => {
   let remainder = ref(str)
   let block = ref("")
+
   while Js.String.length(remainder.contents) > 2 {
     block := Js.String2.slice(remainder.contents, ~from=0, ~to_=9)
     remainder :=
@@ -63,9 +64,9 @@ let validateWithRexp: (
     | Some(xs) =>
       switch xs[0] {
       | Some(x) => Data.User({key, val: x})
-      | None => Data.Error({_type: "Validator", key, val, msg})
+      | None => Data.Error({_type: "CONSTRAINT", key, val, msg})
       }
-    | None => Data.Error({_type: "Validator", key, val, msg})
+    | None => Data.Error({_type: "CONSTRAINT", key, val, msg})
     }
   | t => t
   }
@@ -77,7 +78,7 @@ let validateWithPred: (Data.opt<'a>, string => bool, string) => Data.opt<'a> = (
 ) =>
   switch o {
   | Data.User({key, val}) =>
-    fn(val) ? Data.User({key, val}) : Data.Error({_type: "Validator", key, val, msg})
+    fn(val) ? Data.User({key, val}) : Data.Error({_type: "CONSTRAINT", key, val, msg})
   | t => t
   }
 
@@ -103,7 +104,7 @@ let validateIban: Data.opt<string> => Data.opt<string> = o =>
               x == 1
                 ? Data.User({key, val})
                 : Data.Error({
-                    _type: "Validator",
+                    _type: "CONSTRAINT",
                     key,
                     val,
                     msg: "fails on the checksum: expected 1 but got " ++ Belt.Int.toString(x),
@@ -118,21 +119,20 @@ let validateIban: Data.opt<string> => Data.opt<string> = o =>
 let validateQRR: Data.optSome<string> => Data.opt<string> = ({key, val}) => {
   let valTrim = Formatter.removeWhitespace(val)
   mod10FromIntString(valTrim)->(
-    a =>
-      {
-        let b = Js.String2.sliceToEnd(valTrim, ~from=26)
-        a == b
-          ? Data.User({key, val: valTrim})
-          : Data.Error({
-              _type: "Validator",
-              key,
-              val: valTrim,
-              msg: "fails on the check digit: expected" ++ b ++ " but got " ++ a,
-            })
-      }->validateWithRexp(
-        x => Js.String2.match_(x, %re("/^\S{27}$/")),
-        "must be 27 characters long",
-      )
+    a => {
+      let b = Js.String2.sliceToEnd(valTrim, ~from=26)
+      a == b
+        ? Data.User({key, val: valTrim})
+        : Data.Error({
+            _type: "CONSTRAINT",
+            key,
+            val: valTrim,
+            msg: "fails on the check digit: expected" ++ b ++ " but got " ++ a,
+          })
+    }->validateWithRexp(
+      x => Js.String2.match_(x, %re("/^\S{27}$/")),
+      "must be 27 characters long",
+    )
   )
 }
 
@@ -140,7 +140,8 @@ let validateSCOR: Data.optSome<string> => Data.opt<string> = ov =>
   Data.User(ov)->validateWithRexp(//TODO: missing actual validation
   x =>
     Formatter.removeWhitespace(x)->Js.String2.match_(%re("/^\S{5,25}$/"))
-  , "must be 5 to 25 characters long")
+  , "must be 5 to 25 characters long"
+  )
 
 let validateReference: (
   Data.opt<string>,
@@ -149,21 +150,21 @@ let validateReference: (
   switch reference {
   | Data.User({key, val}) =>
     switch referenceType {
-    | Data.User(ov) =>
-      switch ov.val {
+    | Data.User(o) =>
+      switch o.val {
       | "QRR" => validateQRR({key, val})
       | "SCOR" => validateSCOR({key, val})
       | _ =>
         Data.Error({
-          _type: "Validator",
+          _type: "CONSTRAINT",
           key,
           val,
           msg: "fails as no reference type could be determined for a non-empty reference value",
         })
       }
-    | t => t
+    | _ => reference
     }
-  | t => t
+  | _ => reference
   }
 
 /**
@@ -180,14 +181,14 @@ debtor            O
 INIT DATA:
 
 iban              M           as implemented (!check parsing)
-addressType       M     K | S
+addressType       M     K | S (!enforce S)
 name              M     70
 street            O     70    S
                         x     K: x = 70 - (streetNumber ? streetNumber + 1 : 0)
 streetNumber      O     16    S
                         x     K: x = 70 - (street ? street + 1 : 0)
 postOfficeBox     O     70    if set, ignore street and streetNumber
-postalCode        D     16    S: w/o countrycode -> must be integer-like
+postalCode        D     16    S: w/o countrycode
                         0     K
 locality          D     35    S
                         0     K
@@ -207,7 +208,7 @@ addressLine1      O     70    S: street OR postOfficeBox
                         70    K: street_streetNumber OR postOfficeBox
 addressLine2      O     16    S: streetNumber
                   M     70    K: postalCode_locality
-postalCode        D     16    S: w/o countrycode -> must be integer-like
+postalCode        D     16    S: w/o countrycode (?)
                         0     K
 locality          D     35    S
                         0     K
@@ -221,18 +222,15 @@ messageCode       A     140   as implemented
 
 
 */
-let validateAddressData: Data.opt<Data.initAddress> => Data.opt<
-  Data.initAddress,
-> = o =>
+
+let validateAddressData: Data.opt<Data.address> => Data.opt<Data.address> =
+  o =>
   switch o {
   | Data.User({key, val: ad}) =>
     Data.User({
       key,
       val: {
-        addressType: ad.addressType->validateWithRexp(
-          x => Js.String2.trim(x)->Js.String2.match_(%re("/^(K|S)$/")),
-          "must be either K or S",
-        ),
+        addressType: ad.addressType,
         name: ad.name->validateWithRexp(
           x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{1,70}$/")),
           "must not be empty and at most 70 characters long",
@@ -241,17 +239,13 @@ let validateAddressData: Data.opt<Data.initAddress> => Data.opt<
           x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{0,70}$/")),
           "must be at most 70 characters long",
         ),
-        streetNumber: ad.streetNumber->validateWithRexp(
+        houseNumber: ad.houseNumber->validateWithRexp(
           x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{0,16}$/")),
           "must be at most 16 characters long",
         ),
-        postOfficeBox: ad.postOfficeBox->validateWithRexp(
-          x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{0,70}$/")),
-          "must be at most 70 characters long",
-        ),
-        postalCode: ad.postalCode->validateWithRexp(
-          x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{0,16}$/")),
-          "must be at most 16 characters long for structured address values",
+        postCode: ad.postCode->validateWithRexp(
+          x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{1,16}$/")),
+          "must not be empty and at most 16 characters long"
         ),
         locality: ad.locality->validateWithRexp(
           x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{1,35}$/")),
@@ -263,17 +257,16 @@ let validateAddressData: Data.opt<Data.initAddress> => Data.opt<
         ),
       },
     })
-  | t => t
+  | _ => o
   }
 
-let validate: Data.init => Data.init = d =>
+let validate: Data.init => Data.init = d => {
   d.referenceType
   ->validateWithRexp(
     x => Formatter.removeWhitespace(x)->Js.String2.match_(%re("/^(QRR|SCOR|NON)$/")),
     "must be either QRR, SCOR or NON",
   )
-  ->(
-    (referenceType): Data.init => {
+  ->((referenceType): Data.init => {
       language: d.language->validateWithRexp(
         x => Formatter.removeWhitespace(x)->Js.String2.match_(%re("/^(en|de|fr|it)$/")),
         "must be either en, de, fr, or it",
@@ -314,3 +307,5 @@ let validate: Data.init => Data.init = d =>
       debtor: d.debtor->validateAddressData,
     }
   )
+}
+

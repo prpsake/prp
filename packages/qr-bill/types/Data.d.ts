@@ -10,23 +10,18 @@ type OptErr<V> = {
 type Opt<V> =
   | {TAG: 0; _0: OptSome<V>} // User
   | {TAG: 1; _0: OptSome<V>} // Default
-  | {TAG: 2; _0: OptErr<V>} // Error
-  | 0; // None
+  | {TAG: 2; _0: OptErr<V>}; // Error
 
 type Language = "fr" | "it" | "de" | "en";
 type Currency = "CHF" | "EUR";
-
-// NB(28.10.22): By swiss-qr-bill-spec `addressType` can also be "S" (structured address items) but only "K" (combined
-// address items) are handled at the moment. See Parser.res and Validator.res.
-type AddressType = "K"; // | "S"
+type AddressType = "S";
 
 export type InitAddress = {
   addressType: Opt<AddressType>;
   name: Opt<string>;
   street: Opt<string>;
-  streetNumber: Opt<string>;
-  postOfficeBox: Opt<string>;
-  postalCode: Opt<string>;
+  houseNumber: Opt<string>;
+  postCode: Opt<string>;
   locality: Opt<string>;
   countryCode: Opt<string>;
 };
@@ -55,13 +50,17 @@ export type Comp = {
   messageCode: string;
   creditorAddressType: AddressType;
   creditorName: string;
+  creditorStreet: string;
+  creditorHouseNumber: string;
+  creditorPostCode: string;
+  creditorLocality: string;
   creditorCountryCode: string;
-  creditorAddressLine1: string;
-  creditorAddressLine2: string;
   debtorAddressType: AddressType;
   debtorName: string;
-  debtorAddressLine1: string;
-  debtorAddressLine2: string;
+  debtorStreet: string;
+  debtorHouseNumber: string;
+  debtorPostCode: string;
+  debtorLocality: string;
   debtorCountryCode: string;
   qrCodeString: string;
   showQRCode: boolean;
@@ -73,7 +72,8 @@ export type Comp = {
   error: OptErr<string>[];
 };
 
-export const initAddressDefaults: InitAddress;
+export const initAddressMandatoryDefaults: InitAddress;
+export const initAddressOptionalDefaults: InitAddress;
 export const initDefaults: Init;
 export const compDefaults: Comp;
 

@@ -11,15 +11,13 @@ type opt<'a> =
   | User(optSome<'a>)
   | Default(optSome<'a>)
   | Error(optErr<'a>)
-  | None
 
-type initAddress = {
+type address = {
   addressType: opt<string>,
   name: opt<string>,
   street: opt<string>,
-  streetNumber: opt<string>,
-  postOfficeBox: opt<string>,
-  postalCode: opt<string>,
+  houseNumber: opt<string>,
+  postCode: opt<string>,
   locality: opt<string>,
   countryCode: opt<string>,
 }
@@ -33,8 +31,8 @@ type init = {
   reference: opt<string>,
   message: opt<string>,
   messageCode: opt<string>,
-  creditor: opt<initAddress>,
-  debtor: opt<initAddress>,
+  creditor: opt<address>,
+  debtor: opt<address>,
 }
 
 type comp = {
@@ -48,13 +46,17 @@ type comp = {
   messageCode: string,
   creditorAddressType: string,
   creditorName: string,
+  creditorStreet: string,
+  creditorHouseNumber: string,
+  creditorPostCode: string,
+  creditorLocality: string,
   creditorCountryCode: string,
-  creditorAddressLine1: string,
-  creditorAddressLine2: string,
   debtorAddressType: string,
   debtorName: string,
-  debtorAddressLine1: string,
-  debtorAddressLine2: string,
+  debtorStreet: string,
+  debtorHouseNumber: string,
+  debtorPostCode: string,
+  debtorLocality: string,
   debtorCountryCode: string,
   qrCodeString: string,
   showQRCode: bool,
@@ -66,8 +68,10 @@ type comp = {
   error: array<optErr<string>>
 }
 
+let foldString: opt<string> => string
+let foldAddress: opt<address> => address
+let initMandatoryAddressDefaults: address
+let initOptionalAddressDefaults: address
 let initDefaults: init
-
 let compDefaults: comp
-
 let comp: init => comp

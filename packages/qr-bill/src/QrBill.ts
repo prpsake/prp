@@ -9,6 +9,8 @@ interface QrBillModel extends Comp {}
 interface QrBill extends QrBillModel {
   tag: string;
   data: QrBillModel;
+  creditorAddressLine1: string;
+  debtorAddressLine1: string;
 }
 
 const QrBillModel: Model<QrBillModel> = Data.compDefaults;
@@ -94,25 +96,26 @@ const QrBill: Component<QrBill> = {
       return values;
     },
   },
-  // QUESTION: Determine what's more convenient. `error` as property or/and
-  // passed as detail in custom event?
+  creditorAddressLine1: ({creditorStreet, creditorHouseNumber}) =>
+    [creditorStreet, creditorHouseNumber].join(" ").trim(),
+  debtorAddressLine1: ({debtorStreet, debtorHouseNumber}) =>
+    [debtorStreet, debtorHouseNumber].join(" ").trim(),
   render: ({
     language,
     currency,
     amount,
     iban,
-    // referenceType: "", // QUESTION: Use case? Delete if none.
     reference,
     message,
     messageCode,
-    // creditorAddressType: "", // QUESTION: Use case if other than 'K'? Delete if none.
     creditorName,
     creditorAddressLine1,
-    creditorAddressLine2,
-    // debtorAddressType: "", // QUESTION: Use case if other than 'K'? Delete if none.
+    creditorPostCode,
+    creditorLocality,
     debtorName,
     debtorAddressLine1,
-    debtorAddressLine2,
+    debtorPostCode,
+    debtorLocality,
     qrCodeString,
     showQRCode,
     showAmount,
@@ -120,7 +123,7 @@ const QrBill: Component<QrBill> = {
     showAdditionalInfo,
     showDebtor,
     reduceContent,
-  }: QrBillModel) =>
+  }: QrBill) =>
     html` <div
         class="w-62 p-5 border-t border-r border-dashed border-black scissors-br">
         <div class="h-7 font-bold text-11 leading-none">
@@ -135,7 +138,7 @@ const QrBill: Component<QrBill> = {
             <div>${iban}</div>
             <div>${creditorName}</div>
             ${!reduceContent && html` <div>${creditorAddressLine1}</div>`}
-            <div>${creditorAddressLine2}</div>
+            <div>${creditorPostCode} ${creditorLocality}</div>
           </div>
 
           ${showReference &&
@@ -158,7 +161,7 @@ const QrBill: Component<QrBill> = {
                 <div class="text-8 leading-9">
                   <div>${debtorName}</div>
                   ${!reduceContent && html` <div>${debtorAddressLine1}</div>`}
-                  <div>${debtorAddressLine2}</div>
+                  <div>${debtorPostCode} ${debtorLocality}</div>
                 </div>
               `
             : svgBlankField(52, 20, {marginTop: ".8pt"})}
@@ -242,7 +245,7 @@ const QrBill: Component<QrBill> = {
               <div>${iban}</div>
               <div>${creditorName}</div>
               <div>${creditorAddressLine1}</div>
-              <div>${creditorAddressLine2}</div>
+              <div>${creditorPostCode} ${creditorLocality}</div>
             </div>
 
             ${showReference &&
@@ -275,7 +278,7 @@ const QrBill: Component<QrBill> = {
                   <div class="text-10 leading-11">
                     <div>${debtorName}</div>
                     <div>${debtorAddressLine1}</div>
-                    <div>${debtorAddressLine2}</div>
+                    <div>${debtorPostCode} ${debtorLocality}</div>
                   </div>
                 `
               : svgBlankField(65, 25, {marginTop: "1.1pt"})}
