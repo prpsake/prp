@@ -17,9 +17,8 @@ pnpm add @prpsake/qr-bill hybrids
 ## Usage
 
 ### Sample data
-```typescript 
+```json5
 // qr-bill-sample.json
-
 {
   "language": "it",
   "currency": "CHF",
@@ -29,21 +28,20 @@ pnpm add @prpsake/qr-bill hybrids
   "creditor": {
     "name": "Andere Org",
     "street": "Hustensaft",
-    "streetNumber": "9",
-    "postalCode": "9000",
+    "houseNumber": "9",
+    "postCode": "9000",
     "locality": "Da",
     "countryCode": "CH"
   },
   "debtor": {
     "name": "Eine Org",
     "street": "Geleepistole",
-    "streetNumber": "1",
-    "postalCode": "1000",
+    "houseNumber": "1",
+    "postCode": "1000",
     "locality": "Dort",
     "countryCode": "CH"
   }
 }
-
 ```
 
 ### Example with [hybrids](https://hybrids.js.org)
@@ -118,17 +116,15 @@ fetch("/data/qr-bill-sample.json")
   creditor: {
     name: string
     street: string
-    streetNumber: string | number
-    postOfficeBox: string | number
-    postalCode: string | number
+    houseNumber: string | number
+    postCode: string | number
     locality: string
     countryCode: string
   },
   debtor: {
     name: string
     street: string
-    streetNumber: string | number
-    postOfficeBox: string | number
+    houseNumber: string | number
     postalCode: string | number
     locality: string
     countryCode: string
