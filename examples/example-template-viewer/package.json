@@ -2,6 +2,7 @@
   "name": "@prpsake/example-template-viewer",
   "version": "0.0.1",
   "description": "",
+  "private": true,
   "type": "module",
   "scripts": {
     "test": "echo run example template viewer test && exit 0",
