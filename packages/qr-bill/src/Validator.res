@@ -107,7 +107,7 @@ let validateIban: Data.opt<string> => Data.opt<string> = o =>
                     _type: "CONSTRAINT",
                     key,
                     val,
-                    msg: "fails on the checksum: expected 1 but got " ++ Belt.Int.toString(x),
+                    msg: Checks.invalidIbanChecksum(Belt.Int.toString(x)),
                   })
           )
       )
@@ -127,11 +127,11 @@ let validateQRR: Data.optSome<string> => Data.opt<string> = ({key, val}) => {
             _type: "CONSTRAINT",
             key,
             val: valTrim,
-            msg: "fails on the check digit: expected" ++ b ++ " but got " ++ a,
+            msg: Checks.invalidQrrCheckDigit(a, b),
           })
     }->validateWithRexp(
       x => Js.String2.match_(x, %re("/^\S{27}$/")),
-      "must be 27 characters long",
+      Checks.invalidCharLenExact("27"),
     )
   )
 }
@@ -139,8 +139,8 @@ let validateQRR: Data.optSome<string> => Data.opt<string> = ({key, val}) => {
 let validateSCOR: Data.optSome<string> => Data.opt<string> = ov =>
   Data.User(ov)->validateWithRexp(//TODO: missing actual validation
   x =>
-    Formatter.removeWhitespace(x)->Js.String2.match_(%re("/^\S{5,25}$/"))
-  , "must be 5 to 25 characters long"
+    Formatter.removeWhitespace(x)->Js.String2.match_(%re("/^\S{5,25}$/")),
+    Checks.invalidCharLenMinMax("5", "25")
   )
 
 let validateReference: (
@@ -159,7 +159,7 @@ let validateReference: (
           _type: "CONSTRAINT",
           key,
           val,
-          msg: "fails as no reference type could be determined for a non-empty reference value",
+          msg: Checks.invalidReference,
         })
       }
     | _ => reference
@@ -233,27 +233,27 @@ let validateAddressData: Data.opt<Data.address> => Data.opt<Data.address> =
         addressType: ad.addressType,
         name: ad.name->validateWithRexp(
           x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{1,70}$/")),
-          "must not be empty and at most 70 characters long",
+          Checks.invalidCharLenMinMax("1", "70"),
         ),
         street: ad.street->validateWithRexp(
           x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{0,70}$/")),
-          "must be at most 70 characters long",
+          Checks.invalidCharLenMax("70"),
         ),
         houseNumber: ad.houseNumber->validateWithRexp(
           x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{0,16}$/")),
-          "must be at most 16 characters long",
+          Checks.invalidCharLenMax("16"),
         ),
         postCode: ad.postCode->validateWithRexp(
           x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{1,16}$/")),
-          "must not be empty and at most 16 characters long"
+          Checks.invalidCharLenMinMax("1", "16"),
         ),
         locality: ad.locality->validateWithRexp(
           x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{1,35}$/")),
-          "must not be empty and at most 35 characters long",
+          Checks.invalidCharLenMinMax("1", "35"),
         ),
         countryCode: ad.countryCode->validateWithRexp(
           x => Formatter.removeWhitespace(x)->Js.String2.match_(%re("/^\S{2}$/")),
-          "must be 2 characters long",
+          Checks.invalidCharLenExact("2"),
         ),
       },
     })
@@ -297,11 +297,11 @@ let validate: Data.init => Data.init = d => {
       reference: d.reference->validateReference(referenceType),
       message: d.message->validateWithRexp(
         x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{0,140}$/")),
-        "must be at most 140 characters long",
+        Checks.invalidCharLenMax("140"),
       ),
       messageCode: d.messageCode->validateWithRexp(
         x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{0,140}$/")),
-        "must be at most 140 characters long",
+        Checks.invalidCharLenMax("140"),
       ),
       creditor: d.creditor->validateAddressData,
       debtor: d.debtor->validateAddressData,
