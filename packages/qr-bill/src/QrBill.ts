@@ -9,8 +9,6 @@ interface QrBillModel extends Comp {}
 interface QrBill extends QrBillModel {
   tag: string;
   data: QrBillModel;
-  creditorAddressLine1: string;
-  debtorAddressLine1: string;
 }
 
 const QrBillModel: Model<QrBillModel> = Data.compDefaults;
@@ -80,11 +78,8 @@ const svgQRCode = (str) =>
   </svg>`;
 
 const QrBill: Component<QrBill> = {
-  tag: "qr-bill",
   ...Data.compDefaults,
-  error: {
-    set: (_host, value: OptErr<string>[] = []) => value,
-  },
+  tag: "qr-bill",
   data: {
     set: (host, values: QrBillModel = Data.compDefaults) => {
       Object.entries(values).forEach(([key, value]) => {
@@ -96,10 +91,9 @@ const QrBill: Component<QrBill> = {
       return values;
     },
   },
-  creditorAddressLine1: ({creditorStreet, creditorHouseNumber}) =>
-    [creditorStreet, creditorHouseNumber].join(" ").trim(),
-  debtorAddressLine1: ({debtorStreet, debtorHouseNumber}) =>
-    [debtorStreet, debtorHouseNumber].join(" ").trim(),
+  error: {
+    set: (_, value: OptErr<string>[] = []) => value,
+  },
   render: ({
     language,
     currency,
@@ -109,11 +103,13 @@ const QrBill: Component<QrBill> = {
     message,
     messageCode,
     creditorName,
-    creditorAddressLine1,
+    creditorStreet,
+    creditorHouseNumber,
     creditorPostCode,
     creditorLocality,
     debtorName,
-    debtorAddressLine1,
+    debtorStreet,
+    debtorHouseNumber,
     debtorPostCode,
     debtorLocality,
     qrCodeString,
@@ -123,7 +119,7 @@ const QrBill: Component<QrBill> = {
     showAdditionalInfo,
     showDebtor,
     reduceContent,
-  }: QrBill) =>
+  }: QrBillModel) =>
     html` <div
         class="w-62 p-5 border-t border-r border-dashed border-black scissors-br">
         <div class="h-7 font-bold text-11 leading-none">
@@ -137,7 +133,8 @@ const QrBill: Component<QrBill> = {
           <div class="text-8 leading-9 mb-line-9">
             <div>${iban}</div>
             <div>${creditorName}</div>
-            ${!reduceContent && html` <div>${creditorAddressLine1}</div>`}
+            ${!reduceContent &&
+            html` <div>${creditorStreet} ${creditorHouseNumber}</div>`}
             <div>${creditorPostCode} ${creditorLocality}</div>
           </div>
 
@@ -160,7 +157,8 @@ const QrBill: Component<QrBill> = {
             ? html`
                 <div class="text-8 leading-9">
                   <div>${debtorName}</div>
-                  ${!reduceContent && html` <div>${debtorAddressLine1}</div>`}
+                  ${!reduceContent &&
+                  html` <div>${debtorStreet} ${debtorHouseNumber}</div>`}
                   <div>${debtorPostCode} ${debtorLocality}</div>
                 </div>
               `
@@ -244,7 +242,7 @@ const QrBill: Component<QrBill> = {
             <div class="text-10 leading-11 mb-line-11">
               <div>${iban}</div>
               <div>${creditorName}</div>
-              <div>${creditorAddressLine1}</div>
+              <div>${creditorStreet} ${creditorHouseNumber}</div>
               <div>${creditorPostCode} ${creditorLocality}</div>
             </div>
 
@@ -277,7 +275,7 @@ const QrBill: Component<QrBill> = {
               ? html`
                   <div class="text-10 leading-11">
                     <div>${debtorName}</div>
-                    <div>${debtorAddressLine1}</div>
+                    <div>${debtorStreet} ${debtorHouseNumber}</div>
                     <div>${debtorPostCode} ${debtorLocality}</div>
                   </div>
                 `
