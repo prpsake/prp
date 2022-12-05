@@ -1,5 +1,5 @@
 /*
-NB: 
+NB:
 The backticks are a workaround some unicode chars are wrongly compiled, e.g.:
 
 let blub = "please... Ä"
@@ -10,8 +10,6 @@ The following thread mentions that this behaviour ist fixed in the master
 as of mid september 21 or so.
 https://forum.rescript-lang.org/t/unicode-guidance/2389
 */
-
-
 
 type translation =
   {
@@ -29,9 +27,6 @@ type translation =
     debtorFieldHeading: string,
     ultimateCreditorHeading: string
   }
-
-
-
 
 let translations =
  {

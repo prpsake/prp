@@ -1,14 +1,24 @@
+import {
+  type Component,
+  type Model,
+  type HybridElement,
+  html,
+  define,
+  dispatch,
+} from "hybrids";
 import type {Comp, OptErr} from "../types/Data";
-import {html, define, dispatch, Component, Model, HybridElement} from "hybrids";
-import {translations as tr} from "./Translations.mjs";
+import type {Translation} from "../types/Translations";
+import {translations} from "./Translations.mjs";
 import * as QRCode from "./QRCode.mjs";
 import * as Data from "./Data.mjs";
 import style from "./style.css";
 
 interface QrBillModel extends Comp {}
-interface QrBill extends QrBillModel {
+interface QrBill extends Comp {
   tag: string;
   data: QrBillModel;
+  error: OptErr<string>[];
+  tr: Translation;
 }
 
 const QrBillModel: Model<QrBillModel> = Data.compDefaults;
@@ -82,20 +92,21 @@ const QrBill: Component<QrBill> = {
   tag: "qr-bill",
   data: {
     set: (host, values: QrBillModel = Data.compDefaults) => {
-      Object.entries(values).forEach(([key, value]) => {
-        if (key === "error" && Array.isArray(value) && value.length > 0) {
-          dispatch(host, "error", {detail: value});
-        }
-        host[key] = value;
-      });
+      Object.entries(values).forEach(([key, value]) => (host[key] = value));
       return values;
+    },
+    observe(host) {
+      if (host.error.length > 0) {
+        dispatch(host, "error", {detail: host.error});
+      }
     },
   },
   error: {
     set: (_, value: OptErr<string>[] = []) => value,
   },
+  tr: ({language}) => translations[language] || translations["en"],
   render: ({
-    language,
+    tr,
     currency,
     amount,
     iban,
@@ -119,17 +130,13 @@ const QrBill: Component<QrBill> = {
     showAdditionalInfo,
     showDebtor,
     reduceContent,
-  }: QrBillModel) =>
+  }: QrBill) =>
     html` <div
         class="w-62 p-5 border-t border-r border-dashed border-black scissors-br">
-        <div class="h-7 font-bold text-11 leading-none">
-          ${tr[language].receiptTitle}
-        </div>
+        <div class="h-7 font-bold text-11 leading-none">${tr.receiptTitle}</div>
 
         <div class="h-56">
-          <div class="font-bold text-6 leading-9">
-            ${tr[language].creditorHeading}
-          </div>
+          <div class="font-bold text-6 leading-9">${tr.creditorHeading}</div>
           <div class="text-8 leading-9 mb-line-9">
             <div>${iban}</div>
             <div>${creditorName}</div>
@@ -140,18 +147,14 @@ const QrBill: Component<QrBill> = {
 
           ${showReference &&
           html`
-            <div class="font-bold text-6 leading-9">
-              ${tr[language].referenceHeading}
-            </div>
+            <div class="font-bold text-6 leading-9">${tr.referenceHeading}</div>
             <div class="text-8 leading-9 mb-line-9">
               <div>${reference}</div>
             </div>
           `}
 
           <div class="font-bold text-6 leading-9">
-            ${showDebtor
-              ? tr[language].debtorHeading
-              : tr[language].debtorFieldHeading}
+            ${showDebtor ? tr.debtorHeading : tr.debtorFieldHeading}
           </div>
           ${showDebtor
             ? html`
@@ -167,16 +170,12 @@ const QrBill: Component<QrBill> = {
 
         <div class="h-14 flex">
           <div class="flex-shrink w-22">
-            <div class="font-bold text-6 leading-9">
-              ${tr[language].currencyHeading}
-            </div>
+            <div class="font-bold text-6 leading-9">${tr.currencyHeading}</div>
             <div class="text-8 leading-9">${currency}</div>
           </div>
 
           <div class=${{"flex-grow": true, flex: !showAmount}}>
-            <div class="font-bold text-6 leading-9">
-              ${tr[language].amountHeading}
-            </div>
+            <div class="font-bold text-6 leading-9">${tr.amountHeading}</div>
             ${showAmount
               ? html`<div class="text-8 leading-9">${amount}</div>`
               : svgBlankField(30, 10, {marginTop: "2pt", marginLeft: "4pt"})}
@@ -184,7 +183,7 @@ const QrBill: Component<QrBill> = {
         </div>
 
         <div class="h-18 font-bold text-6 text-right">
-          ${tr[language].acceptancePointHeading}
+          ${tr.acceptancePointHeading}
         </div>
       </div>
 
@@ -192,7 +191,7 @@ const QrBill: Component<QrBill> = {
         <div class="h-85 flex">
           <div class="w-51">
             <div class="h-7 font-bold text-11 leading-none">
-              ${tr[language].paymentPartTitle}
+              ${tr.paymentPartTitle}
             </div>
 
             <div class="h-56 py-5 pr-5">
@@ -204,14 +203,14 @@ const QrBill: Component<QrBill> = {
                   <div class="h-22 flex">
                     <div class="flex-shrink w-22">
                       <div class="font-bold text-8 leading-11">
-                        ${tr[language].currencyHeading}
+                        ${tr.currencyHeading}
                       </div>
                       <div class="text-10 leading-11">${currency}</div>
                     </div>
 
                     <div class="flex-grow">
                       <div class="font-bold text-8 leading-11">
-                        ${tr[language].amountHeading}
+                        ${tr.amountHeading}
                       </div>
                       <div class="text-10 leading-11">${amount}</div>
                     </div>
@@ -220,10 +219,8 @@ const QrBill: Component<QrBill> = {
               : html`
                   <div class="h-22">
                     <div class="flex font-bold text-8 leading-11">
-                      <div class="mr-line-7">
-                        ${tr[language].currencyHeading}
-                      </div>
-                      <div>${tr[language].amountHeading}</div>
+                      <div class="mr-line-7">${tr.currencyHeading}</div>
+                      <div>${tr.amountHeading}</div>
                     </div>
                     <div class="flex">
                       <div class="text-10 leading-11 mr-line-9">
@@ -236,9 +233,7 @@ const QrBill: Component<QrBill> = {
           </div>
 
           <div class="w-87">
-            <div class="font-bold text-8 leading-11">
-              ${tr[language].creditorHeading}
-            </div>
+            <div class="font-bold text-8 leading-11">${tr.creditorHeading}</div>
             <div class="text-10 leading-11 mb-line-11">
               <div>${iban}</div>
               <div>${creditorName}</div>
@@ -249,7 +244,7 @@ const QrBill: Component<QrBill> = {
             ${showReference &&
             html`
               <div class="font-bold text-8 leading-11">
-                ${tr[language].referenceHeading}
+                ${tr.referenceHeading}
               </div>
               <div class="text-10 leading-11 mb-line-11">
                 <div>${reference}</div>
@@ -258,7 +253,7 @@ const QrBill: Component<QrBill> = {
             ${showAdditionalInfo &&
             html`
               <div class="font-bold text-8 leading-11">
-                ${tr[language].additionalInfoHeading}
+                ${tr.additionalInfoHeading}
               </div>
               <div class="text-10 leading-11 mb-line-11">
                 ${message && html`<div>${message}</div>`}
@@ -267,9 +262,7 @@ const QrBill: Component<QrBill> = {
             `}
 
             <div class="font-bold text-8 leading-11">
-              ${showDebtor
-                ? tr[language].debtorHeading
-                : tr[language].debtorFieldHeading}
+              ${showDebtor ? tr.debtorHeading : tr.debtorFieldHeading}
             </div>
             ${showDebtor
               ? html`

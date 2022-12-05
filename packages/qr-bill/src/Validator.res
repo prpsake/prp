@@ -56,7 +56,7 @@ let mod10FromIntString: string => string = str => {
 let validateWithRexp: (
   Data.opt<string>,
   string => option<array<option<string>>>,
-  Checks.fn,
+  string,
 ) => Data.opt<string> = (o, fn, msg) =>
   switch o {
   | Data.User({key, val}) =>
@@ -71,7 +71,7 @@ let validateWithRexp: (
   | t => t
   }
 
-let validateWithPred: (Data.opt<'a>, string => bool, Checks.fn) => Data.opt<'a> = (
+let validateWithPred: (Data.opt<'a>, string => bool, string) => Data.opt<'a> = (
   o,
   fn,
   msg,

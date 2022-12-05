@@ -1,3 +1,5 @@
+import type {Language} from "./Translations";
+
 type OptSome<V> = {key: string; val: V};
 
 type OptErr<V> = {
@@ -12,11 +14,10 @@ type Opt<V> =
   | {TAG: 1; _0: OptSome<V>} // Default
   | {TAG: 2; _0: OptErr<V>}; // Error
 
-type Language = "fr" | "it" | "de" | "en";
 type Currency = "CHF" | "EUR";
 type AddressType = "S";
 
-export type InitAddress = {
+export type Address = {
   addressType: Opt<AddressType>;
   name: Opt<string>;
   street: Opt<string>;
@@ -35,8 +36,8 @@ export type Init = {
   reference: Opt<string>;
   message: Opt<string>;
   messageCode: Opt<string>;
-  creditor: Opt<InitAddress>;
-  debtor: Opt<InitAddress>;
+  creditor: Opt<Address>;
+  debtor: Opt<Address>;
 };
 
 export type Comp = {
@@ -72,8 +73,8 @@ export type Comp = {
   error: OptErr<string>[];
 };
 
-export const initAddressMandatoryDefaults: InitAddress;
-export const initAddressOptionalDefaults: InitAddress;
+export const initAddressMandatoryDefaults: Address;
+export const initAddressOptionalDefaults: Address;
 export const initDefaults: Init;
 export const compDefaults: Comp;
 
