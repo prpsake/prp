@@ -4,7 +4,7 @@ type optErr<'a> = {
   @as("type") _type: string,
   key: string,
   val: 'a,
-  msg: string
+  msg: (. unit) => string
 }
 
 type opt<'a> =

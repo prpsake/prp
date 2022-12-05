@@ -4,7 +4,7 @@ type optErr<'a> = {
   @as("type") _type: string,
   key: string,
   val: 'a,
-  msg: string
+  msg: Checks.fn
 }
 
 type opt<'a> =
@@ -74,7 +74,7 @@ let initMandatoryAddressDefaults: address = {
     _type: "CONSTRAINT",
     key: "name",
     val: "",
-    msg: "must be set"
+    msg: (.) => "must be set"
   }),
   street: Default({key: "street", val: ""}),
   houseNumber: Default({key: "houseNumber", val: ""}),
@@ -83,13 +83,13 @@ let initMandatoryAddressDefaults: address = {
     _type: "CONSTRAINT",
     key: "locality",
     val: "",
-    msg: "must be set"
+    msg: (.) => "must be set"
   }),
   countryCode: Error({
     _type: "CONSTRAINT",
     key: "countryCode",
     val: "",
-    msg: "must be set"
+    msg: (.) => "must be set"
   }),
 }
 
@@ -109,14 +109,14 @@ let initDefaults: init = {
     _type: "CONSTRAINT",
     key: "currency",
     val: "",
-    msg: "must be set"
+    msg: (.) => "must be set"
   }),
   amount: Default({key: "amount", val: ""}),
   iban: Error({
     _type: "CONSTRAINT",
     key: "iban",
     val: "",
-    msg: "must be set"
+    msg: (.) => "must be set"
   }),
   referenceType: Default({key: "referenceType", val: "NON"}),
   reference: Default({key: "reference", val: ""}),
@@ -126,12 +126,12 @@ let initDefaults: init = {
     _type: "CONSTRAINT",
     key: "creditor",
     val: initMandatoryAddressDefaults,
-    msg: "must be set"
+    msg: (.) => "must be set"
   }),
   debtor: Default({key: "debtor", val: initOptionalAddressDefaults}),
 }
 
-let compErrorDefaults: optErr<string> = {_type: "", key: "", val: "", msg: ""}
+let compErrorDefaults: optErr<string> = {_type: "", key: "", val: "", msg: (.) => ""}
 
 let compDefaults: comp = {
   language: "en",

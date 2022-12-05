@@ -56,7 +56,7 @@ let mod10FromIntString: string => string = str => {
 let validateWithRexp: (
   Data.opt<string>,
   string => option<array<option<string>>>,
-  string,
+  Checks.fn,
 ) => Data.opt<string> = (o, fn, msg) =>
   switch o {
   | Data.User({key, val}) =>
@@ -71,7 +71,7 @@ let validateWithRexp: (
   | t => t
   }
 
-let validateWithPred: (Data.opt<'a>, string => bool, string) => Data.opt<'a> = (
+let validateWithPred: (Data.opt<'a>, string => bool, Checks.fn) => Data.opt<'a> = (
   o,
   fn,
   msg,
@@ -107,7 +107,7 @@ let validateIban: Data.opt<string> => Data.opt<string> = o =>
                     _type: "CONSTRAINT",
                     key,
                     val,
-                    msg: Checks.invalidIbanChecksum(Belt.Int.toString(x)),
+                    msg: Checks.invalidChecksum(Belt.Int.toString(x), "1"),
                   })
           )
       )
@@ -127,7 +127,7 @@ let validateQRR: Data.optSome<string> => Data.opt<string> = ({key, val}) => {
             _type: "CONSTRAINT",
             key,
             val: valTrim,
-            msg: Checks.invalidQrrCheckDigit(a, b),
+            msg: Checks.invalidCheckDigit(a, b),
           })
     }->validateWithRexp(
       x => Js.String2.match_(x, %re("/^\S{27}$/")),
@@ -166,62 +166,6 @@ let validateReference: (
     }
   | _ => reference
   }
-
-/**
-
-Mandatory         M
-Dependent         D     Mandatory if parent group is set
-Additional        A     Must be set if not empty
-Optional          O     Must be set but may be empty (string)
-DoNotDeliver      X     Must be set empty
-
-creditor          M
-debtor            O
-
-INIT DATA:
-
-iban              M           as implemented (!check parsing)
-addressType       M     K | S (!enforce S)
-name              M     70
-street            O     70    S
-                        x     K: x = 70 - (streetNumber ? streetNumber + 1 : 0)
-streetNumber      O     16    S
-                        x     K: x = 70 - (street ? street + 1 : 0)
-postOfficeBox     O     70    if set, ignore street and streetNumber
-postalCode        D     16    S: w/o countrycode
-                        0     K
-locality          D     35    S
-                        0     K
-country           M     2
-amount            O           if set, as implemented (!check number), else empty
-currency          M           as implemented
-referenceType     M     QRR | SCOR | NON
-reference         D           as implemented (!check parsing)
-message           O     140   as implemented
-messageCode       A     140   as implemented
-
-
-QR-BILL DATA:
-
-iban              M           as implemented (!check parsing)
-addressLine1      O     70    S: street OR postOfficeBox
-                        70    K: street_streetNumber OR postOfficeBox
-addressLine2      O     16    S: streetNumber
-                  M     70    K: postalCode_locality
-postalCode        D     16    S: w/o countrycode (?)
-                        0     K
-locality          D     35    S
-                        0     K
-country           M     2
-amount            O           if set, as implemented, else empty
-currency          M           as implemented
-referenceType     M     QRR | SCOR | NON
-reference         D           as implemented (!check parsing)
-message           O     140   as implemented
-messageCode       A     140   as implemented
-
-
-*/
 
 let validateAddressData: Data.opt<Data.address> => Data.opt<Data.address> =
   o =>
@@ -264,16 +208,16 @@ let validate: Data.init => Data.init = d => {
   d.referenceType
   ->validateWithRexp(
     x => Formatter.removeWhitespace(x)->Js.String2.match_(%re("/^(QRR|SCOR|NON)$/")),
-    "must be either QRR, SCOR or NON",
+    Checks.invalidOption(["QRR", "SCOR", "NON"]),
   )
   ->((referenceType): Data.init => {
       language: d.language->validateWithRexp(
         x => Formatter.removeWhitespace(x)->Js.String2.match_(%re("/^(en|de|fr|it)$/")),
-        "must be either en, de, fr, or it",
+        Checks.invalidOption(["en", "de", "fr", "it"]),
       ),
       currency: d.currency->validateWithRexp(
         x => Formatter.removeWhitespace(x)->Js.String2.match_(%re("/^(CHF|EUR)$/")),
-        "must be either CHF or EUR",
+        Checks.invalidOption(["CHF","EUF"]),
       ),
       amount: d.amount->validateWithPred(
         x =>
@@ -282,7 +226,7 @@ let validate: Data.init => Data.init = d => {
           ->Js.Float.toFixedWithPrecision(~digits=2)
           ->Js.Float.fromString
           ->(x => x >= 0.01 && x <= 999999999.99),
-        "must be a number ranging from 0.01 to 999999999.99",
+        Checks.invalidNumberRange("0.01", "999999999.99"),
       ),
       iban: d.iban
       ->validateWithRexp(
@@ -290,7 +234,7 @@ let validate: Data.init => Data.init = d => {
           Formatter.removeWhitespace(x)
           ->Js.String2.toUpperCase
           ->Js.String2.match_(%re("/^(CH|LI)[0-9]{19}$/")),
-        "must start with countryCode CH or LI followed by 19 digits (ex. CH1234567890123456789)",
+        Checks.invalidIbanFormat,
       )
       ->validateIban,
       referenceType,
