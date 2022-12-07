@@ -1,23 +1,24 @@
 import {store} from "hybrids";
 
+const SESSION_KEY = "prp:template:session";
+
 export default {
   style: "",
-  useFile: false,
-  file: "invoice-sample.json",
+  file: "sample.json",
   language: "",
   title: "",
   viewVertical: false,
   [store.connect]: {
     get: () => {
-      if (sessionStorage.getItem("prp:template:session")) {
-        const jsonString = sessionStorage.getItem("prp:template:session");
+      if (sessionStorage.getItem(SESSION_KEY)) {
+        const jsonString = sessionStorage.getItem(SESSION_KEY);
         return JSON.parse(jsonString);
       }
       return {};
     },
     set: (_id, values, _keys) => {
       const jsonString = JSON.stringify(values);
-      sessionStorage.setItem("prp:template:session", jsonString);
+      sessionStorage.setItem(SESSION_KEY, jsonString);
       return values;
     },
     observe: (_id, values, _lastValues) => {

@@ -52,26 +52,40 @@ import {QrBill, QrBillModel, jsonToQrBillModel} from "@prpsake/qr-bill";
 import {type Model, define, store, html} from "hybrids";
 import "./style.css";
 
+interface MyApp {
+  qrBillData: QrBillModel;
+}
+
 const MyQrBillModel: Model<QrBillModel> = {
   ...QrBillModel,
-  [store.connect]: {
-    get: () =>
-      fetch("/data/qr-bill-sample.json")
-        .then((resp) => resp.json())
-        .then(jsonToQrBillModel)
-        .catch(console.log),
-  },
+  [store.connect]: () =>
+    fetch("/data/qr-bill-sample.json")
+      .then((resp) => resp.json())
+      .then(jsonToQrBillModel)
+      .catch(console.log),
 };
 
-define<QrBill>({
-  tag: "my-qr-bill",
-  data: store(MyQrBillModel),
-  render: ({data}) => html` ${store.ready(data) && QrBill.render(data)} `,
+define(QrBill);
+define<MyApp>({
+  tag: "my-app",
+  qrBillData: store(MyQrBillModel),
+  content: ({qrBillData}) => html`
+    ${store.ready(qrBillData) && html`
+      <qr-bill
+        data=${qrBillData}
+        onerror=${handleQrBillError}>
+      </qr-bill>
+    `}
+  `,
 });
+
+function handleQrBillError(_host, {detail}) {
+  detail.forEach(({key, msg}) => console.log(key, ":", msg));
+}
 ```
 
 ```html
-<my-qr-bill></my-qr-bill>
+<my-app></my-app>
 ```
 
 The imported stylesheet (`import "./style.css"`) is not part of the package. It is shown here to refer to the additional styles used in the full example mentioned above. it contains a few reset, component positioning, page and print styles, respectively some screen-only-styles. See [here](https://github.com/prpsake/prp/blob/main/examples/example-qr-bill-hybrids/src/style.css).
@@ -86,8 +100,8 @@ customElements.define("my-qr-bill", QrBillHybridElement);
 
 const myQrBill: QrBillHybridElement = document.querySelector("my-qr-bill");
 
-myQrBill.addEventListener("error", (e) => {
-  e.detail.forEach(console.log);
+myQrBill.addEventListener("error", ({detail}) => {
+  detail.forEach(({key, msg}) => console.log(key, ":", msg));
 });
 
 fetch("/data/qr-bill-sample.json")
@@ -104,30 +118,25 @@ fetch("/data/qr-bill-sample.json")
 
 ## Model
 
-```typescript 
-{
+```typescript
+type Address = {
+  name: string;
+  street?: string;
+  houseNumber?: string | number;
+  postalCode: string | number;
+  locality: string;
+  countryCode: string
+}
+
+type Init = {
   language: "fr" | "it" | "de" | "en"
   currency: "CHF" | "EUR"
-  amount: string
+  amount: string | number
   iban: string
-  reference: string
-  message: string
-  messageCode: string
-  creditor: {
-    name: string
-    street: string
-    houseNumber: string | number
-    postCode: string | number
-    locality: string
-    countryCode: string
-  },
-  debtor: {
-    name: string
-    street: string
-    houseNumber: string | number
-    postalCode: string | number
-    locality: string
-    countryCode: string
-  }
+  reference?: string
+  message?: string
+  messageCode?: string
+  creditor: Address
+  debtor?: Address
 }
 ```

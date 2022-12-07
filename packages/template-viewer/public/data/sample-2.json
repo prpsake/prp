@@ -1,0 +1,6 @@
+{
+  "templates": ["foo", "baz"],
+  "title": "Sample 2",
+  "language": "de",
+  "foo": "boo"
+}

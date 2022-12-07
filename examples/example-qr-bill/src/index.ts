@@ -6,7 +6,6 @@ customElements.define("my-qr-bill", QrBillHybridElement);
 const myQrBill: QrBillHybridElement = document.querySelector("my-qr-bill");
 
 myQrBill.addEventListener("error", ({detail}) => {
-  console.log(detail);
   detail.forEach(({key, msg}) => console.log(key, ":", msg));
 });
 

@@ -10,7 +10,7 @@ export function preview({host, onSuccess, onError = console.log}) {
       const viewElm = host.querySelector(".view").firstElementChild.shadowRoot;
 
       host.previewElm.innerHTML = "";
-      document.head.querySelectorAll("styleApp").forEach((elm) => elm.remove());
+      document.head.querySelectorAll("style").forEach((elm) => elm.remove());
       Promise.all([
         store
           .set(Session, {

@@ -91,7 +91,7 @@ const QrBill: Component<QrBill> = {
   ...Data.compDefaults,
   tag: "qr-bill",
   data: {
-    set: (host, values: QrBillModel = Data.compDefaults) => {
+    set: (host, values: QrBillModel | {} = {}) => {
       Object.entries(values).forEach(([key, value]) => (host[key] = value));
       return values;
     },
@@ -102,7 +102,8 @@ const QrBill: Component<QrBill> = {
     },
   },
   error: {
-    set: (_, value: OptErr<string>[] = []) => value,
+    set: (_, values: OptErr<string>[] = []) =>
+      values.filter(({type}) => type !== ""),
   },
   tr: ({language}) => translations[language] || translations["en"],
   render: ({

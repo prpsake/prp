@@ -168,5 +168,5 @@ export const view: View<InvoiceBase> = ({data}) => html`
 `;
 
 function handleQrBillError(_host, {detail}) {
-  detail.forEach(({key, msg}) => console.log(key, ":", msg()));
+  detail.forEach(({key, msg}) => console.log(key, ":", msg));
 }
