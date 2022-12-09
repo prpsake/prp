@@ -46,5 +46,6 @@ let readFileAsText: readFileParam => unit = ({ e, onLoad }) => {
     onLoad(. { result: result(reader), file })
   }, { once: true })
 
+  Webapi.Pro
   readAsText(reader, file)
 }

@@ -191,12 +191,16 @@ function readTemplateJsonData({host, e, templates}) {
     onLoad: ({result, file}) => {
       try {
         const data = JSON.parse(result);
-        store.set(Session, {file: file.name}).then(() => {
-          const templateName = router.currentUrl().pathname.substring(1);
-          store
-            .set(templates[templateName].model, data)
-            .then(() => preview({host}));
-        });
+        store
+          .set(Session, {file: file.name})
+          .then(() =>
+            Promise.all(
+              Object.values(templates).map((template) =>
+                store.set(template.model, data),
+              ),
+            ),
+          )
+          .then(() => preview({host}));
       } catch (e) {
         console.log(e);
       }

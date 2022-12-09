@@ -11,7 +11,6 @@ export function connect(model) {
       set: (_id, values) => values,
       get: () => {
         const {file} = store.get(Session);
-        console.log("store.connect", file);
         return fetch(`/data/${file}`)
           .then((resp) => resp.json())
           .catch((e) => console.log(e));

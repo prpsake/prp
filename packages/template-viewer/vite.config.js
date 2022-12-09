@@ -4,6 +4,7 @@ import {defineConfig} from "vite";
 export default ({mode}) =>
   mode === "production"
     ? defineConfig({
+        publicDir: false,
         build: {
           target: "esnext",
           minify: true,
