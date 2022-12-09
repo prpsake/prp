@@ -21,19 +21,10 @@ const TemplateViewer = ({views, baseUrl = "", onFileInput, onFileDrop}) => ({
   previewElm: {
     value: undefined,
     connect: (host, key) => {
-      // NB(22.11.22): Currently this mutation observer not only handles the
-      // initial preview, but also successive previews via nav-link, which
-      // is not super obvious. For the latter, successive previews might be
-      // handled via click-event in the future.
-      new MutationObserver((mutations, observer) => {
-        for (const mutation of mutations)
-          if (mutation.addedNodes[0]?.tagName?.startsWith("VIEW-")) {
-            //observer.disconnect();
-            host[key] = host.querySelector(".template-view");
-            preview({host});
-            break;
-          }
-      }).observe(host, {subtree: true, childList: true});
+      readyView({host}).then(({host}) => {
+        host[key] = host.querySelector(".template-view");
+        togglePreview({host}).then(preview).then(togglePreview);
+      });
     },
   },
   view: router(views, {url: `/${baseUrl}`}),
@@ -66,7 +57,8 @@ const TemplateViewer = ({views, baseUrl = "", onFileInput, onFileDrop}) => ({
                   <li class="mb-2">
                     <a
                       class="inline-block px-2 py-1 drop-shadow-sm rounded-md bg-action-bg hover:bg-action-hover-bg font-light text-sm text-gray-200 select-none"
-                      href="${router.url(v)}">
+                      href="${router.url(v)}"
+                      onclick=${previewOnClick}>
                       ${v[router.connect].url.substring(1)}
                     </a>
                   </li>
@@ -160,24 +152,41 @@ export function defineWith({
         views: Object.entries(templatesConnected).map(([key, {view, model}]) =>
           defineViewWith({key, view, model}),
         ),
-        onFileInput: onFileInputFn({templates: templatesConnected}),
-        onFileDrop: onFileDropFn({templates: templatesConnected}),
+        onFileInput: previewOnFileInputFn({templates: templatesConnected}),
+        onFileDrop: previewOnFileInputFn({
+          templates: templatesConnected,
+          preventDefault: true,
+        }),
       }),
     });
   });
 }
 
-function onFileDropFn({templates}) {
-  return function onFileDrop(host, e) {
-    e.preventDefault();
-    readTemplateJsonData({host, e, templates});
+function readyView({host}) {
+  return new Promise((resolve, _reject) => {
+    new MutationObserver((mutations, observer) => {
+      for (const mutation of mutations)
+        if (mutation.addedNodes[0]?.tagName?.startsWith("VIEW-")) {
+          observer.disconnect();
+          resolve({host});
+          break;
+        }
+    }).observe(host, {subtree: true, childList: true});
+  });
+}
+
+function previewOnFileInputFn({templates, preventDefault = false}) {
+  return function previewOnFileInput(host, e) {
+    preventDefault && e.preventDefault();
+    readTemplateJsonData({host, e, templates})
+      .then(togglePreview)
+      .then(preview)
+      .then(togglePreview);
   };
 }
 
-function onFileInputFn({templates}) {
-  return function onFileInput(host, e) {
-    readTemplateJsonData({host, e, templates});
-  };
+function previewOnClick(host, _e) {
+  togglePreview({host}).then(preview).then(togglePreview);
 }
 
 function toggleMode(host, _e) {
@@ -185,25 +194,26 @@ function toggleMode(host, _e) {
   store.set(Session, {viewVertical: !viewVertical});
 }
 
+function togglePreview({host}) {
+  return new Promise((resolve, _reject) => {
+    host.previewElm.addEventListener("transitionend", () => resolve({host}), {
+      once: true,
+    });
+    setTimeout(() => (host.showPreview = !host.showPreview));
+  });
+}
+
 function readTemplateJsonData({host, e, templates}) {
-  Webapi.FileReader.readFileAsText({
-    e,
-    onLoad: ({result, file}) => {
-      try {
-        const data = JSON.parse(result);
-        store
-          .set(Session, {file: file.name})
-          .then(() =>
-            Promise.all(
-              Object.values(templates).map((template) =>
-                store.set(template.model, data),
-              ),
-            ),
-          )
-          .then(() => preview({host}));
-      } catch (e) {
-        console.log(e);
-      }
-    },
+  return Webapi.FileReader.readFileAsText({e}).then(({result, file}) => {
+    const data = JSON.parse(result);
+    return store
+      .set(Session, {file: file.name})
+      .then((session) =>
+        Promise.all(
+          Object.values(templates).map((template) =>
+            store.set(template.model, data),
+          ),
+        ).then(() => ({host, session})),
+      );
   });
 }

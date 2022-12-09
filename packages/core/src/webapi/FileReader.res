@@ -1,15 +1,14 @@
 type t
 type listenerOptions = { once: bool }
-type onLoadFnParam = { result: string, file: Webapi.File.t }
-type onLoadFn = (. onLoadFnParam) => unit
-type readFileParam = { e: Webapi.Dom.InputEvent.t, onLoad: onLoadFn }
+type readFileParam = { e: Webapi.Dom.InputEvent.t }
+type textResult = { result: string, file: Webapi.File.t }
 
 @new external make: unit => t = "FileReader"
 @get external result: t => string = "result"
 @send external readAsText: (t, Webapi.File.t) => unit = "readAsText"
 @send external addEventListener: (t, string, Dom.event => unit, listenerOptions) => unit = "addEventListener"
 
-let readFileAsText: readFileParam => unit = ({ e, onLoad }) => {
+let readFileAsText: readFileParam => Promise.t<textResult> = ({ e }) => {
   let reader = make()
   let file =
     switch Webapi.Dom.InputEvent.type_(e) {
@@ -42,10 +41,12 @@ let readFileAsText: readFileParam => unit = ({ e, onLoad }) => {
     | None => Js.Exn.raiseError("No_file")
     }
 
-  addEventListener(reader, "load", _e => {
-    onLoad(. { result: result(reader), file })
-  }, { once: true })
+  let promise = Promise.make((resolve, _reject) =>{
+    addEventListener(reader, "load", _e => {
+      resolve(. { result: result(reader), file })
+    }, { once: true })
+  })
 
-  Webapi.Pro
   readAsText(reader, file)
+  promise
 }

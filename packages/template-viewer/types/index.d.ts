@@ -9,14 +9,13 @@ import {QrBillModel} from "@prpsake/qr-bill";
 
 type PRPModel<M> = {
   qrBill?: QrBillModel | ((data: M) => QrBillModel);
-  connect?: Promise<any | void>;
 };
 
 export type Model<M> = HybridsModel<M> & PRPModel<M>;
 export type View<M> = ({
   data,
 }: {
-  data: Omit<M & PRPModel<M>, "connect">;
+  data: M & PRPModel<M>;
 }) => UpdateFunctionWithMethods<any>;
 
 type Template<M> = {

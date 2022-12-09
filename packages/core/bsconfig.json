@@ -25,5 +25,8 @@
       "basic": false
     }
   },
-  "bs-dependencies": ["rescript-webapi"]
+  "bs-dependencies": [
+    "rescript-webapi",
+    "@ryyppy/rescript-promise"
+  ]
 }
