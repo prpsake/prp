@@ -18,8 +18,8 @@ export function preview({host, error = []}) {
       })
       .catch(
         Webapi.Error.resolveFromOriginal({
-          name: "PaginatorError",
-          message: "failed to set session properties",
+          name: "StoreModelError",
+          message: "failed to update store model",
         }),
       ),
     previewer
@@ -30,7 +30,7 @@ export function preview({host, error = []}) {
       )
       .catch(
         Webapi.Error.resolveFromOriginal({
-          name: "PaginatorError",
+          name: "PreviewerError",
           message: "failed to generate the preview",
         }),
       ),
