@@ -194,26 +194,76 @@ function toggleMode(host, _e) {
   store.set(Session, {viewVertical: !viewVertical});
 }
 
-function togglePreview({host}) {
-  return new Promise((resolve, _reject) => {
-    host.previewElm.addEventListener("transitionend", () => resolve({host}), {
-      once: true,
-    });
-    setTimeout(() => (host.showPreview = !host.showPreview));
-  });
+function togglePreview({host, error = []}) {
+  let timeout;
+  return Promise.any([
+    new Promise((resolve, _reject) => {
+      host.previewElm.addEventListener(
+        "transitionend",
+        () => {
+          clearTimeout(timeout);
+          resolve({host, error});
+        },
+        {
+          once: true,
+        },
+      );
+      setTimeout(() => (host.showPreview = !host.showPreview));
+    }),
+    new Promise((resolve, _reject) => {
+      timeout = setTimeout(() => {
+        host.showPreview = !host.showPreview;
+        resolve({
+          host,
+          error: [
+            ...error,
+            Webapi.Error.make({
+              name: "TransitionTimeOutError",
+              message:
+                "transitionend-event has not occurred within the timeout",
+            }),
+          ],
+        });
+      }, 3000);
+    }),
+  ]);
 }
 
-function readTemplateJsonData({host, e, templates}) {
-  return Webapi.FileReader.readFileAsText({e}).then(({result, file}) => {
-    const data = JSON.parse(result);
-    return store
-      .set(Session, {file: file.name})
-      .then((session) =>
-        Promise.all(
-          Object.values(templates).map((template) =>
+function readTemplateJsonData({host, e, templates, error = []}) {
+  return Webapi.FileReader.readFileAsText(e)
+    .then(({result, file, error: fileReaderError}) => {
+      if (fileReaderError) {
+        error.push(fileReaderError);
+        throw fileReaderError;
+      } else {
+        let data;
+        try {
+          data = JSON.parse(result);
+        } catch (err) {
+          const jsonParserError = Webapi.Error.make({
+            name: "JsonParserError",
+            message: "failed to parse json data",
+            cause: err,
+          });
+          error.push(jsonParserError);
+          throw jsonParserError;
+        }
+        return Promise.all([
+          store.set(Session, {file: file.name}),
+          ...Object.values(templates).map((template) =>
             store.set(template.model, data),
           ),
-        ).then(() => ({host, session})),
-      );
-  });
+        ]).catch((err) => {
+          const storeModelError = Webapi.Error.make({
+            name: "StoreModelError",
+            message: "failed to update store model",
+            cause: err,
+          });
+          error.push(storeModelError);
+          throw storeModelError;
+        });
+      }
+    })
+    .then(() => ({host, error}))
+    .catch((err) => ({host, error: [...error, err]}));
 }

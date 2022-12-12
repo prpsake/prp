@@ -1,8 +1,7 @@
-/**
- * ...
- * @param param
- */
-export function readFileAsText(param: {e: InputEvent}): Promise<{
+import {PRPError} from "./Error";
+
+export function readFileAsText(e: InputEvent): Promise<{
   result: string;
-  file: File;
+  file: File | null;
+  error?: PRPError<string>;
 }>;
