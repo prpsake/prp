@@ -181,7 +181,8 @@ function previewOnFileInputFn({templates, preventDefault = false}) {
     readTemplateJsonData({host, e, templates})
       .then(togglePreview)
       .then(preview)
-      .then(togglePreview);
+      .then(togglePreview)
+      .then(console.log);
   };
 }
 
@@ -233,20 +234,17 @@ function readTemplateJsonData({host, e, templates, error = []}) {
   return Webapi.FileReader.readFileAsText(e)
     .then(({result, file, error: fileReaderError}) => {
       if (fileReaderError) {
-        error.push(fileReaderError);
         throw fileReaderError;
       } else {
         let data;
         try {
           data = JSON.parse(result);
         } catch (err) {
-          const jsonParserError = Webapi.Error.make({
+          throw Webapi.Error.make({
             name: "JsonParserError",
             message: "failed to parse json data",
             cause: err,
           });
-          error.push(jsonParserError);
-          throw jsonParserError;
         }
         return Promise.all([
           store.set(Session, {file: file.name}),
@@ -254,13 +252,11 @@ function readTemplateJsonData({host, e, templates, error = []}) {
             store.set(template.model, data),
           ),
         ]).catch((err) => {
-          const storeModelError = Webapi.Error.make({
+          throw Webapi.Error.make({
             name: "StoreModelError",
             message: "failed to update store model",
             cause: err,
           });
-          error.push(storeModelError);
-          throw storeModelError;
         });
       }
     })
