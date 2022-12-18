@@ -1,22 +1,22 @@
-type Details<V, E> = {
-  name: string;
-  key?: string;
-  value?: V;
-  message: string;
-  cause?: E;
-};
+export namespace Cause {
+  type Structured = {
+    code: string;
+    message: string;
+    operational: boolean;
+    value?: string;
+  };
 
-export interface PRPError<V> extends Error {
-  key: string;
-  value: V;
+  type Caught = {
+    name: string;
+    message: string;
+    fileName?: string;
+    lineNumber?: number;
+    columnNumber?: number;
+    stack?: string;
+  };
 }
 
-export function make<V>(details: Details<V, Error>): PRPError<V>;
-
-export function fromOriginal<V, E>(
-  details: Details<V, E>,
-): (cause: Error) => PRPError<V>;
-
-export function resolveFromOriginal<V, E>(
-  details: Details<V, E>,
-): (cause: Error) => PromiseLike<PRPError<V>>;
+export function makeStructured(cause: Cause.Structured): Error;
+export function makeCaught(cause: Cause.Caught): Error;
+export function resolveStructured(cause: Cause.Structured): PromiseLike<Error>;
+export function resolveCaught(cause: Cause.Caught): PromiseLike<Error>;

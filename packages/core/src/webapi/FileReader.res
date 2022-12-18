@@ -22,8 +22,11 @@ let readFileAsText: Webapi.Dom.InputEvent.t => Promise.t<readFileValue> = (e) =>
         dataTransfer
         ->Webapi.Dom.DataTransfer.items
         ->items => switch Webapi.Dom.DataTransferItemList.get(items, 0) {
-          | Some(item) => switch Webapi.Dom.DataTransferItem.kind(item)->Webapi.Dom.DataTransferItem.kindToString {
-            | "file" => DataTransferItem.getAsFile(item)
+          | Some(item) => switch (
+            Webapi.Dom.DataTransferItem.kind(item)->Webapi.Dom.DataTransferItem.kindToString,
+            Webapi.Dom.DataTransferItem.itemType(item)
+            ) {
+            | ("file", "application/json") => DataTransferItem.getAsFile(item)
             | _ => None
             }
           | None =>
@@ -51,9 +54,10 @@ let readFileAsText: Webapi.Dom.InputEvent.t => Promise.t<readFileValue> = (e) =>
     Promise.resolve({
       result: "",
       file: Js.Nullable.null,
-      error: Error.make({
-        name: "NoFileError",
-        message: "failed to load file"
+      error: Error.makeStructured({
+        code: "InvalidFile",
+        message: "failed to load json file",
+        operational: true
       })
     })
   }

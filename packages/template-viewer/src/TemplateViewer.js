@@ -218,10 +218,11 @@ function togglePreview({host, error = []}) {
           host,
           error: [
             ...error,
-            Webapi.Error.make({
-              name: "TransitionTimeOutError",
+            Webapi.Error.makeStructured({
+              code: "TransitionTimeOut",
               message:
                 "transitionend-event has not occurred within the timeout",
+              operational: false,
             }),
           ],
         });
@@ -239,11 +240,11 @@ function readTemplateJsonData({host, e, templates, error = []}) {
         let data;
         try {
           data = JSON.parse(result);
-        } catch (err) {
-          throw Webapi.Error.make({
-            name: "JsonParserError",
-            message: "failed to parse json data",
-            cause: err,
+        } catch (_) {
+          throw Webapi.Error.makeStructured({
+            code: "UnparsableJsonString",
+            message: "failed to parse json string",
+            operational: true,
           });
         }
         return Promise.all([
@@ -251,11 +252,12 @@ function readTemplateJsonData({host, e, templates, error = []}) {
           ...Object.values(templates).map((template) =>
             store.set(template.model, data),
           ),
-        ]).catch((err) => {
-          throw Webapi.Error.make({
-            name: "StoreModelError",
-            message: "failed to update store model",
-            cause: err,
+        ]).catch((_) => {
+          throw Webapi.Error.makeStructured({
+            code: "FailedSessionModelUpdate",
+            message:
+              "failed to update session model properties file and/or ...data",
+            operational: false,
           });
         });
       }

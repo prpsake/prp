@@ -16,10 +16,12 @@ export function preview({host, error = []}) {
         language: viewElm.host.data.language,
         title: viewElm.host.data.title,
       })
-      .catch(
-        Webapi.Error.resolveFromOriginal({
-          name: "StoreModelError",
-          message: "failed to update store model",
+      .catch((_) =>
+        Webapi.Error.resolveStructured({
+          code: "FailedSessionModelUpdate",
+          message:
+            "failed to update session model properties language and/or title",
+          operational: false,
         }),
       ),
     previewer
@@ -28,10 +30,11 @@ export function preview({host, error = []}) {
         [{styles: host.session.style}],
         host.previewElm,
       )
-      .catch(
-        Webapi.Error.resolveFromOriginal({
-          name: "PreviewerError",
-          message: "failed to generate the preview",
+      .catch((_) =>
+        Webapi.Error.resolveStructured({
+          code: "FailedPreviewUpdate",
+          message: "failed to update preview",
+          operational: false,
         }),
       ),
   ]).then(([session, previewer]) => {
