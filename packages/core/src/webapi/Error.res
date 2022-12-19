@@ -25,6 +25,7 @@ module Cause = {
     code: string,
     message: string,
     operational: bool,
+    key?: string,
     value?: string
   }
 

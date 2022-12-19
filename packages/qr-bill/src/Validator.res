@@ -57,16 +57,16 @@ let validateWithRexp: (
   Data.opt<string>,
   string => option<array<option<string>>>,
   string,
-) => Data.opt<string> = (o, fn, msg) =>
+) => Data.opt<string> = (o, fn, message) =>
   switch o {
-  | Data.User({key, val}) =>
-    switch fn(val) {
+  | Data.User({key, value}) =>
+    switch fn(value) {
     | Some(xs) =>
       switch xs[0] {
-      | Some(x) => Data.User({key, val: x})
-      | None => Data.Error({_type: "CONSTRAINT", key, val, msg})
+      | Some(x) => Data.User({key, value: x})
+      | None => Data.Error({code: "Constraint", key, value, message})
       }
-    | None => Data.Error({_type: "CONSTRAINT", key, val, msg})
+    | None => Data.Error({code: "Constraint", key, value, message})
     }
   | t => t
   }
@@ -74,20 +74,20 @@ let validateWithRexp: (
 let validateWithPred: (Data.opt<'a>, string => bool, string) => Data.opt<'a> = (
   o,
   fn,
-  msg,
+  message,
 ) =>
   switch o {
-  | Data.User({key, val}) =>
-    fn(val) ? Data.User({key, val}) : Data.Error({_type: "CONSTRAINT", key, val, msg})
+  | Data.User({key, value}) =>
+    fn(value) ? Data.User({key, value}) : Data.Error({code: "Constraint", key, value, message})
   | t => t
   }
 
 let validateIban: Data.opt<string> => Data.opt<string> = o =>
   switch o {
-  | Data.User({key, val}) => {
+  | Data.User({key, value}) => {
       let codeA = Js.String2.charCodeAt(`A`, 0)
       let codeZ = Js.String2.charCodeAt(`Z`, 0)
-      val->(
+      value->(
         x =>
           (Js.String2.sliceToEnd(x, ~from=4) ++ Js.String2.substring(x, ~from=0, ~to_=4))
           ->Js.String2.split("")
@@ -102,12 +102,12 @@ let validateIban: Data.opt<string> => Data.opt<string> = o =>
           ->(
             x =>
               x == 1
-                ? Data.User({key, val})
+                ? Data.User({key, value})
                 : Data.Error({
-                    _type: "CONSTRAINT",
+                    code: "Constraint",
                     key,
-                    val,
-                    msg: Checks.invalidChecksum(Belt.Int.toString(x), "1"),
+                    value,
+                    message: Checks.invalidChecksum(Belt.Int.toString(x), "1"),
                   })
           )
       )
@@ -116,18 +116,18 @@ let validateIban: Data.opt<string> => Data.opt<string> = o =>
   | t => t
   }
 
-let validateQRR: Data.optSome<string> => Data.opt<string> = ({key, val}) => {
-  let valTrim = Formatter.removeWhitespace(val)
+let validateQRR: Data.optSome<string> => Data.opt<string> = ({key, value}) => {
+  let valTrim = Formatter.removeWhitespace(value)
   mod10FromIntString(valTrim)->(
     a => {
       let b = Js.String2.sliceToEnd(valTrim, ~from=26)
       a == b
-        ? Data.User({key, val: valTrim})
+        ? Data.User({key, value: valTrim})
         : Data.Error({
-            _type: "CONSTRAINT",
+            code: "Constraint",
             key,
-            val: valTrim,
-            msg: Checks.invalidCheckDigit(a, b),
+            value: valTrim,
+            message: Checks.invalidCheckDigit(a, b),
           })
     }->validateWithRexp(
       x => Js.String2.match_(x, %re("/^\S{27}$/")),
@@ -148,18 +148,18 @@ let validateReference: (
   Data.opt<string>,
 ) => Data.opt<string> = (reference, referenceType) =>
   switch reference {
-  | Data.User({key, val}) =>
+  | Data.User({key, value}) =>
     switch referenceType {
     | Data.User(o) =>
-      switch o.val {
-      | "QRR" => validateQRR({key, val})
-      | "SCOR" => validateSCOR({key, val})
+      switch o.value {
+      | "QRR" => validateQRR({key, value})
+      | "SCOR" => validateSCOR({key, value})
       | _ =>
         Data.Error({
-          _type: "CONSTRAINT",
+          code: "Constraint",
           key,
-          val,
-          msg: Checks.invalidReference,
+          value,
+          message: Checks.invalidReference,
         })
       }
     | _ => reference
@@ -170,10 +170,10 @@ let validateReference: (
 let validateAddressData: Data.opt<Data.address> => Data.opt<Data.address> =
   o =>
   switch o {
-  | Data.User({key, val: ad}) =>
+  | Data.User({key, value: ad}) =>
     Data.User({
       key,
-      val: {
+      value: {
         addressType: ad.addressType,
         name: ad.name->validateWithRexp(
           x => Js.String2.trim(x)->Js.String2.match_(%re("/^[\s\S]{1,70}$/")),

@@ -1,10 +1,10 @@
-type optSome<'a> = {key: string, val: 'a}
+type optSome<'a> = {key: string, value: 'a}
 
 type optErr<'a> = {
-  @as("type") _type: string,
+  code: string,
   key: string,
-  val: 'a,
-  msg: string
+  value: 'a,
+  message: string
 }
 
 type opt<'a> =
@@ -69,69 +69,69 @@ type comp = {
 }
 
 let initMandatoryAddressDefaults: address = {
-  addressType: Default({key: "addressType", val: "S"}),
+  addressType: Default({key: "addressType", value: "S"}),
   name: Error({
-    _type: "CONSTRAINT",
+    code: "Constraint",
     key: "name",
-    val: "",
-    msg: Checks.required
+    value: "",
+    message: Checks.required
   }),
-  street: Default({key: "street", val: ""}),
-  houseNumber: Default({key: "houseNumber", val: ""}),
-  postCode: Default({key: "postCode", val: ""}),
+  street: Default({key: "street", value: ""}),
+  houseNumber: Default({key: "houseNumber", value: ""}),
+  postCode: Default({key: "postCode", value: ""}),
   locality: Error({
-    _type: "CONSTRAINT",
+    code: "Constraint",
     key: "locality",
-    val: "",
-    msg: Checks.required
+    value: "",
+    message: Checks.required
   }),
   countryCode: Error({
-    _type: "CONSTRAINT",
+    code: "Constraint",
     key: "countryCode",
-    val: "",
-    msg: Checks.required
+    value: "",
+    message: Checks.required
   }),
 }
 
 let initOptionalAddressDefaults: address = {
-  addressType: Default({key: "addressType", val: ""}),
-  name: Default({key: "name", val: ""}),
-  street: Default({key: "street", val: ""}),
-  houseNumber: Default({key: "houseNumber", val: ""}),
-  postCode: Default({key: "postCode", val: ""}),
-  locality: Default({key: "locality", val: ""}),
-  countryCode: Default({key: "countryCode", val: ""}),
+  addressType: Default({key: "addressType", value: ""}),
+  name: Default({key: "name", value: ""}),
+  street: Default({key: "street", value: ""}),
+  houseNumber: Default({key: "houseNumber", value: ""}),
+  postCode: Default({key: "postCode", value: ""}),
+  locality: Default({key: "locality", value: ""}),
+  countryCode: Default({key: "countryCode", value: ""}),
 }
 
 let initDefaults: init = {
-  language: Default({key: "language", val: "en"}),
+  language: Default({key: "language", value: "en"}),
   currency: Error({
-    _type: "CONSTRAINT",
+    code: "Constraint",
     key: "currency",
-    val: "",
-    msg: Checks.required
+    value: "",
+    message: Checks.required
   }),
-  amount: Default({key: "amount", val: ""}),
+  amount: Default({key: "amount", value: ""}),
   iban: Error({
-    _type: "CONSTRAINT",
+    code: "Constraint",
     key: "iban",
-    val: "",
-    msg: Checks.required
+    value: "",
+    message: Checks.required
   }),
-  referenceType: Default({key: "referenceType", val: "NON"}),
-  reference: Default({key: "reference", val: ""}),
-  message: Default({key: "message", val: ""}),
-  messageCode: Default({key: "messageCode", val: ""}),
+  referenceType: Default({key: "referenceType", value: "NON"}),
+  reference: Default({key: "reference", value: ""}),
+  message: Default({key: "message", value: ""}),
+  messageCode: Default({key: "messageCode", value: ""}),
   creditor: Error({
-    _type: "CONSTRAINT",
+    code: "Constraint",
     key: "creditor",
-    val: initMandatoryAddressDefaults,
-    msg: Checks.required
+    value: initMandatoryAddressDefaults,
+    message: Checks.required
   }),
-  debtor: Default({key: "debtor", val: initOptionalAddressDefaults}),
+  debtor: Default({key: "debtor", value: initOptionalAddressDefaults}),
 }
 
-let compErrorDefaults: optErr<string> = {_type: "", key: "", val: "", msg: ""}
+let compErrorDefaults: optErr<string> = {code: "", key: "", value: "", message: ""}
 
 let compDefaults: comp = {
   language: "en",
@@ -168,16 +168,16 @@ let compDefaults: comp = {
 
 let foldString: opt<string> => string = o =>
   switch o {
-  | User({val})
-  | Default({val}) => val
+  | User({value})
+  | Default({value}) => value
   | Error(_) => ""
   }
 
 let foldAddress: opt<address> => address = o =>
   switch o {
-  | User({val})
-  | Default({val})
-  | Error({val}) => val
+  | User({value})
+  | Default({value})
+  | Error({value}) => value
   }
 
 let compQrCodeString: comp => string =

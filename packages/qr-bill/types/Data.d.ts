@@ -1,12 +1,12 @@
 import type {Language} from "./Translations";
 
-type OptSome<V> = {key: string; val: V};
+type OptSome<V> = {key: string; value: V};
 
 type OptErr<V> = {
-  type: string;
+  code: string;
   key: string;
-  val: V;
-  msg: string;
+  value: V;
+  message: string;
 };
 
 type Opt<V> =

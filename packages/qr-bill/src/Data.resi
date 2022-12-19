@@ -1,10 +1,10 @@
-type optSome<'a> = {key: string, val: 'a}
+type optSome<'a> = {key: string, value: 'a}
 
 type optErr<'a> = {
-  @as("type") _type: string,
+  code: string,
   key: string,
-  val: 'a,
-  msg: string
+  value: 'a,
+  message: string
 }
 
 type opt<'a> =
