@@ -103,7 +103,7 @@ const QrBill: Component<QrBill> = {
   },
   error: {
     set: (_, values: OptErr<string>[] = []) =>
-      values.filter(({type}) => type !== ""),
+      values.filter(({code}) => code !== ""),
   },
   tr: ({language}) => translations[language] || translations["en"],
   render: ({

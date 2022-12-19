@@ -6,4 +6,5 @@ import style from "./style.css";
 defineWith({
   templates: {foo, baz},
   style,
+  tagQrBill: true,
 });

@@ -16,14 +16,23 @@ if (import.meta.hot) {
   });
 }
 
-const TemplateViewer = ({views, baseUrl = "", onFileInput, onFileDrop}) => ({
+const TemplateViewer = ({
+  views,
+  baseUrl = "",
+  onFileInput,
+  onFileDrop,
+  error,
+}) => ({
   session: store(Session),
   previewElm: {
     value: undefined,
     connect: (host, key) => {
       readyView({host}).then(({host}) => {
         host[key] = host.querySelector(".template-view");
-        togglePreview({host}).then(preview).then(togglePreview);
+        togglePreview({host, error})
+          .then(preview)
+          .then(togglePreview)
+          .then(console.log);
       });
     },
   },
@@ -123,14 +132,39 @@ export function defineWith({
   templates,
   style,
   tag = "template-viewer",
-  tagQrBill = "qr-bill",
+  tagQrBill,
 }) {
+  let error = [];
+  if (tagQrBill === true) tagQrBill = "qr-bill";
   if (typeof tagQrBill === "string") {
-    define({
-      ...QrBill,
-      tag: tagQrBill,
-      class: "absolute bottom-0 left-0",
-    });
+    if (
+      Boolean(
+        tagQrBill.match(
+          /^(([a-zA-Z]{1}[a-zA-Z0-9]{1,})([-][a-zA-Z0-9]{1,}){1,})$/,
+        ),
+      )
+    ) {
+      define({
+        ...QrBill,
+        tag: tagQrBill,
+        class: "absolute bottom-0 left-0",
+      });
+    } else {
+      error.push(
+        Webapi.Error.makeStructured({
+          code: "InvalidCustomTag",
+          message: "invalid tag name for the qr-bill component",
+        }),
+      );
+    }
+  } else {
+    error.push(
+      Webapi.Error.makeStructured({
+        code: "InvalidOptionValue",
+        message:
+          "tagQrBill must be a valid custom-tag string value or a boolean",
+      }),
+    );
   }
 
   store.set(Session, {style}).then(() => {
@@ -157,6 +191,7 @@ export function defineWith({
           templates: templatesConnected,
           preventDefault: true,
         }),
+        error,
       }),
     });
   });

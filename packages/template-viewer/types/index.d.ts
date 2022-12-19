@@ -54,13 +54,15 @@ type Template<M> = {
  * @param {Record<string, Template<unknown>>} param.templates - The template modules.
  * @param {string} param.styles - The styles for the templates.
  * @param {string} [param.tag="template-viewer"] - The tag to be used for the template-viewer custom element.
- * @param {string} [param.tagQrBill="qr-bill"] - The tag to be used for the qr-bill custom element.
+ * @param {string} [param.tagQrBill="qr-bill"] - The tag to be used
+ * for the qr-bill custom element. If a value other than a string is
+ * specified, the qr-bill component will not be defined
  */
 export function defineWith(param: {
   templates: Record<string, Template<unknown>>;
   style: string;
   tag?: string;
-  tagQrBill?: string;
+  tagQrBill?: string | boolean;
 }): void;
 
 /**

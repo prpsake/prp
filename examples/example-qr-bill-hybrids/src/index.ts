@@ -31,5 +31,5 @@ define<MyApp>({
 });
 
 function handleQrBillError(_host, {detail}) {
-  detail.forEach(({key, msg}) => console.log(key, ":", msg));
+  detail.forEach(({key, message}) => console.log(key, ":", message));
 }
