@@ -12,6 +12,7 @@ import {translations} from "./Translations.mjs";
 import * as QRCode from "./QRCode.mjs";
 import * as Data from "./Data.mjs";
 import style from "./style.css";
+import {Webapi} from "@prpsake/core";
 
 interface QrBillModel extends Comp {}
 interface QrBill extends Comp {
@@ -97,7 +98,19 @@ const QrBill: Component<QrBill> = {
     },
     observe(host) {
       if (host.error.length > 0) {
-        dispatch(host, "error", {detail: host.error});
+        dispatch(host, "error", {
+          detail: host.error.map((err) =>
+            Webapi.Error.makeStructured({
+              code: err.code,
+              message: err.message,
+              operational: true,
+              value: String(err.value),
+            }),
+          ),
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        });
       }
     },
   },

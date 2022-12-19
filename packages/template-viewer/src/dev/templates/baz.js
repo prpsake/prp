@@ -4,13 +4,10 @@ export const model = {
   title: "",
   language: "",
   foo: "",
+  iban: "CH28938",
 };
 
 export const view = ({data}) => html`
   <div>${data.foo}</div>
-  <qr-bill onerror=${handleQrBillError}></qr-bill>
+  <qr-bill data=${jsonToQrBillModel(data)}></qr-bill>
 `;
-
-function handleQrBillError(host, {detail}) {
-  console.log(detail);
-}

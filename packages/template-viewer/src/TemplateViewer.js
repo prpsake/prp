@@ -40,7 +40,11 @@ const TemplateViewer = ({
   showPreview: true,
   content: ({session, view, showPreview}) =>
     html`
-      <div class="hidden view">${view}</div>
+      <div
+        class="hidden view"
+        onerror=${handleViewError}>
+        ${view}
+      </div>
 
       <div
         class=${{
@@ -152,8 +156,10 @@ export function defineWith({
     } else {
       error.push(
         Webapi.Error.makeStructured({
-          code: "InvalidCustomTag",
-          message: "invalid tag name for the qr-bill component",
+          code: "InvalidOptionValue",
+          message:
+            "tagQrBill must be a valid custom-tag string value or a boolean",
+          operational: true,
         }),
       );
     }
@@ -163,6 +169,7 @@ export function defineWith({
         code: "InvalidOptionValue",
         message:
           "tagQrBill must be a valid custom-tag string value or a boolean",
+        operational: true,
       }),
     );
   }
@@ -299,4 +306,8 @@ function readTemplateJsonData({host, e, templates, error = []}) {
     })
     .then(() => ({host, error}))
     .catch((err) => ({host, error: [...error, err]}));
+}
+
+function handleViewError(host, e) {
+  console.log(e.detail);
 }
