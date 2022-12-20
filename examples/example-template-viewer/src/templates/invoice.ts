@@ -160,13 +160,7 @@ export const view: View<InvoiceBase> = ({data}) => html`
       </footer>
     </section>
     <section class="page-payment-methods">
-      <qr-bill
-        data=${data.qrBill}
-        onerror=${handleQrBillError}></qr-bill>
+      <qr-bill data=${data.qrBill}></qr-bill>
     </section>
   </main>
 `;
-
-function handleQrBillError(_host, {detail}) {
-  detail.forEach(({key, message}) => console.log(key, ":", message));
-}

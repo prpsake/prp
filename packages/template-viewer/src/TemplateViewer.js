@@ -32,12 +32,18 @@ const TemplateViewer = ({
         togglePreview({host, error})
           .then(preview)
           .then(togglePreview)
-          .then(console.log);
+          .then(handleError);
       });
     },
   },
   view: router(views, {url: `/${baseUrl}`}),
   showPreview: true,
+  error: {
+    set: (host, values = []) => values,
+    observe: (_host, values) => {
+      console.log(values);
+    },
+  },
   content: ({session, view, showPreview}) =>
     html`
       <div
@@ -224,7 +230,7 @@ function previewOnFileInputFn({templates, preventDefault = false}) {
       .then(togglePreview)
       .then(preview)
       .then(togglePreview)
-      .then(console.log);
+      .then(handleError);
   };
 }
 
@@ -261,10 +267,10 @@ function togglePreview({host, error = []}) {
           error: [
             ...error,
             Webapi.Error.makeStructured({
-              code: "TransitionTimeOut",
+              code: "PreviewTransitionTimeOut",
               message:
                 "transitionend-event has not occurred within the timeout",
-              operational: false,
+              operational: true,
             }),
           ],
         });
@@ -285,7 +291,7 @@ function readTemplateJsonData({host, e, templates, error = []}) {
         } catch (_) {
           throw Webapi.Error.makeStructured({
             code: "UnparsableJsonString",
-            message: "failed to parse json string",
+            message: "failed to parse template data json string",
             operational: true,
           });
         }
@@ -299,7 +305,7 @@ function readTemplateJsonData({host, e, templates, error = []}) {
             code: "FailedSessionModelUpdate",
             message:
               "failed to update session model properties file and/or ...data",
-            operational: false,
+            operational: true,
           });
         });
       }
@@ -309,5 +315,15 @@ function readTemplateJsonData({host, e, templates, error = []}) {
 }
 
 function handleViewError(host, e) {
-  console.log(e.detail);
+  e.stopPropagation();
+  if (e.detail.length > 0) {
+    host.error = [...host.error, ...e.detail];
+  }
+}
+
+function handleError(param) {
+  if (param.error.length > 0) {
+    param.host.error = [...param.host.error, ...param.error];
+  }
+  return param;
 }

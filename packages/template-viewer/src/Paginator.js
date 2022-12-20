@@ -21,7 +21,7 @@ export function preview({host, error = []}) {
           code: "FailedSessionModelUpdate",
           message:
             "failed to update session model properties language and/or title",
-          operational: false,
+          operational: true,
         }),
       ),
     previewer
@@ -32,9 +32,9 @@ export function preview({host, error = []}) {
       )
       .catch((_) =>
         Webapi.Error.resolveStructured({
-          code: "FailedPreviewUpdate",
-          message: "failed to update preview",
-          operational: false,
+          code: "FailedPreviewRender",
+          message: "failed to render preview",
+          operational: true,
         }),
       ),
   ]).then(([session, previewer]) => {

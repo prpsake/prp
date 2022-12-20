@@ -11,11 +11,20 @@ type PRPModel<M> = {
   qrBill?: QrBillModel | ((data: M) => QrBillModel);
 };
 
+type SessionPartialModel = {
+  file: string;
+  language: string;
+  title: string;
+  viewVertical: boolean;
+};
+
 export type Model<M> = HybridsModel<M> & PRPModel<M>;
 export type View<M> = ({
   data,
+  session,
 }: {
   data: M & PRPModel<M>;
+  session: HybridsModel<SessionPartialModel>;
 }) => UpdateFunctionWithMethods<any>;
 
 type Template<M> = {

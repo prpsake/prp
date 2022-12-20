@@ -5,5 +5,6 @@ import style from "./style.css";
 
 defineWith({
   templates: {estimate, invoice},
+  tagQrBill: true,
   style,
 });
