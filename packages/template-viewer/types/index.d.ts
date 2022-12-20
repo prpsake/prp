@@ -1,5 +1,6 @@
 import {
   type Model as HybridsModel,
+  type Component as HybridsComponent,
   type UpdateFunctionWithMethods,
   html as hybridsHtml,
   svg as hybridsSvg,
@@ -33,19 +34,20 @@ type Template<M> = {
 };
 
 /**
- * Register the template-viewer custom element with template modules and their styles.
- * Optionally register the qr-bill custom element. The object keys of `param.templates` are used to set up the url
- * paths to the corresponding templates.
+ * Register the template-viewer custom element with template modules and their
+ * styles. Optionally register the qr-bill custom element. The object keys of
+ * `param.templates` are used to set up the url paths to the corresponding
+ * templates.
  *
  * @example
  * // with required options:
- * import { defineWith } from "@prpsake/template-viewer"
+ * import {defineWith} from "@prpsake/template-viewer"
  * import * as estimate from "./templates/estimate"
  * import * as invoice from "./templates/invoice"
  * import style from "./style.css"
  *
  * defineWith({
- *   templates: { estimate, invoice },
+ *   templates: {estimate, invoice},
  *   style
  * })
  *
@@ -54,24 +56,37 @@ type Template<M> = {
  * import ...
  *
  * defineWith({
- *   templates: { estimate, invoice },
+ *   templates: {estimate, invoice},
  *   style,
  *   tag: "my-template-viewer",
- *   tagQrBill: "my-qr-bill"
+ *   tagQrBill: "my-qr-bill",
+ *   onError: ({error}) => error.forEach(console.log)
  * })
  *
- * @param {Record<string, Template<unknown>>} param.templates - The template modules.
+ * @param param
+ * @param {Record<string, Template<unknown>>} param.templates - The template
+ *   modules.
  * @param {string} param.styles - The styles for the templates.
- * @param {string} [param.tag="template-viewer"] - The tag to be used for the template-viewer custom element.
- * @param {string} [param.tagQrBill="qr-bill"] - The tag to be used
- * for the qr-bill custom element. If a value other than a string is
- * specified, the qr-bill component will not be defined
+ * @param {string} [param.tag="template-viewer"] - The tag to be used for the
+ *   template-viewer custom element.
+ * @param {string} [param.tagQrBill="qr-bill"] - The tag to be used for the
+ * qr-bill custom element. If a value other than a string is specified, the
+ * qr-bill component will not be defined
+ * @param {(param: {host: HybridsComponent<unknown>, error: Error[]}) => void} [param.onError=console.log] - The function
+ * handling errors
  */
 export function defineWith(param: {
   templates: Record<string, Template<unknown>>;
   style: string;
   tag?: string;
   tagQrBill?: string | boolean;
+  onError?: ({
+    host,
+    error,
+  }: {
+    host: HybridsComponent<unknown>;
+    error: Error[];
+  }) => void;
 }): void;
 
 /**
@@ -93,7 +108,8 @@ export function defineWith(param: {
 export const html: typeof hybridsHtml;
 
 /**
- * Define a svg template. Use the svg tag function for svg child elements with dynamic content.
+ * Define a svg template. Use the svg tag function for svg child elements with
+ * dynamic content.
  *
  * @example ```
  * import { html, svg } from "@prpsake/template-viewer"

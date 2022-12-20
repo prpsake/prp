@@ -21,6 +21,7 @@ const TemplateViewer = ({
   baseUrl = "",
   onFileInput,
   onFileDrop,
+  onError,
   error,
 }) => ({
   session: store(Session),
@@ -40,8 +41,10 @@ const TemplateViewer = ({
   showPreview: true,
   error: {
     set: (host, values = []) => values,
-    observe: (_host, values) => {
-      console.log(values);
+    observe: (host, values) => {
+      if (values.length > 0) {
+        onError({host, error: values});
+      }
     },
   },
   content: ({session, view, showPreview}) =>
@@ -143,6 +146,7 @@ export function defineWith({
   style,
   tag = "template-viewer",
   tagQrBill,
+  onError,
 }) {
   let error = [];
   if (tagQrBill === true) tagQrBill = "qr-bill";
@@ -180,6 +184,10 @@ export function defineWith({
     );
   }
 
+  if (typeof onError !== "function") {
+    onError = console.log;
+  }
+
   store.set(Session, {style}).then(() => {
     const templatesConnected = Webapi.Object.map(
       templates,
@@ -204,12 +212,14 @@ export function defineWith({
           templates: templatesConnected,
           preventDefault: true,
         }),
+        onError,
         error,
       }),
     });
   });
 }
 
+/* TODO: implement rejection */
 function readyView({host}) {
   return new Promise((resolve, _reject) => {
     new MutationObserver((mutations, observer) => {

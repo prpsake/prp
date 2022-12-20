@@ -6,5 +6,6 @@ import style from "./style.css";
 defineWith({
   templates: {estimate, invoice},
   tagQrBill: true,
+  onError: ({error}) => error.forEach(console.log),
   style,
 });
