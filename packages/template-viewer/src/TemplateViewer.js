@@ -141,6 +141,8 @@ const TemplateViewer = ({
     `.style(styleApp),
 });
 
+console.log(import.meta);
+
 export function defineWith({
   templates,
   style,
@@ -166,9 +168,10 @@ export function defineWith({
     } else {
       error.push(
         Webapi.Error.makeStructured({
-          code: "InvalidOptionValue",
-          message:
-            "tagQrBill must be a valid custom-tag string value or a boolean",
+          code: "TemplateViewer:TemplateViewer",
+          message: "must be a valid custom-tag string value or a boolean",
+          key: "tagQrBill",
+          value: tagQrBill,
           operational: true,
         }),
       );
@@ -176,9 +179,10 @@ export function defineWith({
   } else {
     error.push(
       Webapi.Error.makeStructured({
-        code: "InvalidOptionValue",
-        message:
-          "tagQrBill must be a valid custom-tag string value or a boolean",
+        code: "TemplateViewer:TemplateViewer",
+        message: "must be a valid custom-tag string value or a boolean",
+        key: "tagQrBill",
+        value: Webapi.Error.Cause.valueToString(tagQrBill),
         operational: true,
       }),
     );
@@ -277,7 +281,7 @@ function togglePreview({host, error = []}) {
           error: [
             ...error,
             Webapi.Error.makeStructured({
-              code: "PreviewTransitionTimeOut",
+              code: "TemplateViewer:TemplateViewer",
               message:
                 "transitionend-event has not occurred within the timeout",
               operational: true,
@@ -300,7 +304,7 @@ function readTemplateJsonData({host, e, templates, error = []}) {
           data = JSON.parse(result);
         } catch (_) {
           throw Webapi.Error.makeStructured({
-            code: "UnparsableJsonString",
+            code: "TemplateViewer:TemplateViewer",
             message: "failed to parse template data json string",
             operational: true,
           });
@@ -312,9 +316,9 @@ function readTemplateJsonData({host, e, templates, error = []}) {
           ),
         ]).catch((_) => {
           throw Webapi.Error.makeStructured({
-            code: "FailedSessionModelUpdate",
-            message:
-              "failed to update session model properties file and/or ...data",
+            code: "TemplateViewer:TemplateViewer",
+            message: "failed to update session model",
+            key: "file,...data",
             operational: true,
           });
         });

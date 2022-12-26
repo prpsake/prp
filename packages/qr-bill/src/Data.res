@@ -71,7 +71,7 @@ type comp = {
 let initMandatoryAddressDefaults: address = {
   addressType: Default({key: "addressType", value: "S"}),
   name: Error({
-    code: "Constraint",
+    code: "QrBill:Data",
     key: "name",
     value: "",
     message: Checks.required
@@ -80,13 +80,13 @@ let initMandatoryAddressDefaults: address = {
   houseNumber: Default({key: "houseNumber", value: ""}),
   postCode: Default({key: "postCode", value: ""}),
   locality: Error({
-    code: "Constraint",
+    code: "QrBill:Data",
     key: "locality",
     value: "",
     message: Checks.required
   }),
   countryCode: Error({
-    code: "Constraint",
+    code: "QrBill:Data",
     key: "countryCode",
     value: "",
     message: Checks.required
@@ -106,14 +106,14 @@ let initOptionalAddressDefaults: address = {
 let initDefaults: init = {
   language: Default({key: "language", value: "en"}),
   currency: Error({
-    code: "Constraint",
+    code: "QrBill:Data",
     key: "currency",
     value: "",
     message: Checks.required
   }),
   amount: Default({key: "amount", value: ""}),
   iban: Error({
-    code: "Constraint",
+    code: "QrBill:Data",
     key: "iban",
     value: "",
     message: Checks.required
@@ -123,7 +123,7 @@ let initDefaults: init = {
   message: Default({key: "message", value: ""}),
   messageCode: Default({key: "messageCode", value: ""}),
   creditor: Error({
-    code: "Constraint",
+    code: "QrBill:Data",
     key: "creditor",
     value: initMandatoryAddressDefaults,
     message: Checks.required

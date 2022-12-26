@@ -14,6 +14,8 @@ export namespace Cause {
     columnNumber?: number;
     stack?: string;
   };
+
+  function valueToString(value: any): string;
 }
 
 export function makeStructured(cause: Cause.Structured): Error;

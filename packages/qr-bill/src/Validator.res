@@ -64,9 +64,9 @@ let validateWithRexp: (
     | Some(xs) =>
       switch xs[0] {
       | Some(x) => Data.User({key, value: x})
-      | None => Data.Error({code: "Constraint", key, value, message})
+      | None => Data.Error({code: "QrBill:Validator", key, value, message})
       }
-    | None => Data.Error({code: "Constraint", key, value, message})
+    | None => Data.Error({code: "QrBill:Validator", key, value, message})
     }
   | t => t
   }
@@ -78,7 +78,7 @@ let validateWithPred: (Data.opt<'a>, string => bool, string) => Data.opt<'a> = (
 ) =>
   switch o {
   | Data.User({key, value}) =>
-    fn(value) ? Data.User({key, value}) : Data.Error({code: "Constraint", key, value, message})
+    fn(value) ? Data.User({key, value}) : Data.Error({code: "QrBill:Validator", key, value, message})
   | t => t
   }
 
@@ -104,7 +104,7 @@ let validateIban: Data.opt<string> => Data.opt<string> = o =>
               x == 1
                 ? Data.User({key, value})
                 : Data.Error({
-                    code: "Constraint",
+                    code: "QrBill:Validator",
                     key,
                     value,
                     message: Checks.invalidChecksum(Belt.Int.toString(x), "1"),
@@ -124,7 +124,7 @@ let validateQRR: Data.optSome<string> => Data.opt<string> = ({key, value}) => {
       a == b
         ? Data.User({key, value: valTrim})
         : Data.Error({
-            code: "Constraint",
+            code: "QrBill:Validator",
             key,
             value: valTrim,
             message: Checks.invalidCheckDigit(a, b),
@@ -156,7 +156,7 @@ let validateReference: (
       | "SCOR" => validateSCOR({key, value})
       | _ =>
         Data.Error({
-          code: "Constraint",
+          code: "QrBill:Validator",
           key,
           value,
           message: Checks.invalidReference,

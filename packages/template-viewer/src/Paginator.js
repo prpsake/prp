@@ -18,9 +18,9 @@ export function preview({host, error = []}) {
       })
       .catch((_) =>
         Webapi.Error.resolveStructured({
-          code: "FailedSessionModelUpdate",
-          message:
-            "failed to update session model properties language and/or title",
+          code: "TemplateViewer:Paginator",
+          message: "failed to update session model",
+          key: "language,title",
           operational: true,
         }),
       ),
@@ -32,7 +32,7 @@ export function preview({host, error = []}) {
       )
       .catch((_) =>
         Webapi.Error.resolveStructured({
-          code: "FailedPreviewRender",
+          code: "TemplateViewer:Paginator",
           message: "failed to render preview",
           operational: true,
         }),
@@ -51,7 +51,7 @@ export function preview({host, error = []}) {
 
     previewer instanceof Error
       ? value.error.push(previewer)
-      : (value.previewer = session);
+      : (value.previewer = previewer);
 
     return value;
   });

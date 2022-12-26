@@ -1,25 +1,3 @@
-/**
-Operational Errors
-
-- failed to connect to server
-- failed to resolve hostname
-- invalid user input
-- request timeout
-- server returned a 500 response
-- socket hang-up
-- system is out of memory
-
-Programmer Errors
-
-- called an asynchronous function without a callback
-- did not resolve a promise
-- did not catch a rejected promise
-- passed a string where an object was expected
-- passed an object where a string was expected
-- passed incorrect parameters in a function
-
-*/
-
 module Cause = {
   type structured = {
     code: string,
@@ -37,6 +15,17 @@ module Cause = {
     columnNumber?: int,
     stack?: string
   }
+
+  let valueToString: 'a => string =
+    x =>
+    switch Js.Types.classify(x) {
+    | JSObject(o) =>
+      switch Js.Json.stringifyAny(o) {
+      | Some(s) => s
+      | None => "unknown"
+      }
+    | _ => Js.String2.make(x)
+    }
 }
 
 type t

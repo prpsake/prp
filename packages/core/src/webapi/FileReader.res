@@ -55,7 +55,7 @@ let readFileAsText: Webapi.Dom.InputEvent.t => Promise.t<readFileValue> = (e) =>
       result: "",
       file: Js.Nullable.null,
       error: Error.makeStructured({
-        code: "InvalidFile",
+        code: "Core:WebApi:FileReader",
         message: "failed to load json file",
         operational: true
       })
