@@ -141,8 +141,6 @@ const TemplateViewer = ({
     `.style(styleApp),
 });
 
-console.log(import.meta);
-
 export function defineWith({
   templates,
   style,
