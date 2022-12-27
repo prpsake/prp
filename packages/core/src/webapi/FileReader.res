@@ -1,6 +1,6 @@
 type t
 type listenerOptions = { once: bool }
-type readFileValue = { result: string, file: Js.Nullable.t<Webapi.File.t>, error?: Error.t }
+type readFileValue = { result: string, file: Js.Nullable.t<Webapi.File.t>, error?: Error.Cause.structured }
 
 @new external make: unit => t = "FileReader"
 @get external result: t => string = "result"
@@ -54,11 +54,12 @@ let readFileAsText: Webapi.Dom.InputEvent.t => Promise.t<readFileValue> = (e) =>
     Promise.resolve({
       result: "",
       file: Js.Nullable.null,
-      error: Error.makeStructured({
+      error: {
+        id: "__ERROR_CAUSE_ID__",
         code: "Core:WebApi:FileReader",
         message: "failed to load json file",
         operational: true
-      })
+      }
     })
   }
 }

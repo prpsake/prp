@@ -1,4 +1,5 @@
 import type {Language} from "./Translations";
+import {Cause} from "@prpsake/core/types/webapi/Error";
 
 type OptSome<V> = {key: string; value: V};
 
@@ -12,7 +13,7 @@ type OptErr<V> = {
 type Opt<V> =
   | {TAG: 0; _0: OptSome<V>} // User
   | {TAG: 1; _0: OptSome<V>} // Default
-  | {TAG: 2; _0: OptErr<V>}; // Error
+  | {TAG: 2; _0: Cause.Structured}; // Error
 
 type Currency = "CHF" | "EUR";
 type AddressType = "S";
@@ -70,7 +71,7 @@ export type Comp = {
   showAdditionalInfo: boolean;
   showReference: boolean;
   reduceContent: boolean;
-  error: OptErr<string>[];
+  error: Cause.Structured[];
 };
 
 export const initAddressMandatoryDefaults: Address;

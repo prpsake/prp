@@ -40,7 +40,10 @@ const TemplateViewer = ({
   view: router(views, {url: `/${baseUrl}`}),
   showPreview: true,
   error: {
-    set: (host, values = []) => values,
+    set: (host, values = [], lastValues = []) => {
+      let set = new Set(lastValues);
+      values;
+    },
     observe: (host, values) => {
       if (values.length > 0) {
         onError({host, error: values});

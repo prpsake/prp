@@ -1,16 +1,9 @@
 type optSome<'a> = {key: string, value: 'a}
 
-type optErr<'a> = {
-  code: string,
-  key: string,
-  value: 'a,
-  message: string
-}
-
 type opt<'a> =
   | User(optSome<'a>)
   | Default(optSome<'a>)
-  | Error(optErr<'a>)
+  | Error(PrpsakeCore.Error.Cause.structured)
 
 type address = {
   addressType: opt<string>,
@@ -65,11 +58,11 @@ type comp = {
   showAdditionalInfo: bool,
   showReference: bool,
   reduceContent: bool,
-  error: array<optErr<string>>
+  error: array<PrpsakeCore.Error.Cause.structured>
 }
 
 let foldString: opt<string> => string
-let foldAddress: opt<address> => address
+let foldAddress: (. opt<address>, address) => address
 let initMandatoryAddressDefaults: address
 let initOptionalAddressDefaults: address
 let initDefaults: init

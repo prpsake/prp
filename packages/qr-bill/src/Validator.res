@@ -1,11 +1,3 @@
-/**
-
-`mod97FromString(str)`
-
-Gratefully taken from https://github.com/arhs/iban.js/blob/master/iban.js#L71
-TODO: simplify
-
-*/
 let mod97FromString: string => int = str => {
   let remainder = ref(str)
   let block = ref("")
@@ -27,15 +19,6 @@ let mod97FromString: string => int = str => {
   }
 }
 
-/**
-
-`mod10FromIntegerString(str)`
-
-Gratefully taken from https://www.hosang.ch/modulo10.aspx via
-https://github.com/NicolasZanotti/esr-code-line/blob/master/src/index.ts#L10
-TODO: simplify
-
-*/
 let mod10FromIntString: string => string = str => {
   let carry = ref(0)
   let ints = Js.String2.split(str, "")->Js.Array2.map(x =>
@@ -64,9 +47,23 @@ let validateWithRexp: (
     | Some(xs) =>
       switch xs[0] {
       | Some(x) => Data.User({key, value: x})
-      | None => Data.Error({code: "QrBill:Validator", key, value, message})
+      | None => Data.Error({
+          id: "__ERROR_CAUSE_ID__",
+          code: "QrBill:Validator",
+          key,
+          value,
+          message,
+          operational: true
+        })
       }
-    | None => Data.Error({code: "QrBill:Validator", key, value, message})
+    | None => Data.Error({
+        id: "__ERROR_CAUSE_ID__",
+        code: "QrBill:Validator",
+        key,
+        value,
+        message,
+        operational: true
+      })
     }
   | t => t
   }
@@ -78,7 +75,16 @@ let validateWithPred: (Data.opt<'a>, string => bool, string) => Data.opt<'a> = (
 ) =>
   switch o {
   | Data.User({key, value}) =>
-    fn(value) ? Data.User({key, value}) : Data.Error({code: "QrBill:Validator", key, value, message})
+    fn(value) ?
+    Data.User({key, value}) :
+    Data.Error({
+      id: "__ERROR_CAUSE_ID__",
+      code: "QrBill:Validator",
+      key,
+      value,
+      message,
+      operational: true
+    })
   | t => t
   }
 
@@ -104,10 +110,12 @@ let validateIban: Data.opt<string> => Data.opt<string> = o =>
               x == 1
                 ? Data.User({key, value})
                 : Data.Error({
+                    id: "__ERROR_CAUSE_ID__",
                     code: "QrBill:Validator",
                     key,
                     value,
                     message: Checks.invalidChecksum(Belt.Int.toString(x), "1"),
+                    operational: true
                   })
           )
       )
@@ -124,10 +132,12 @@ let validateQRR: Data.optSome<string> => Data.opt<string> = ({key, value}) => {
       a == b
         ? Data.User({key, value: valTrim})
         : Data.Error({
+            id: "__ERROR_CAUSE_ID__",
             code: "QrBill:Validator",
             key,
             value: valTrim,
             message: Checks.invalidCheckDigit(a, b),
+            operational: true
           })
     }->validateWithRexp(
       x => Js.String2.match_(x, %re("/^\S{27}$/")),
@@ -156,10 +166,12 @@ let validateReference: (
       | "SCOR" => validateSCOR({key, value})
       | _ =>
         Data.Error({
+          id: "__ERROR_CAUSE_ID__",
           code: "QrBill:Validator",
           key,
           value,
           message: Checks.invalidReference,
+          operational: true
         })
       }
     | _ => reference

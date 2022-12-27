@@ -1,6 +1,13 @@
 import {resolve} from "path";
 import {defineConfig} from "vite";
 import createReScriptPlugin from "@jihchi/vite-plugin-rescript";
+import replace from "@rollup/plugin-replace";
+import {Utils} from "@prpsake/core";
+
+const errorCauseIdSeq = Utils.Sequence.intStr(
+  process.env.npm_package_name + "_",
+  0,
+);
 
 export default ({mode}) =>
   defineConfig({
@@ -17,5 +24,11 @@ export default ({mode}) =>
         formats: ["es"],
       },
     },
-    plugins: [createReScriptPlugin()],
+    plugins: [
+      createReScriptPlugin(),
+      replace({
+        preventAssignment: false,
+        __ERROR_CAUSE_ID__: () => `${errorCauseIdSeq.next().value}`,
+      }),
+    ],
   });

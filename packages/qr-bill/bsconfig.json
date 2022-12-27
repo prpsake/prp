@@ -14,5 +14,6 @@
     }
   ],
   "suffix": ".mjs",
-  "bs-dependencies": ["@prpsake/core"]
+  "bs-dependencies": ["@prpsake/core"],
+  "pinned-dependencies": ["@prpsake/core"]
 }

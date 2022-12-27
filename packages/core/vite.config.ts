@@ -1,9 +1,16 @@
 import {resolve} from "path";
 import {defineConfig} from "vite";
 import createReScriptPlugin from "@jihchi/vite-plugin-rescript";
+import replace from "@rollup/plugin-replace";
+import {Utils} from "./src";
 
-export default ({mode}) => {
-  return defineConfig({
+const errorCauseIdSeq = Utils.Sequence.intStr(
+  process.env.npm_package_name + "_",
+  0,
+);
+
+export default (_) =>
+  defineConfig({
     publicDir: "public",
     build: {
       target: "esnext",
@@ -14,6 +21,11 @@ export default ({mode}) => {
         formats: ["es"],
       },
     },
-    plugins: [createReScriptPlugin()],
+    plugins: [
+      createReScriptPlugin(),
+      replace({
+        preventAssignment: false,
+        __ERROR_CAUSE_ID__: () => `${errorCauseIdSeq.next().value}`,
+      }),
+    ],
   });
-};

@@ -1,16 +1,9 @@
 type optSome<'a> = {key: string, value: 'a}
 
-type optErr<'a> = {
-  code: string,
-  key: string,
-  value: 'a,
-  message: string
-}
-
 type opt<'a> =
   | User(optSome<'a>)
   | Default(optSome<'a>)
-  | Error(optErr<'a>)
+  | Error(PrpsakeCore.Error.Cause.structured)
 
 type address = {
   addressType: opt<string>,
@@ -65,31 +58,37 @@ type comp = {
   showAdditionalInfo: bool,
   showReference: bool,
   reduceContent: bool,
-  error: array<optErr<string>>
+  error: array<PrpsakeCore.Error.Cause.structured>
 }
 
 let initMandatoryAddressDefaults: address = {
   addressType: Default({key: "addressType", value: "S"}),
   name: Error({
+    id: "__ERROR_CAUSE_ID__",
     code: "QrBill:Data",
     key: "name",
     value: "",
-    message: Checks.required
+    message: Checks.required,
+    operational: true
   }),
   street: Default({key: "street", value: ""}),
   houseNumber: Default({key: "houseNumber", value: ""}),
   postCode: Default({key: "postCode", value: ""}),
   locality: Error({
+    id: "__ERROR_CAUSE_ID__",
     code: "QrBill:Data",
     key: "locality",
     value: "",
-    message: Checks.required
+    message: Checks.required,
+    operational: true
   }),
   countryCode: Error({
+    id: "__ERROR_CAUSE_ID__",
     code: "QrBill:Data",
     key: "countryCode",
     value: "",
-    message: Checks.required
+    message: Checks.required,
+    operational: true
   }),
 }
 
@@ -106,32 +105,38 @@ let initOptionalAddressDefaults: address = {
 let initDefaults: init = {
   language: Default({key: "language", value: "en"}),
   currency: Error({
+    id: "__ERROR_CAUSE_ID__",
     code: "QrBill:Data",
     key: "currency",
     value: "",
-    message: Checks.required
+    message: Checks.required,
+    operational: true
   }),
   amount: Default({key: "amount", value: ""}),
   iban: Error({
+    id: "__ERROR_CAUSE_ID__",
     code: "QrBill:Data",
     key: "iban",
     value: "",
-    message: Checks.required
+    message: Checks.required,
+    operational: true
   }),
   referenceType: Default({key: "referenceType", value: "NON"}),
   reference: Default({key: "reference", value: ""}),
   message: Default({key: "message", value: ""}),
   messageCode: Default({key: "messageCode", value: ""}),
   creditor: Error({
+    id: "__ERROR_CAUSE_ID__",
     code: "QrBill:Data",
     key: "creditor",
-    value: initMandatoryAddressDefaults,
-    message: Checks.required
+    value: "",
+    message: Checks.required,
+    operational: true
   }),
   debtor: Default({key: "debtor", value: initOptionalAddressDefaults}),
 }
 
-let compErrorDefaults: optErr<string> = {code: "", key: "", value: "", message: ""}
+let compErrorDefaults: PrpsakeCore.Error.Cause.structured = {id: "", code: "", message: "", operational: false}
 
 let compDefaults: comp = {
   language: "en",
@@ -173,11 +178,11 @@ let foldString: opt<string> => string = o =>
   | Error(_) => ""
   }
 
-let foldAddress: opt<address> => address = o =>
+let foldAddress: (. opt<address>, address) => address = (. o, defaultAddress) =>
   switch o {
   | User({value})
-  | Default({value})
-  | Error({value}) => value
+  | Default({value}) => value
+  | Error(_) => defaultAddress
   }
 
 let compQrCodeString: comp => string =
@@ -239,8 +244,8 @@ let compPostCode: string => string => string =
 
 let comp: init => comp =
   d => {
-    ( foldAddress(d.creditor),
-      foldAddress(d.debtor),
+    ( foldAddress(. d.creditor, initMandatoryAddressDefaults),
+      foldAddress(. d.debtor, initOptionalAddressDefaults),
     )->((
       creditor,
       debtor
