@@ -16,27 +16,29 @@ export function preview({host, error = []}) {
         language: viewElm.host.data.language,
         title: viewElm.host.data.title,
       })
-      .catch((_) =>
-        Webapi.Error.resolveStructured({
+      .catch((_) => ({
+        error_: {
+          id: "__ERROR_CAUSE_ID__",
           code: "TemplateViewer:Paginator",
-          message: "failed to update session model",
           key: "language,title",
+          message: "failed to update session model",
           operational: true,
-        }),
-      ),
+        },
+      })),
     previewer
       .preview(
         viewElm.innerHTML,
         [{styles: host.session.style}],
         host.previewElm,
       )
-      .catch((_) =>
-        Webapi.Error.resolveStructured({
+      .catch((_) => ({
+        error_: {
+          id: "__ERROR_CAUSE_ID__",
           code: "TemplateViewer:Paginator",
           message: "failed to render preview",
           operational: true,
-        }),
-      ),
+        },
+      })),
   ]).then(([session, previewer]) => {
     let value = {
       host,
@@ -45,12 +47,12 @@ export function preview({host, error = []}) {
       error,
     };
 
-    session instanceof Error
-      ? value.error.push(session)
+    session.error_
+      ? value.error.push(session.error_)
       : (value.session = session);
 
-    previewer instanceof Error
-      ? value.error.push(previewer)
+    previewer.error_
+      ? value.error.push(previewer.error_)
       : (value.previewer = previewer);
 
     return value;

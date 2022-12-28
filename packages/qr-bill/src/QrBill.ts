@@ -6,19 +6,19 @@ import {
   define,
   dispatch,
 } from "hybrids";
-import type {Comp, OptErr} from "../types/Data";
+import {Cause} from "@prpsake/core/types/webapi/Error";
+import type {Comp} from "../types/Data";
 import type {Translation} from "../types/Translations";
 import {translations} from "./Translations.mjs";
 import * as QRCode from "./QRCode.mjs";
 import * as Data from "./Data.mjs";
 import style from "./style.css";
-import {Webapi} from "@prpsake/core";
 
 interface QrBillModel extends Comp {}
 interface QrBill extends Comp {
   tag: string;
   data: QrBillModel;
-  error: OptErr<string>[];
+  error: Cause.Structured[];
   tr: Translation;
 }
 
@@ -99,14 +99,7 @@ const QrBill: Component<QrBill> = {
     observe(host) {
       if (host.error.length > 0) {
         dispatch(host, "error", {
-          detail: host.error.map((err) =>
-            Webapi.Error.makeStructured({
-              code: err.code,
-              message: err.message,
-              operational: true,
-              value: String(err.value),
-            }),
-          ),
+          detail: host.error,
           bubbles: true,
           cancelable: true,
           composed: true,
@@ -115,8 +108,13 @@ const QrBill: Component<QrBill> = {
     },
   },
   error: {
-    set: (_, values: OptErr<string>[] = []) =>
-      values.filter(({code}) => code !== ""),
+    set: (_, values: Cause.Structured[] = []) =>
+      Object.values(
+        values.reduce((a, b) => {
+          if (b.id !== "") a[b.id] = b;
+          return a;
+        }, {}),
+      ),
   },
   tr: ({language}) => translations[language] || translations["en"],
   render: ({

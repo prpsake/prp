@@ -40,10 +40,8 @@ const TemplateViewer = ({
   view: router(views, {url: `/${baseUrl}`}),
   showPreview: true,
   error: {
-    set: (host, values = [], lastValues = []) => {
-      let set = new Set(lastValues);
-      values;
-    },
+    set: (host, values = []) =>
+      Object.values(values.reduce((a, b) => ((a[b.id] = b), a), {})),
     observe: (host, values) => {
       if (values.length > 0) {
         onError({host, error: values});
@@ -167,26 +165,24 @@ export function defineWith({
         class: "absolute bottom-0 left-0",
       });
     } else {
-      error.push(
-        Webapi.Error.makeStructured({
-          code: "TemplateViewer:TemplateViewer",
-          message: "must be a valid custom-tag string value or a boolean",
-          key: "tagQrBill",
-          value: tagQrBill,
-          operational: true,
-        }),
-      );
+      error.push({
+        id: "__ERROR_CAUSE_ID__",
+        code: "TemplateViewer:TemplateViewer",
+        key: "tagQrBill",
+        value: tagQrBill,
+        message: "must be a valid custom-tag string value or a boolean",
+        operational: true,
+      });
     }
   } else {
-    error.push(
-      Webapi.Error.makeStructured({
-        code: "TemplateViewer:TemplateViewer",
-        message: "must be a valid custom-tag string value or a boolean",
-        key: "tagQrBill",
-        value: Webapi.Error.Cause.valueToString(tagQrBill),
-        operational: true,
-      }),
-    );
+    error.push({
+      id: "__ERROR_CAUSE_ID__",
+      code: "TemplateViewer:TemplateViewer",
+      key: "tagQrBill",
+      value: Webapi.Error.Cause.valueToString(tagQrBill),
+      message: "must be a valid custom-tag string value or a boolean",
+      operational: true,
+    });
   }
 
   if (typeof onError !== "function") {
@@ -281,12 +277,13 @@ function togglePreview({host, error = []}) {
           host,
           error: [
             ...error,
-            Webapi.Error.makeStructured({
+            {
+              id: "__ERROR_CAUSE_ID__",
               code: "TemplateViewer:TemplateViewer",
               message:
                 "transitionend-event has not occurred within the timeout",
               operational: true,
-            }),
+            },
           ],
         });
       }, 3000);
@@ -298,35 +295,45 @@ function readTemplateJsonData({host, e, templates, error = []}) {
   return Webapi.FileReader.readFileAsText(e)
     .then(({result, file, error: fileReaderError}) => {
       if (fileReaderError) {
-        throw fileReaderError;
+        return {error_: fileReaderError};
       } else {
         let data;
         try {
           data = JSON.parse(result);
         } catch (_) {
-          throw Webapi.Error.makeStructured({
-            code: "TemplateViewer:TemplateViewer",
-            message: "failed to parse template data json string",
-            operational: true,
-          });
+          return {
+            error_: {
+              id: "__ERROR_CAUSE_ID__",
+              code: "TemplateViewer:TemplateViewer",
+              message: "failed to parse template data json string",
+              operational: true,
+            },
+          };
         }
         return Promise.all([
           store.set(Session, {file: file.name}),
           ...Object.values(templates).map((template) =>
             store.set(template.model, data),
           ),
-        ]).catch((_) => {
-          throw Webapi.Error.makeStructured({
-            code: "TemplateViewer:TemplateViewer",
-            message: "failed to update session model",
-            key: "file,...data",
-            operational: true,
+        ])
+          .then((_) => ({error_: null}))
+          .catch((_) => {
+            return {
+              error_: {
+                id: "__ERROR_CAUSE_ID__",
+                code: "TemplateViewer:TemplateViewer",
+                key: "file,...data",
+                message: "failed to update session model",
+                operational: true,
+              },
+            };
           });
-        });
       }
     })
-    .then(() => ({host, error}))
-    .catch((err) => ({host, error: [...error, err]}));
+    .then(({error_}) => {
+      if (error_) return {host, error: [...error, error_]};
+      return {host, error};
+    });
 }
 
 function handleViewError(host, e) {

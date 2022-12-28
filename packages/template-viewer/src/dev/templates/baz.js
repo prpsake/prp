@@ -4,7 +4,8 @@ export const model = {
   title: "",
   language: "",
   foo: "",
-  iban: "CH28938",
+  currency: "CHF",
+  iban: "CH1509000000152034087",
 };
 
 export const view = ({data}) => html`

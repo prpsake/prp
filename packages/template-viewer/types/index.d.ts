@@ -6,6 +6,7 @@ import {
   svg as hybridsSvg,
 } from "hybrids";
 
+import {Cause} from "@prpsake/core/types/webapi/Error";
 import {QrBillModel} from "@prpsake/qr-bill";
 
 type PRPModel<M> = {
@@ -85,7 +86,7 @@ export function defineWith(param: {
     error,
   }: {
     host: HybridsComponent<unknown>;
-    error: Error[];
+    error: Cause.Structured[];
   }) => void;
 }): void;
 

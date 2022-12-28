@@ -3,13 +3,6 @@ import {Cause} from "@prpsake/core/types/webapi/Error";
 
 type OptSome<V> = {key: string; value: V};
 
-type OptErr<V> = {
-  code: string;
-  key: string;
-  value: V;
-  message: string;
-};
-
 type Opt<V> =
   | {TAG: 0; _0: OptSome<V>} // User
   | {TAG: 1; _0: OptSome<V>} // Default
