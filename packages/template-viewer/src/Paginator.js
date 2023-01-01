@@ -18,7 +18,7 @@ export function preview({host, error = []}) {
       })
       .catch((_) => ({
         error_: {
-          code: "__ERROR_CAUSE_ID__/Paginator",
+          code: "__ERROR_CAUSE_ID__",
           key: "language,title",
           message: "failed to update session model"
         },
