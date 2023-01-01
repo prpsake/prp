@@ -1,12 +1,10 @@
 module Cause = {
 
   type structured = {
-    id: string,
     code: string,
     key?: string,
     value?: string,
-    message: string,
-    operational: bool
+    message: string
   }
 
 //  type caught = {

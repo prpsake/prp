@@ -5,7 +5,7 @@ import replace from "@rollup/plugin-replace";
 import {Utils} from "@prpsake/core";
 
 const errorCauseIdSeq = Utils.Sequence.intStr(
-  process.env.npm_package_name + "_",
+  process.env.npm_package_name + "#",
   0,
 );
 

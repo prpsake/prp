@@ -55,10 +55,8 @@ let readFileAsText: Webapi.Dom.InputEvent.t => Promise.t<readFileValue> = (e) =>
       result: "",
       file: Js.Nullable.null,
       error: {
-        id: "__ERROR_CAUSE_ID__",
-        code: "Core:WebApi:FileReader",
-        message: "failed to load json file",
-        operational: true
+        code: "__ERROR_CAUSE_ID__",
+        message: "failed to load json file"
       }
     })
   }

@@ -48,21 +48,17 @@ let validateWithRexp: (
       switch xs[0] {
       | Some(x) => Data.User({key, value: x})
       | None => Data.Error({
-          id: "__ERROR_CAUSE_ID__",
-          code: "QrBill:Validator",
+          code: "__ERROR_CAUSE_ID__",
           key,
           value,
-          message,
-          operational: true
+          message
         })
       }
     | None => Data.Error({
-        id: "__ERROR_CAUSE_ID__",
-        code: "QrBill:Validator",
+        code: "__ERROR_CAUSE_ID__",
         key,
         value,
-        message,
-        operational: true
+        message
       })
     }
   | t => t
@@ -78,12 +74,10 @@ let validateWithPred: (Data.opt<'a>, string => bool, string) => Data.opt<'a> = (
     fn(value) ?
     Data.User({key, value}) :
     Data.Error({
-      id: "__ERROR_CAUSE_ID__",
-      code: "QrBill:Validator",
+      code: "__ERROR_CAUSE_ID__",
       key,
       value,
-      message,
-      operational: true
+      message
     })
   | t => t
   }
@@ -110,12 +104,10 @@ let validateIban: Data.opt<string> => Data.opt<string> = o =>
               x == 1
                 ? Data.User({key, value})
                 : Data.Error({
-                    id: "__ERROR_CAUSE_ID__",
-                    code: "QrBill:Validator",
+                    code: "__ERROR_CAUSE_ID__",
                     key,
                     value,
-                    message: Checks.invalidChecksum(Belt.Int.toString(x), "1"),
-                    operational: true
+                    message: Checks.invalidChecksum(Belt.Int.toString(x), "1")
                   })
           )
       )
@@ -132,12 +124,10 @@ let validateQRR: Data.optSome<string> => Data.opt<string> = ({key, value}) => {
       a == b
         ? Data.User({key, value: valTrim})
         : Data.Error({
-            id: "__ERROR_CAUSE_ID__",
-            code: "QrBill:Validator",
+            code: "__ERROR_CAUSE_ID__",
             key,
             value: valTrim,
-            message: Checks.invalidCheckDigit(a, b),
-            operational: true
+            message: Checks.invalidCheckDigit(a, b)
           })
     }->validateWithRexp(
       x => Js.String2.match_(x, %re("/^\S{27}$/")),
@@ -166,12 +156,10 @@ let validateReference: (
       | "SCOR" => validateSCOR({key, value})
       | _ =>
         Data.Error({
-          id: "__ERROR_CAUSE_ID__",
-          code: "QrBill:Validator",
+          code: "__ERROR_CAUSE_ID__",
           key,
           value,
-          message: Checks.invalidReference,
-          operational: true
+          message: Checks.invalidReference
         })
       }
     | _ => reference

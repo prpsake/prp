@@ -18,11 +18,9 @@ export function preview({host, error = []}) {
       })
       .catch((_) => ({
         error_: {
-          id: "__ERROR_CAUSE_ID__",
-          code: "TemplateViewer:Paginator",
+          code: "__ERROR_CAUSE_ID__/Paginator",
           key: "language,title",
-          message: "failed to update session model",
-          operational: true,
+          message: "failed to update session model"
         },
       })),
     previewer
@@ -33,10 +31,8 @@ export function preview({host, error = []}) {
       )
       .catch((_) => ({
         error_: {
-          id: "__ERROR_CAUSE_ID__",
-          code: "TemplateViewer:Paginator",
-          message: "failed to render preview",
-          operational: true,
+          code: "__ERROR_CAUSE_ID__",
+          message: "failed to render preview"
         },
       })),
   ]).then(([session, previewer]) => {

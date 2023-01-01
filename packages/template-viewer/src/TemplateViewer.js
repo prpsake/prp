@@ -166,22 +166,18 @@ export function defineWith({
       });
     } else {
       error.push({
-        id: "__ERROR_CAUSE_ID__",
-        code: "TemplateViewer:TemplateViewer",
+        code: "__ERROR_CAUSE_ID__",
         key: "tagQrBill",
         value: tagQrBill,
-        message: "must be a valid custom-tag string value or a boolean",
-        operational: true,
+        message: "must be a valid custom-tag string value or a boolean"
       });
     }
   } else {
     error.push({
-      id: "__ERROR_CAUSE_ID__",
-      code: "TemplateViewer:TemplateViewer",
+      code: "__ERROR_CAUSE_ID__",
       key: "tagQrBill",
       value: Webapi.Error.Cause.valueToString(tagQrBill),
-      message: "must be a valid custom-tag string value or a boolean",
-      operational: true,
+      message: "must be a valid custom-tag string value or a boolean"
     });
   }
 
@@ -278,11 +274,9 @@ function togglePreview({host, error = []}) {
           error: [
             ...error,
             {
-              id: "__ERROR_CAUSE_ID__",
-              code: "TemplateViewer:TemplateViewer",
+              code: "__ERROR_CAUSE_ID__",
               message:
-                "transitionend-event has not occurred within the timeout",
-              operational: true,
+                "transitionend-event has not occurred within the timeout"
             },
           ],
         });
@@ -303,10 +297,8 @@ function readTemplateJsonData({host, e, templates, error = []}) {
         } catch (_) {
           return {
             error_: {
-              id: "__ERROR_CAUSE_ID__",
-              code: "TemplateViewer:TemplateViewer",
-              message: "failed to parse template data json string",
-              operational: true,
+              code: "__ERROR_CAUSE_ID__",
+              message: "failed to parse template data json string"
             },
           };
         }
@@ -320,11 +312,9 @@ function readTemplateJsonData({host, e, templates, error = []}) {
           .catch((_) => {
             return {
               error_: {
-                id: "__ERROR_CAUSE_ID__",
-                code: "TemplateViewer:TemplateViewer",
+                code: "__ERROR_CAUSE_ID__",
                 key: "file,...data",
-                message: "failed to update session model",
-                operational: true,
+                message: "failed to update session model"
               },
             };
           });

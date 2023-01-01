@@ -64,31 +64,25 @@ type comp = {
 let initMandatoryAddressDefaults: address = {
   addressType: Default({key: "addressType", value: "S"}),
   name: Error({
-    id: "__ERROR_CAUSE_ID__",
-    code: "QrBill:Data",
+    code: "__ERROR_CAUSE_ID__",
     key: "name",
     value: "",
-    message: Checks.required,
-    operational: true
+    message: Checks.required
   }),
   street: Default({key: "street", value: ""}),
   houseNumber: Default({key: "houseNumber", value: ""}),
   postCode: Default({key: "postCode", value: ""}),
   locality: Error({
-    id: "__ERROR_CAUSE_ID__",
-    code: "QrBill:Data",
+    code: "__ERROR_CAUSE_ID__",
     key: "locality",
     value: "",
-    message: Checks.required,
-    operational: true
+    message: Checks.required
   }),
   countryCode: Error({
-    id: "__ERROR_CAUSE_ID__",
-    code: "QrBill:Data",
+    code: "__ERROR_CAUSE_ID__",
     key: "countryCode",
     value: "",
-    message: Checks.required,
-    operational: true
+    message: Checks.required
   }),
 }
 
@@ -105,38 +99,32 @@ let initOptionalAddressDefaults: address = {
 let initDefaults: init = {
   language: Default({key: "language", value: "en"}),
   currency: Error({
-    id: "__ERROR_CAUSE_ID__",
-    code: "QrBill:Data",
+    code: "__ERROR_CAUSE_ID__",
     key: "currency",
     value: "",
-    message: Checks.required,
-    operational: true
+    message: Checks.required
   }),
   amount: Default({key: "amount", value: ""}),
   iban: Error({
-    id: "__ERROR_CAUSE_ID__",
-    code: "QrBill:Data",
+    code: "__ERROR_CAUSE_ID__",
     key: "iban",
     value: "",
-    message: Checks.required,
-    operational: true
+    message: Checks.required
   }),
   referenceType: Default({key: "referenceType", value: "NON"}),
   reference: Default({key: "reference", value: ""}),
   message: Default({key: "message", value: ""}),
   messageCode: Default({key: "messageCode", value: ""}),
   creditor: Error({
-    id: "__ERROR_CAUSE_ID__",
-    code: "QrBill:Data",
+    code: "__ERROR_CAUSE_ID__",
     key: "creditor",
     value: "",
-    message: Checks.required,
-    operational: true
+    message: Checks.required
   }),
   debtor: Default({key: "debtor", value: initOptionalAddressDefaults}),
 }
 
-let compErrorDefaults: PrpsakeCore.Error.Cause.structured = {id: "", code: "", message: "", operational: false}
+let compErrorDefaults: PrpsakeCore.Error.Cause.structured = {code: "", message: ""}
 
 let compDefaults: comp = {
   language: "en",
