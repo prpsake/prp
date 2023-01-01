@@ -1,5 +1,4 @@
 import {store} from "hybrids";
-import {Webapi} from "@prpsake/core";
 import {Previewer} from "./lib/paged.lib.js";
 import Session from "./Session.js";
 
