@@ -1,73 +1,69 @@
 @tailwind base;
- @tailwind components;
- @tailwind utilities;
+@tailwind components;
+@tailwind utilities;
 
 
- @layer base {
+@layer base {
+  @font-face {
+   font-family: "JetBrains Mono";
+   font-display: auto;
+   font-weight: 100 900;
+   font-style: normal;
+   src: url("/assets/JetBrainsMono-VariableFont_wght.woff2") format('woff2');
+  }
 
-   @font-face {
-     font-family: "JetBrains Mono";
-     font-display: auto;
-     font-weight: 100 900;
-     font-style: normal;
-     src: url("/assets/JetBrainsMono-VariableFont_wght.woff2") format('woff2');
-   }
+  @font-face {
+   font-family: "JetBrains Mono";
+   font-display: auto;
+   font-weight: 100 900;
+   font-style: italic;
+   src: url("/assets/JetBrainsMono-Italic-VariableFont_wght.woff2") format('woff2');
+  }
 
-   @font-face {
-     font-family: "JetBrains Mono";
-     font-display: auto;
-     font-weight: 100 900;
-     font-style: italic;
-     src: url("/assets/JetBrainsMono-Italic-VariableFont_wght.woff2") format('woff2');
-   }
-
-   :root {
-     --template-bg: #FBFBFB;
-     --template-fg: #1D1D1F;
-     --template-action-fg: #38BDF8;
-     --template-font: "JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-   }
- }
-
-
- @layer utilities {
-
-   .page-payment-methods {
-     page: paymentMethods;
-   }
-
- }
+  :root {
+   --template-bg: #FBFBFB;
+   --template-fg: #1D1D1F;
+   --template-action-fg: #38BDF8;
+   --template-font: "JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+  }
+}
 
 
- /**
-  * Print styles
-  *
-  * NB: These styles do not work well in tw layer directives while developing:
-  * `element` and `running declarations are sometimes lost when other modules change.
-  */
+@layer utilities {
+  .page-payment-methods {
+    page: paymentMethods;
+  }
+}
 
 
- @page {
-   size: A4;
-   margin: 11.5mm 10mm 41.5mm 10mm;
-   background-color: var(--template-bg);
-   background-image: url("/assets/ornament-page.svg");
-   background-position: top left;
-   background-size: 210mm 297mm;
-   background-repeat: no-repeat;
-   print-color-adjust: exact;
-
-   @bottom-left { content: element(bottomLeft) }
- }
+/**
+* Print styles
+*
+* NB: These styles do not work well in tw layer directives while developing:
+* `element` and `running declarations are sometimes lost when other modules change.
+*/
 
 
- @page paymentMethods {
-   position: relative;
-   margin: 11.5mm 0 0;
-   background-image: url("/assets/ornament-page-paymentmethods.svg");
+@page {
+  size: A4;
+  margin: 11.5mm 10mm 41.5mm 10mm;
+  background-color: var(--template-bg);
+  background-image: url("/assets/ornament-page.svg");
+  /*background-position: top left;*/
+  /*background-size: 210mm 297mm;*/
+  /*background-repeat: no-repeat;*/
+  print-color-adjust: exact;
 
-   @bottom-left { content: none }
- }
+  @bottom-left { content: element(bottomLeft) }
+}
 
 
- .bottom-left { position: running(bottomLeft) }
+@page paymentMethods {
+  margin: 11.5mm 0 0;
+  background-image: url("/assets/ornament-page-paymentmethods.svg");
+
+  @bottom-left { content: none }
+}
+
+
+.bottom-left { position: running(bottomLeft) }

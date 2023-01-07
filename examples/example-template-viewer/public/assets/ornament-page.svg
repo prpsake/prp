@@ -3,18 +3,22 @@
   width="100%"
   height="100%"
   viewBox="0 0 2100 2970">
-  <defs>
-    <pattern id="pattern" x="0" y="0" width="0.01" height="0.0035">
-<!--      <line x1="0" y1="8" x2="8" y2="0" stroke="#1D1D1F" stroke-opacity="0.1" />-->
-<!--      <line x1="0" y1="0" x2="8" y2="8" stroke="#1D1D1F" stroke-opacity="0.1" />-->
-      <line x1="4" y1="0" x2="4" y2="8" stroke="#1D1D1F" stroke-opacity="0.1" />
-      <line x1="0" y1="4" x2="8" y2="4" stroke="#1D1D1F" stroke-opacity="0.1" />
-    </pattern>
-  </defs>
+<!--  <defs>-->
+<!--    <pattern id="pattern" x="0" y="0" width="0.01" height="0.0035">-->
+<!--&lt;!&ndash;      <line x1="0" y1="8" x2="8" y2="0" stroke="#1D1D1F" stroke-opacity="0.1" />&ndash;&gt;-->
+<!--&lt;!&ndash;      <line x1="0" y1="0" x2="8" y2="8" stroke="#1D1D1F" stroke-opacity="0.1" />&ndash;&gt;-->
+<!--      <line x1="4" y1="0" x2="4" y2="8" stroke="#1D1D1F" stroke-opacity="0.1" />-->
+<!--      <line x1="0" y1="4" x2="8" y2="4" stroke="#1D1D1F" stroke-opacity="0.1" />-->
+<!--    </pattern>-->
+<!--  </defs>-->
+<!--  <rect-->
+<!--    width="1100"-->
+<!--    height="2970"-->
+<!--    fill="url(#pattern)" />-->
   <rect
     width="1100"
     height="2970"
-    fill="url(#pattern)" />
+    fill="#1D1D1F" fill-opacity="0.01" />
   <rect
     width="2100"
     height="15"
