@@ -48,14 +48,14 @@ let validateWithRexp: (
       switch xs[0] {
       | Some(x) => Data.User({key, value: x})
       | None => Data.Error({
-          code: "__ERROR_CAUSE_ID__",
+          id: "__ERROR_CAUSE_ID__",
           key,
           value,
           message
         })
       }
     | None => Data.Error({
-        code: "__ERROR_CAUSE_ID__",
+        id: "__ERROR_CAUSE_ID__",
         key,
         value,
         message
@@ -74,7 +74,7 @@ let validateWithPred: (Data.opt<'a>, string => bool, string) => Data.opt<'a> = (
     fn(value) ?
     Data.User({key, value}) :
     Data.Error({
-      code: "__ERROR_CAUSE_ID__",
+      id: "__ERROR_CAUSE_ID__",
       key,
       value,
       message
@@ -104,7 +104,7 @@ let validateIban: Data.opt<string> => Data.opt<string> = o =>
               x == 1
                 ? Data.User({key, value})
                 : Data.Error({
-                    code: "__ERROR_CAUSE_ID__",
+                    id: "__ERROR_CAUSE_ID__",
                     key,
                     value,
                     message: Checks.invalidChecksum(Belt.Int.toString(x), "1")
@@ -124,7 +124,7 @@ let validateQRR: Data.optSome<string> => Data.opt<string> = ({key, value}) => {
       a == b
         ? Data.User({key, value: valTrim})
         : Data.Error({
-            code: "__ERROR_CAUSE_ID__",
+            id: "__ERROR_CAUSE_ID__",
             key,
             value: valTrim,
             message: Checks.invalidCheckDigit(a, b)
@@ -156,7 +156,7 @@ let validateReference: (
       | "SCOR" => validateSCOR({key, value})
       | _ =>
         Data.Error({
-          code: "__ERROR_CAUSE_ID__",
+          id: "__ERROR_CAUSE_ID__",
           key,
           value,
           message: Checks.invalidReference

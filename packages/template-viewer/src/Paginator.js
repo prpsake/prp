@@ -17,9 +17,9 @@ export function preview({host, error = []}) {
       })
       .catch((_) => ({
         error_: {
-          code: "__ERROR_CAUSE_ID__",
+          id: "__ERROR_CAUSE_ID__",
           key: "language,title",
-          message: "failed to update session model"
+          message: "failed to update session model",
         },
       })),
     previewer
@@ -30,8 +30,8 @@ export function preview({host, error = []}) {
       )
       .catch((_) => ({
         error_: {
-          code: "__ERROR_CAUSE_ID__",
-          message: "failed to render preview"
+          id: "__ERROR_CAUSE_ID__",
+          message: "failed to render preview",
         },
       })),
   ]).then(([session, previewer]) => {

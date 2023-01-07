@@ -166,18 +166,18 @@ export function defineWith({
       });
     } else {
       error.push({
-        code: "__ERROR_CAUSE_ID__",
+        id: "__ERROR_CAUSE_ID__",
         key: "tagQrBill",
         value: tagQrBill,
-        message: "must be a valid custom-tag string value or a boolean"
+        message: "must be a valid custom-tag string value or a boolean",
       });
     }
   } else {
     error.push({
-      code: "__ERROR_CAUSE_ID__",
+      id: "__ERROR_CAUSE_ID__",
       key: "tagQrBill",
       value: Webapi.Error.Cause.valueToString(tagQrBill),
-      message: "must be a valid custom-tag string value or a boolean"
+      message: "must be a valid custom-tag string value or a boolean",
     });
   }
 
@@ -274,9 +274,9 @@ function togglePreview({host, error = []}) {
           error: [
             ...error,
             {
-              code: "__ERROR_CAUSE_ID__",
+              id: "__ERROR_CAUSE_ID__",
               message:
-                "transitionend-event has not occurred within the timeout"
+                "transitionend-event has not occurred within the timeout",
             },
           ],
         });
@@ -297,8 +297,8 @@ function readTemplateJsonData({host, e, templates, error = []}) {
         } catch (_) {
           return {
             error_: {
-              code: "__ERROR_CAUSE_ID__",
-              message: "failed to parse template data json string"
+              id: "__ERROR_CAUSE_ID__",
+              message: "failed to parse template data json string",
             },
           };
         }
@@ -312,9 +312,9 @@ function readTemplateJsonData({host, e, templates, error = []}) {
           .catch((_) => {
             return {
               error_: {
-                code: "__ERROR_CAUSE_ID__",
+                id: "__ERROR_CAUSE_ID__",
                 key: "file,...data",
-                message: "failed to update session model"
+                message: "failed to update session model",
               },
             };
           });
