@@ -17,7 +17,8 @@
     "paths": {
       "core": ["packages/core/src/index.ts"],
       "qr-bill": ["packages/qr-bill/src/index.ts"],
-      "template-viewer": ["packages/template-viewer/src/index.ts"]
+      "template-viewer": ["packages/template-viewer/src/index.ts"],
+      "utils": ["packages/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

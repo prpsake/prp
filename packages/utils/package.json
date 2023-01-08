@@ -1,7 +1,7 @@
 {
-  "name": "@prpsake/core",
+  "name": "@prpsake/utils",
   "description": "",
-  "version": "0.0.5",
+  "version": "0.0.1",
   "type": "module",
   "files": [
     "dist",
@@ -11,9 +11,9 @@
   "exports": "./dist/index.js",
   "types": "types/index.d.ts",
   "scripts": {
-    "test": "echo run core test && exit 0",
+    "test": "echo run utils test && exit 0",
     "test:publish": "pnpm publish --dry-run --no-git-checks",
-    "dev": "rescript build -w",
+    "dev": "vite dev",
     "build": "vite build",
     "release": "pnpm publish --no-git-checks"
   }

@@ -1,0 +1,18 @@
+/node_modules/
+/dist/
+/coverage/
+
+/lib/
+/src/**/*.bs.js
+/src/**/*.mjs
+/src/**/*.gen.ts
+.bsb.lock
+.merlin
+
+*.log*
+
+# env
+*.local
+
+# os specific
+.DS_Store
