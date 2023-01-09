@@ -12,6 +12,9 @@ export default (_) =>
         fileName: "index",
         formats: ["es"],
       },
+      rollupOptions: {
+        external: [/node_modules/],
+      },
     },
     plugins: [],
   });

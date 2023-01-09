@@ -1,12 +1,5 @@
 import {execa, type ExecaChildProcess} from "execa";
-
-type env = {
-  mode: string;
-  entries: Record<string, string | boolean>;
-  var: (key: string) => string | boolean;
-} & {
-  [key: string]: (key: string) => string | boolean;
-};
+import type {env} from "./Env";
 
 type killOptions = {
   termination?: NodeJS.Signals;
@@ -35,10 +28,10 @@ type commandStdoutFn = ({
   rej?: (reason?: any) => void;
 } & values) => PromiseLike<Record<string, any>>;
 
-const omitProp = (obj, key) => {
+function omitProp(obj: Record<string, any>, key: string): Record<string, any> {
   const {[key]: _, ...rest} = obj;
   return rest;
-};
+}
 
 const colors = (color: string): string =>
   ({
@@ -56,25 +49,24 @@ const colors = (color: string): string =>
 export const prependTitleToLine = (line: string, title: string): string =>
   line.replace(/.*?\n/g, `${title}$&`);
 
-export const command =
-  ({
-    cmd,
-    title = cmd,
-    color = "reset",
-    args,
-    stdout,
-    wait = true,
-    options = {},
-  }: {
-    cmd: string;
-    title?: string;
-    color?: string;
-    args?: string[] | ((env?: env) => string[]);
-    stdout?: boolean | commandStdoutFn;
-    wait?: boolean;
-    options?: Record<string, any> | ((env?: env) => Record<string, any>);
-  }) =>
-  (env: env, prevValues: values) => {
+export function command({
+  cmd,
+  title = cmd,
+  color = "reset",
+  args = [],
+  stdout,
+  wait = true,
+  options = {},
+}: {
+  cmd: string;
+  title?: string;
+  color?: string;
+  args?: string[] | ((env?: env) => string[]);
+  stdout?: boolean | commandStdoutFn;
+  wait?: boolean;
+  options?: Record<string, any> | ((env?: env) => Record<string, any>);
+}) {
+  return function (env?: env, prevValues?: values) {
     const args_ = typeof args === "function" ? args(env) : args;
     const options_ = typeof options === "function" ? options(env) : options;
     const title_ = `${colors(color)}[${title}]\u001b[0m${" ".repeat(
@@ -82,7 +74,7 @@ export const command =
     )}`;
 
     const subprocess = execa(cmd, args_, {
-      env: {FORCE_COLOR: true, ...options_.env},
+      env: {FORCE_COLOR: true, ...(options_.env ? options_.env : {})},
       ...omitProp(options_, "env"),
     });
 
@@ -122,3 +114,4 @@ export const command =
     if (wait) return subprocess.then(() => values);
     return Promise.resolve(values);
   };
+}
