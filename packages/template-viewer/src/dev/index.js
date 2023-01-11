@@ -6,5 +6,6 @@ import style from "./style.css";
 defineWith({
   templates: {foo, baz},
   tagQrBill: true,
+  data: "/data/sample.json",
   style,
 });

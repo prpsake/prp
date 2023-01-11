@@ -1,10 +1,238 @@
 {
-  "invoices": [
+  "billable": [
     {
-      "id": 1
+      "id": 1,
+      "templates": ["estimate", "invoice"],
+      "title": "Rechnung-00123-AndereOrg-010123",
+      "number": "00123",
+      "subject": "eine.org",
+      "date": "01.01.23",
+      "due": "15.01.23",
+      "language": "de",
+      "currency": "CHF",
+      "amount": "2880.00",
+      "reference": "",
+      "message": "Rechnung 00123",
+      "messageCode": "",
+      "creditor": {
+        "name": "Andere Org",
+        "organisation": "Andere Org",
+        "street": "Hustensaft",
+        "houseNumber": "9",
+        "postCode": "9000",
+        "locality": "Da",
+        "countryCode": "CH",
+        "iban": "CH15 0900 0000 1520 3408 7",
+        "uid": "CHE-214.481.730",
+        "person": "Daphne Kräcker",
+        "email": "hallo@andere.org",
+        "threema": "9ZZZ9999"
+      },
+      "debtor": {
+        "name": "Eine Org",
+        "organisation": "Eine Org",
+        "street": "Geleepistole",
+        "houseNumber": "1",
+        "postCode": "1000",
+        "locality": "Dort",
+        "countryCode": "CH",
+        "person": "Mans Huster"
+      },
+      "items": [
+        {
+          "quantity": "1",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "120.00",
+          "description": "Nibh tellus molestie nunc non blandit massa enim. Neque aliquam vestibulum morbi blandit cursus. Aliquet nibh praesent tristique magna.",
+          "issues": ["100"]
+        },
+        {
+          "quantity": "2",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "240.00",
+          "description": "Accumsan lacus vel facilisis volutpat. Sodales ut eu sem integer vitae justo eget. Tincidunt augue interdum velit euismod in pellentesque massa. Enim nunc faucibus a pellentesque sit. Accumsan in nisl nisi scelerisque eu ultrices. Aliquam id diam maecenas ultricies mi eget mauris pharetra et.",
+          "issues": ["101", "102"]
+        },
+        {
+          "quantity": "3",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "360.00",
+          "description": "Est ullamcorper eget nulla facilisi etiam dignissim diam quis.",
+          "issues": ["103", "104", "105"]
+        },
+        {
+          "quantity": "2",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "240.00",
+          "description": "Accumsan lacus vel facilisis volutpat. Sodales ut eu sem integer vitae justo eget. Tincidunt augue interdum velit euismod in pellentesque massa. Enim nunc faucibus a pellentesque sit. Accumsan in nisl nisi scelerisque eu ultrices. Aliquam id diam.",
+          "issues": ["101", "102"]
+        },
+        {
+          "quantity": "1",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "120.00",
+          "description": "Enim nunc faucibus a pellentesque sit. Neque aliquam vestibulum morbi blandit cursus. Aliquet nibh praesent tristique magna.",
+          "issues": ["100"]
+        },
+        {
+          "quantity": "3",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "360.00",
+          "description": "Est ullamcorper eget nulla facilisi etiam dignissim diam quis. Neque aliquam vestibulum morbi blandit cursus.",
+          "issues": ["103", "104", "105"]
+        },
+        {
+          "quantity": "1",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "120.00",
+          "description": "Nibh tellus molestie nunc non blandit massa enim. Neque aliquam vestibulum morbi blandit cursus. Aliquet nibh praesent tristique magna. Neque aliquam vestibulum morbi blandit cursus. Est ullamcorper eget nulla facilisi etiam dignissim diam quis.",
+          "issues": ["100"]
+        },
+        {
+          "quantity": "2",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "240.00",
+          "description": "Accumsan lacus vel facilisis volutpat. Sodales ut eu sem integer vitae justo eget. Tincidunt augue interdum velit euismod in pellentesque massa. Enim nunc faucibus a pellentesque sit. Accumsan in nisl nisi scelerisque eu ultrices. Aliquam id diam maecenas ultricies mi eget mauris pharetra et.",
+          "issues": ["101", "102"]
+        },
+        {
+          "quantity": "3",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "360.00",
+          "description": "Est ullamcorper eget nulla facilisi etiam dignissim diam quis.",
+          "issues": ["103", "104", "105"]
+        },
+        {
+          "quantity": "2",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "240.00",
+          "description": "Accumsan lacus vel facilisis volutpat. Sodales ut eu sem integer vitae justo eget. Tincidunt augue interdum velit euismod in pellentesque massa. Enim nunc faucibus a pellentesque sit. Accumsan in nisl nisi scelerisque eu ultrices. Aliquam id diam.",
+          "issues": ["101", "102"]
+        },
+        {
+          "quantity": "1",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "120.00",
+          "description": "Enim nunc faucibus a pellentesque sit. Neque aliquam vestibulum morbi blandit cursus. Aliquet nibh praesent tristique magna.",
+          "issues": ["100"]
+        },
+        {
+          "quantity": "3",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "360.00",
+          "description": "Est ullamcorper eget nulla facilisi etiam dignissim diam quis. Neque aliquam vestibulum morbi blandit cursus.",
+          "issues": ["103", "104", "105"]
+        }
+      ]
     },
     {
-      "id": 2
+      "id": 2,
+      "templates": ["estimate", "invoice"],
+      "title": "Rechnung-00124-AndereOrg-010123",
+      "number": "00124",
+      "subject": "eine.org",
+      "date": "02.02.23",
+      "due": "16.02.23",
+      "language": "de",
+      "currency": "CHF",
+      "amount": "1680.00",
+      "reference": "",
+      "message": "Rechnung 00124",
+      "messageCode": "",
+      "creditor": {
+        "name": "Andere Org",
+        "organisation": "Andere Org",
+        "street": "Hustensaft",
+        "houseNumber": "9",
+        "postCode": "9000",
+        "locality": "Da",
+        "countryCode": "CH",
+        "iban": "CH15 0900 0000 1520 3408 7",
+        "uid": "CHE-214.481.730",
+        "person": "Konstanze Dreist",
+        "email": "hallo@andere.org",
+        "threema": "9ZZZ9999"
+      },
+      "debtor": {
+        "name": "Eine Org",
+        "organisation": "Eine Org",
+        "street": "Geleepistole",
+        "houseNumber": "1",
+        "postCode": "1000",
+        "locality": "Dort",
+        "countryCode": "CH",
+        "person": "Mans Huster"
+      },
+      "items": [
+        {
+          "quantity": "1",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "120.00",
+          "description": "Nibh tellus molestie nunc non blandit massa enim. Neque aliquam vestibulum morbi blandit cursus. Aliquet nibh praesent tristique magna.",
+          "issues": ["100"]
+        },
+        {
+          "quantity": "2",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "240.00",
+          "description": "Accumsan lacus vel facilisis volutpat. Sodales ut eu sem integer vitae justo eget. Tincidunt augue interdum velit euismod in pellentesque massa. Enim nunc faucibus a pellentesque sit. Accumsan in nisl nisi scelerisque eu ultrices. Aliquam id diam maecenas ultricies mi eget mauris pharetra et.",
+          "issues": ["101", "102"]
+        },
+        {
+          "quantity": "3",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "360.00",
+          "description": "Est ullamcorper eget nulla facilisi etiam dignissim diam quis.",
+          "issues": ["103", "104", "105"]
+        },
+        {
+          "quantity": "2",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "240.00",
+          "description": "Accumsan lacus vel facilisis volutpat. Sodales ut eu sem integer vitae justo eget. Tincidunt augue interdum velit euismod in pellentesque massa. Enim nunc faucibus a pellentesque sit. Accumsan in nisl nisi scelerisque eu ultrices. Aliquam id diam.",
+          "issues": ["101", "102"]
+        },
+        {
+          "quantity": "1",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "120.00",
+          "description": "Enim nunc faucibus a pellentesque sit. Neque aliquam vestibulum morbi blandit cursus. Aliquet nibh praesent tristique magna.",
+          "issues": ["100"]
+        },
+        {
+          "quantity": "3",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "360.00",
+          "description": "Est ullamcorper eget nulla facilisi etiam dignissim diam quis. Neque aliquam vestibulum morbi blandit cursus.",
+          "issues": ["103", "104", "105"]
+        },
+        {
+          "quantity": "2",
+          "unit": "STD",
+          "price": "120.00",
+          "total": "240.00",
+          "description": "Accumsan lacus vel facilisis volutpat. Sodales ut eu sem integer vitae justo eget. Tincidunt augue interdum velit euismod in pellentesque massa. Enim nunc faucibus a pellentesque sit. Accumsan in nisl nisi scelerisque eu ultrices. Aliquam id diam maecenas ultricies mi eget mauris pharetra et.",
+          "issues": ["101", "102"]
+        }
+      ]
     }
   ]
 }

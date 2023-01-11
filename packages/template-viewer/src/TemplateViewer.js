@@ -2,10 +2,10 @@ import styleApp from "./style.css";
 import {store, define, router, html} from "hybrids";
 import {QrBill} from "@prpsake/qr-bill";
 import {Webapi} from "@prpsake/core";
-import {connect} from "./Model.js";
-import {defineWith as defineViewWith} from "./View.js";
+import {makeWith as makeModelWith} from "./Model.js";
+import {makeWith as makeViewWith} from "./View.js";
 import {preview} from "./Paginator.js";
-import Session from "./Session.js";
+import Session, {makeLocator} from "./Session.js";
 
 if (import.meta.env.EXP_ROUTER_DEBUG) router.debug();
 if (import.meta.hot) {
@@ -18,7 +18,7 @@ if (import.meta.hot) {
 
 const TemplateViewer = ({
   views,
-  baseUrl = "",
+  initialUrl = "",
   onFileInput,
   onFileDrop,
   onError,
@@ -37,7 +37,7 @@ const TemplateViewer = ({
       });
     },
   },
-  view: router(views, {url: `/${baseUrl}`}),
+  view: router(views, {url: initialUrl}),
   showPreview: true,
   error: {
     set: (host, values = []) =>
@@ -147,9 +147,11 @@ export function defineWith({
   style,
   tag = "template-viewer",
   tagQrBill,
+  data,
   onError,
 }) {
   let error = [];
+
   if (tagQrBill === true) tagQrBill = "qr-bill";
   if (typeof tagQrBill === "string") {
     if (
@@ -185,28 +187,29 @@ export function defineWith({
     onError = console.log;
   }
 
-  store.set(Session, {style}).then(() => {
-    const templatesConnected = Webapi.Object.map(
+  let locator = makeLocator(data);
+
+  store.set(Session, {style, ...locator}).then(() => {
+    const templatesMade = Webapi.Object.map(
       templates,
-      ([key, {view, model}]) => [
-        key,
-        {
-          view,
-          model: connect(model),
-        },
-      ],
+      ([key, {view, model}]) => {
+        const modelMade = makeModelWith({model, locator});
+        const viewMade = makeViewWith({key, view, model: modelMade, locator});
+        return [key, {view: viewMade, model: modelMade}];
+      },
     );
 
     define({
       tag,
       ...TemplateViewer({
-        baseUrl: Object.keys(templates)[0],
-        views: Object.entries(templatesConnected).map(([key, {view, model}]) =>
-          defineViewWith({key, view, model}),
-        ),
-        onFileInput: previewOnFileInputFn({templates: templatesConnected}),
+        initialUrl: Object.keys(templates)[0],
+        views: Object.values(templatesMade).map(({view}) => view),
+        onFileInput: previewOnFileInputFn({
+          templates: templatesMade,
+          preventDefault: false,
+        }),
         onFileDrop: previewOnFileInputFn({
-          templates: templatesConnected,
+          templates: templatesMade,
           preventDefault: true,
         }),
         onError,

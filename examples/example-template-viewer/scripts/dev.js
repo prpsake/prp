@@ -4,7 +4,7 @@ const db = Command.command({
   title: "db",
   color: "blue",
   cmd: "json-server",
-  args: ["db.json", "--host", "localhost", "--port", "3001"],
+  args: ["db.json", "--watch", "--host", "localhost", "--port", "3001"],
   stdout: ({title, content, log, res}) => {
     const urlMatch = content.includes("http://localhost:3001");
     const methodMatch = /(GET|POST|PUT|PATCH|DELETE|Error)/.test(content);
@@ -17,7 +17,6 @@ const db = Command.command({
 });
 
 const vite = Command.command({
-  title: "vite",
   color: "yellow",
   cmd: "vite",
   stdout: true,

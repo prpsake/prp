@@ -13,7 +13,7 @@ export default (_) =>
         formats: ["es"],
       },
       rollupOptions: {
-        external: [/node_modules/],
+        external: [/node_modules/, "fs"],
       },
     },
     plugins: [],

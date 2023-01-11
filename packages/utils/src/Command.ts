@@ -28,26 +28,41 @@ type commandStdoutFn = ({
   rej?: (reason?: any) => void;
 } & values) => PromiseLike<Record<string, any>>;
 
+type colorNames =
+  | "reset"
+  | "black"
+  | "white"
+  | "red"
+  | "green"
+  | "yellow"
+  | "blue"
+  | "magenta"
+  | "cyan";
+
 function omitProp(obj: Record<string, any>, key: string): Record<string, any> {
   const {[key]: _, ...rest} = obj;
   return rest;
 }
 
-const colors = (color: string): string =>
-  ({
-    reset: "\u001b[0m",
-    black: "\u001b[30m",
-    white: "\u001b[37m",
-    red: "\u001b[31m",
-    green: "\u001b[32m",
-    yellow: "\u001b[33m",
-    blue: "\u001b[34m",
-    magenta: "\u001b[35m",
-    cyan: "\u001b[36m",
-  }[color] || "reset");
+function colors(color: colorNames): string {
+  return (
+    {
+      reset: "\u001b[0m",
+      black: "\u001b[30m",
+      white: "\u001b[37m",
+      red: "\u001b[31m",
+      green: "\u001b[32m",
+      yellow: "\u001b[33m",
+      blue: "\u001b[34m",
+      magenta: "\u001b[35m",
+      cyan: "\u001b[36m",
+    }[color] || "reset"
+  );
+}
 
-export const prependTitleToLine = (line: string, title: string): string =>
-  line.replace(/.*?\n/g, `${title}$&`);
+export function prependTitleToLine(line: string, title: string): string {
+  return line.replace(/.*?\n/g, `${title}$&`);
+}
 
 export function command({
   cmd,
@@ -60,13 +75,13 @@ export function command({
 }: {
   cmd: string;
   title?: string;
-  color?: string;
+  color?: colorNames;
   args?: string[] | ((env?: env) => string[]);
   stdout?: boolean | commandStdoutFn;
   wait?: boolean;
   options?: Record<string, any> | ((env?: env) => Record<string, any>);
 }) {
-  return function (env?: env, prevValues?: values) {
+  return function (env?: env, prevValues?: values): PromiseLike<values> {
     const args_ = typeof args === "function" ? args(env) : args;
     const options_ = typeof options === "function" ? options(env) : options;
     const title_ = `${colors(color)}[${title}]\u001b[0m${" ".repeat(

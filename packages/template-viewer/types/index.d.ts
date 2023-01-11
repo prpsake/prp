@@ -70,10 +70,15 @@ type Template<M> = {
  * @param {string} param.styles - The styles for the templates.
  * @param {string} [param.tag="template-viewer"] - The tag to be used for the
  *   template-viewer custom element.
- * @param {string} [param.tagQrBill="qr-bill"] - The tag to be used for the
- * qr-bill custom element. If a value other than a string is specified, the
- * qr-bill component will not be defined
- * @param {(param: {host: HybridsComponent<unknown>, error: Error[]}) => void} [param.onError=console.log] - The function
+ * @param {string|boolean} [param.tagQrBill] - The tag to be used for the
+ * qr-bill custom element or true for `qr-bill` or any falsy value, which
+ * means that the qr-bill component won't be used.
+ * @param {string} param.data - A locator. Either a fully qualified url with
+ * protocol to a single data item or a local path to a file. If the value
+ * starts with `http(s)://`, everything up to the last path segment is used
+ * as the base url. The last path segment is understood as the initial and
+ * default data item.
+ * @param {(param: {host: HybridsComponent<unknown>, error: Cause.Structured[]}) => void} [param.onError=console.log] - The function
  * handling errors
  */
 export function defineWith(param: {
@@ -81,6 +86,7 @@ export function defineWith(param: {
   style: string;
   tag?: string;
   tagQrBill?: string | boolean;
+  data: string;
   onError?: ({
     host,
     error,
