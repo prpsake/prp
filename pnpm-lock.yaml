@@ -85,24 +85,31 @@ importers:
       vite: 3.1.8
 
   packages/core:
-    specifiers: {}
+    specifiers:
+      '@prpsake/utils': 0.0.1
+    devDependencies:
+      '@prpsake/utils': link:../utils
 
   packages/qr-bill:
     specifiers:
       '@prpsake/core': '*'
+      '@prpsake/utils': 0.0.1
       hybrids: ^8.1.5
     optionalDependencies:
       hybrids: 8.1.12
     devDependencies:
       '@prpsake/core': link:../core
+      '@prpsake/utils': link:../utils
 
   packages/template-viewer:
     specifiers:
       '@prpsake/core': '*'
       '@prpsake/qr-bill': '*'
+      '@prpsake/utils': 0.0.1
     devDependencies:
       '@prpsake/core': link:../core
       '@prpsake/qr-bill': link:../qr-bill
+      '@prpsake/utils': link:../utils
 
   packages/utils:
     specifiers: {}

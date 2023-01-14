@@ -22,7 +22,8 @@
     "release": "pnpm publish --no-git-checks"
   },
   "devDependencies": {
-    "@prpsake/core": "*"
+    "@prpsake/core": "*",
+    "@prpsake/utils": "0.0.1"
   },
   "optionalDependencies": {
     "hybrids": "^8.1.5"

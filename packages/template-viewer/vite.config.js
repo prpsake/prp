@@ -1,13 +1,9 @@
 import {resolve} from "path";
 import {defineConfig} from "vite";
-import {Utils} from "@prpsake/core";
 import replace from "@rollup/plugin-replace";
+import {Sequence} from "@prpsake/utils";
 
-const errorCauseIdSeq = Utils.Sequence.intStr(
-  process.env.npm_package_name + "#",
-  0,
-);
-
+const errorCauseIdSeq = Sequence.intStr(process.env.npm_package_name + "#", 0);
 const sharedOptions = {
   plugins: [
     replace({

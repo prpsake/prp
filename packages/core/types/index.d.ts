@@ -1,11 +1,6 @@
-import * as Sequence_ from "./utils/Sequence";
 import * as Error_ from "./webapi/Error";
 import * as FileReader_ from "./webapi/FileReader";
 import * as Object_ from "./webapi/Object";
-
-export namespace Utils {
-  export const Sequence: typeof Sequence_;
-}
 
 export namespace Webapi {
   export const Error: typeof Error_;

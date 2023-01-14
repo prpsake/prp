@@ -16,5 +16,8 @@
     "dev": "rescript build -w",
     "build": "vite build",
     "release": "pnpm publish --no-git-checks"
+  },
+  "devDependencies": {
+    "@prpsake/utils": "0.0.1"
   }
 }

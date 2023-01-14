@@ -18,6 +18,7 @@
     "release": "pnpm publish --no-git-checks"
   },
   "devDependencies": {
+    "@prpsake/utils": "0.0.1",
     "@prpsake/core": "*",
     "@prpsake/qr-bill": "*"
   }

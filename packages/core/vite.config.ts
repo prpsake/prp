@@ -2,12 +2,9 @@ import {resolve} from "path";
 import {defineConfig} from "vite";
 import createReScriptPlugin from "@jihchi/vite-plugin-rescript";
 import replace from "@rollup/plugin-replace";
-import {Utils} from "./src";
+import {Sequence} from "@prpsake/utils";
 
-const errorCauseIdSeq = Utils.Sequence.intStr(
-  process.env.npm_package_name + "#",
-  0,
-);
+const errorCauseIdSeq = Sequence.intStr(process.env.npm_package_name + "#", 0);
 
 export default (_) =>
   defineConfig({
