@@ -16,7 +16,9 @@ pnpm add @prpsake/qr-bill hybrids
 
 ## Usage
 
-### Sample data
+### Data
+
+#### Example
 ```json5
 // qr-bill-sample.json
 {
@@ -41,6 +43,31 @@ pnpm add @prpsake/qr-bill hybrids
     "locality": "Dort",
     "countryCode": "CH"
   }
+}
+```
+
+#### Model
+
+```typescript
+type Address = {
+  name: string;
+  street?: string;
+  houseNumber?: string | number;
+  postCode: string | number;
+  locality: string;
+  countryCode: string
+}
+
+type Init = {
+  language: "fr" | "it" | "de" | "en"
+  currency: "CHF" | "EUR"
+  amount: string | number
+  iban: string
+  reference?: string
+  message?: string
+  messageCode?: string
+  creditor: Address
+  debtor?: Address
 }
 ```
 
@@ -114,29 +141,4 @@ fetch("/data/qr-bill-sample.json")
 
 ```html
 <my-qr-bill></my-qr-bill>
-```
-
-## Model
-
-```typescript
-type Address = {
-  name: string;
-  street?: string;
-  houseNumber?: string | number;
-  postalCode: string | number;
-  locality: string;
-  countryCode: string
-}
-
-type Init = {
-  language: "fr" | "it" | "de" | "en"
-  currency: "CHF" | "EUR"
-  amount: string | number
-  iban: string
-  reference?: string
-  message?: string
-  messageCode?: string
-  creditor: Address
-  debtor?: Address
-}
 ```

@@ -1,6 +1,6 @@
 export namespace Cause {
   type Structured = {
-    id: string;
+    id_: string;
     key?: string;
     value?: string;
     message: string;

@@ -1,7 +1,7 @@
 module Cause = {
 
   type structured = {
-    id: string,
+    id_: string,
     key?: string,
     value?: string,
     message: string

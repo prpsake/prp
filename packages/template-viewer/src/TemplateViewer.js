@@ -16,7 +16,14 @@ if (import.meta.hot) {
   });
 }
 
-const TemplateViewer = ({templates, dataIds, onFileInput, onFileDrop, onError, error}) => ({
+const TemplateViewer = ({
+  templates,
+  dataIds,
+  onFileInput,
+  onFileDrop,
+  onError,
+  error,
+}) => ({
   session: store(Session),
   previewElm: {
     value: undefined,
@@ -69,16 +76,19 @@ const TemplateViewer = ({templates, dataIds, onFileInput, onFileDrop, onError, e
           <div>
             <ul class="text-right">
               ${templates.map(({view: view_, key}) =>
-                dataIds.map((dataId) => html`
-                  <li class="mb-2">
-                    <a
-                      class="inline-block px-2 py-1 drop-shadow-sm rounded-md bg-action-bg hover:bg-action-hover-bg font-light text-sm text-gray-200 select-none"
-                      href="${router.url(view_, {dataId})}"
-                      onclick=${previewOnClick}>
-                      ${key}/${dataId}
-                    </a>
-                  </li>
-                `))}
+                dataIds.map(
+                  (dataId) => html`
+                    <li class="mb-2">
+                      <a
+                        class="inline-block px-2 py-1 drop-shadow-sm rounded-md bg-action-bg hover:bg-action-hover-bg font-light text-sm text-gray-200 select-none"
+                        href="${router.url(view_, {dataId})}"
+                        onclick=${previewOnClick}>
+                        ${key}/${dataId}
+                      </a>
+                    </li>
+                  `,
+                ),
+              )}
             </ul>
           </div>
           <div class="mb-2">
@@ -160,7 +170,7 @@ export function defineWith({
       });
     } else {
       error.push({
-        id: "__ERROR_CAUSE_ID__",
+        id_: "__ERROR_CAUSE_ID__",
         key: "tagQrBill",
         value: tagQrBill,
         message: "must be a valid custom-tag string value or a boolean",
@@ -168,7 +178,7 @@ export function defineWith({
     }
   } else {
     error.push({
-      id: "__ERROR_CAUSE_ID__",
+      id_: "__ERROR_CAUSE_ID__",
       key: "tagQrBill",
       value: Webapi.Error.Cause.valueToString(tagQrBill),
       message: "must be a valid custom-tag string value or a boolean",
@@ -181,7 +191,7 @@ export function defineWith({
 
   if (typeof api?.get !== "function") {
     error.push({
-      id: "__ERROR_CAUSE_ID__",
+      id_: "__ERROR_CAUSE_ID__",
       key: "api.get",
       value: Webapi.Error.Cause.valueToString(api.get),
       message: "must be a function",
@@ -190,29 +200,29 @@ export function defineWith({
 
   if (typeof api?.list !== "function") {
     error.push({
-      id: "__ERROR_CAUSE_ID__",
+      id_: "__ERROR_CAUSE_ID__",
       key: "api.list",
       value: Webapi.Error.Cause.valueToString(api.list),
       message: "must be a function",
     });
   }
 
-  return Promise.all([
-      api.list(),
-      store.set(Session, {style})
-    ])
-    .then(([list, _session]) => {
+  return Promise.all([api.list(), store.set(Session, {style})]).then(
+    ([list, _session]) => {
       const dataIds = list.map(({[api.idKey]: k}) => String(k));
-      const templatesMade = Webapi.Object.map(templates, ([key, {model, view}]) => {
-        const modelMade = makeModelWith({model, apiGet: api.get});
-        const viewMade = makeViewWith({
-          view,
-          model: modelMade,
-          key,
-          dataId: dataIds[0]
-        });
-        return [key, {key, view: viewMade, model: modelMade}];
-      });
+      const templatesMade = Webapi.Object.map(
+        templates,
+        ([key, {model, view}]) => {
+          const modelMade = makeModelWith({model, apiGet: api.get});
+          const viewMade = makeViewWith({
+            view,
+            model: modelMade,
+            key,
+            dataId: dataIds[0],
+          });
+          return [key, {key, view: viewMade, model: modelMade}];
+        },
+      );
 
       return define({
         tag,
@@ -220,7 +230,7 @@ export function defineWith({
           templates: Object.values(templatesMade),
           dataIds,
           onFileInput: previewOnFileInputFn({
-            templates: templatesMade
+            templates: templatesMade,
           }),
           onFileDrop: previewOnFileInputFn({
             templates: templatesMade,
@@ -229,8 +239,9 @@ export function defineWith({
           onError,
           error,
         }),
-      })
-    })
+      });
+    },
+  );
 }
 
 /* TODO: implement rejection */
@@ -291,7 +302,7 @@ function togglePreview({host, error = []}) {
           error: [
             ...error,
             {
-              id: "__ERROR_CAUSE_ID__",
+              id_: "__ERROR_CAUSE_ID__",
               message:
                 "transitionend-event has not occurred within the timeout",
             },
@@ -314,7 +325,7 @@ function readTemplateJsonData({host, e, templates, error = []}) {
         } catch (_) {
           return {
             error_: {
-              id: "__ERROR_CAUSE_ID__",
+              id_: "__ERROR_CAUSE_ID__",
               message: "failed to parse template data json string",
             },
           };
@@ -329,7 +340,7 @@ function readTemplateJsonData({host, e, templates, error = []}) {
           .catch((_) => {
             return {
               error_: {
-                id: "__ERROR_CAUSE_ID__",
+                id_: "__ERROR_CAUSE_ID__",
                 key: "file,...data",
                 message: "failed to update session model",
               },

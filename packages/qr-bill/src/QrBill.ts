@@ -111,7 +111,7 @@ const QrBill: Component<QrBill> = {
     set: (_, values: Cause.Structured[] = []) =>
       Object.values(
         values.reduce((a, b) => {
-          if (b.id !== "") a[b.id] = b;
+          if (b.id_ !== "") a[b.id_] = b;
           return a;
         }, {}),
       ),
