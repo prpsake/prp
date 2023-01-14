@@ -35,6 +35,13 @@ type Template<M> = {
 };
 
 /**
+ * @typedef {{
+ *   get: <M>(_: {id: string | number}) => PromiseLike<M>,
+ *   list: <M>(_: {offset: number, limit, number}) => PromiseLike<M>
+ * }} api
+ */
+
+/**
  * Register the template-viewer custom element with template modules and their
  * styles. Optionally register the qr-bill custom element. The object keys of
  * `param.templates` are used to set up the url paths to the corresponding
@@ -73,20 +80,30 @@ type Template<M> = {
  * @param {string|boolean} [param.tagQrBill] - The tag to be used for the
  * qr-bill custom element or true for `qr-bill` or any falsy value, which
  * means that the qr-bill component won't be used.
- * @param {string} param.data - A locator. Either a fully qualified url with
- * protocol to a single data item or a local path to a file. If the value
- * starts with `http(s)://`, everything up to the last path segment is used
- * as the base url. The last path segment is understood as the initial and
- * default data item.
- * @param {(param: {host: HybridsComponent<unknown>, error: Cause.Structured[]}) => void} [param.onError=console.log] - The function
- * handling errors
+ * @param {{
+ *   get: <M>(_: {id: string | number}) => PromiseLike<M>,
+ *   list: <M>(_: {offset: number, limit: number}) => PromiseLike<M>
+ * }} param.api
+ * @param {(param: {host: HybridsComponent<unknown>, error:
+ *   Cause.Structured[]}) => void} [param.onError=console.log] - The function
+ *   handling errors
  */
 export function defineWith(param: {
   templates: Record<string, Template<unknown>>;
   style: string;
   tag?: string;
   tagQrBill?: string | boolean;
-  data: string;
+  api: {
+    idKey: string;
+    get: <M>({id}: {id: string | number}) => PromiseLike<M>;
+    list: <M>({
+      offset,
+      limit,
+    }: {
+      offset: number;
+      limit: number;
+    }) => PromiseLike<M>;
+  };
   onError?: ({
     host,
     error,

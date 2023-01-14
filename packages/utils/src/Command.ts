@@ -1,4 +1,7 @@
-import {execa, type ExecaChildProcess} from "execa";
+import {
+  execa,
+  type ExecaChildProcess
+} from "execa";
 import type {env} from "./Env";
 
 type killOptions = {
@@ -7,9 +10,9 @@ type killOptions = {
 };
 
 type values = {
-  env: env;
+  env?: env;
   subprocess: ExecaChildProcess<string>;
-  kill: (options: killOptions) => void;
+  kill: (options: killOptions) => false | void;
   prevValues?: values;
 };
 
@@ -23,7 +26,7 @@ type commandStdoutFn = ({
 }: {
   title?: string;
   content?: string;
-  log?: (content: string, cb?: (err?: Error) => void) => void;
+  log?: (content: string, cb?: (err?: Error) => void | undefined) => void;
   res?: (otherValues?: Record<string, any>) => void;
   rej?: (reason?: any) => void;
 } & values) => PromiseLike<Record<string, any>>;
@@ -81,7 +84,7 @@ export function command({
   wait?: boolean;
   options?: Record<string, any> | ((env?: env) => Record<string, any>);
 }) {
-  return function (env?: env, prevValues?: values): PromiseLike<values> {
+  return function (env?: env, prevValues?: values): Promise<values> {
     const args_ = typeof args === "function" ? args(env) : args;
     const options_ = typeof options === "function" ? options(env) : options;
     const title_ = `${colors(color)}[${title}]\u001b[0m${" ".repeat(
@@ -93,7 +96,12 @@ export function command({
       ...omitProp(options_, "env"),
     });
 
-    const values: values = {
+    const values: {
+      subprocess: ExecaChildProcess<string>;
+      env: env | undefined;
+      kill: (options) => false | void;
+      prevValues: values | undefined
+    } = {
       env,
       subprocess,
       kill: (options) =>

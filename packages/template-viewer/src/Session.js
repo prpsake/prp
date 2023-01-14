@@ -4,10 +4,6 @@ const SESSION_KEY = "prp:template:session";
 
 export default {
   style: "",
-  isDataFile: false,
-  dataUrl: "",
-  dataId: "",
-  dataFile: "",
   language: "",
   title: "",
   viewVertical: false,
@@ -33,18 +29,3 @@ export default {
     },
   },
 };
-
-export function makeLocator(str) {
-  if (typeof str !== "string") return {};
-
-  const str_ = str.trim();
-  const lastSeg = str_.replace(/^.*[\\\/]/, "");
-  const isDataFile = lastSeg.endsWith(".json");
-
-  return {
-    isDataFile,
-    dataUrl: isDataFile ? str_ : str_.replace(lastSeg, ""),
-    dataId: !isDataFile ? lastSeg : "",
-    dataFile: isDataFile ? lastSeg : "",
-  };
-}

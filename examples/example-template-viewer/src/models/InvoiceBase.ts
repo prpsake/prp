@@ -2,6 +2,7 @@ import {type Model} from "@prpsake/template-viewer";
 import Party from "./Party";
 
 interface InvoiceBase {
+  id: boolean;
   title: string;
   number: string;
   subject: string;
@@ -29,6 +30,7 @@ interface InvoiceBase {
 }
 
 const InvoiceBase: Model<InvoiceBase> = {
+  id: true,
   title: "",
   number: "",
   subject: "",

@@ -4,12 +4,12 @@ import Session from "./Session.js";
 
 // NB(21.11.22): typing: model must have store connect symbol
 
-export function makeWith({key, view, model, locator}) {
+export function makeWith({view, model, key, dataId}) {
   return define({
-    [router.connect]: {url: `/${key}/:id`},
+    [router.connect]: {url: `/${key}/:dataId`, multiple: true},
     tag: `view-${key}`,
-    dataId: locator.dataId,
-    data: store(model, {id: ({dataId}) => dataId}),
+    dataId,
+    data: store(model, {id: ({dataId}) => ({id: dataId})}),
     session: store(Session),
     render: ({data, session}) =>
       store.ready(data) && store.ready(session)

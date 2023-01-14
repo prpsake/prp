@@ -19,6 +19,7 @@ const db = Command.command({
 const vite = Command.command({
   color: "yellow",
   cmd: "vite",
+  args: ["--force"],
   stdout: true,
 });
 

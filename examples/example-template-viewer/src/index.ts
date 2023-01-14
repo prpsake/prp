@@ -6,6 +6,17 @@ import style from "./style.css";
 defineWith({
   templates: {estimate, invoice},
   tagQrBill: true,
+  api: {
+    idKey: "id",
+    get: ({id}) =>
+      fetch(`http://localhost:3001/billable/${id}`)
+        .then((resp) => resp.json())
+        .catch(console.log),
+    list: () =>
+      fetch(`http://localhost:3001/billable`)
+        .then((resp) => resp.json())
+        .catch(console.log),
+  },
   onError: ({error}) => error.forEach(console.log),
   style,
 });

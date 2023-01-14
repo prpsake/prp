@@ -5,7 +5,7 @@ import {Webapi} from "@prpsake/core";
 import {makeWith as makeModelWith} from "./Model.js";
 import {makeWith as makeViewWith} from "./View.js";
 import {preview} from "./Paginator.js";
-import Session, {makeLocator} from "./Session.js";
+import Session from "./Session.js";
 
 if (import.meta.env.EXP_ROUTER_DEBUG) router.debug();
 if (import.meta.hot) {
@@ -16,14 +16,7 @@ if (import.meta.hot) {
   });
 }
 
-const TemplateViewer = ({
-  views,
-  initialUrl = "",
-  onFileInput,
-  onFileDrop,
-  onError,
-  error,
-}) => ({
+const TemplateViewer = ({templates, dataIds, onFileInput, onFileDrop, onError, error}) => ({
   session: store(Session),
   previewElm: {
     value: undefined,
@@ -37,7 +30,7 @@ const TemplateViewer = ({
       });
     },
   },
-  view: router(views, {url: initialUrl}),
+  view: router(templates.map(({view}) => view)),
   showPreview: true,
   error: {
     set: (host, values = []) =>
@@ -75,18 +68,17 @@ const TemplateViewer = ({
         <div class="flex flex-col items-end">
           <div>
             <ul class="text-right">
-              ${views.map(
-                (v) => html`
+              ${templates.map(({view: view_, key}) =>
+                dataIds.map((dataId) => html`
                   <li class="mb-2">
                     <a
                       class="inline-block px-2 py-1 drop-shadow-sm rounded-md bg-action-bg hover:bg-action-hover-bg font-light text-sm text-gray-200 select-none"
-                      href="${router.url(v)}"
+                      href="${router.url(view_, {dataId})}"
                       onclick=${previewOnClick}>
-                      ${v[router.connect].url.substring(1)}
+                      ${key}/${dataId}
                     </a>
                   </li>
-                `,
-              )}
+                `))}
             </ul>
           </div>
           <div class="mb-2">
@@ -147,7 +139,7 @@ export function defineWith({
   style,
   tag = "template-viewer",
   tagQrBill,
-  data,
+  api = {},
   onError,
 }) {
   let error = [];
@@ -187,36 +179,58 @@ export function defineWith({
     onError = console.log;
   }
 
-  let locator = makeLocator(data);
-
-  store.set(Session, {style, ...locator}).then(() => {
-    const templatesMade = Webapi.Object.map(
-      templates,
-      ([key, {view, model}]) => {
-        const modelMade = makeModelWith({model, locator});
-        const viewMade = makeViewWith({key, view, model: modelMade, locator});
-        return [key, {view: viewMade, model: modelMade}];
-      },
-    );
-
-    define({
-      tag,
-      ...TemplateViewer({
-        initialUrl: Object.keys(templates)[0],
-        views: Object.values(templatesMade).map(({view}) => view),
-        onFileInput: previewOnFileInputFn({
-          templates: templatesMade,
-          preventDefault: false,
-        }),
-        onFileDrop: previewOnFileInputFn({
-          templates: templatesMade,
-          preventDefault: true,
-        }),
-        onError,
-        error,
-      }),
+  if (typeof api?.get !== "function") {
+    error.push({
+      id: "__ERROR_CAUSE_ID__",
+      key: "api.get",
+      value: Webapi.Error.Cause.valueToString(api.get),
+      message: "must be a function",
     });
-  });
+  }
+
+  if (typeof api?.list !== "function") {
+    error.push({
+      id: "__ERROR_CAUSE_ID__",
+      key: "api.list",
+      value: Webapi.Error.Cause.valueToString(api.list),
+      message: "must be a function",
+    });
+  }
+
+  return Promise.all([
+      api.list(),
+      store.set(Session, {style})
+    ])
+    .then(([list, _session]) => {
+      const dataIds = list.map(({[api.idKey]: k}) => String(k));
+      const templatesMade = Webapi.Object.map(templates, ([key, {model, view}]) => {
+        const modelMade = makeModelWith({model, apiGet: api.get});
+        const viewMade = makeViewWith({
+          view,
+          model: modelMade,
+          key,
+          dataId: dataIds[0]
+        });
+        return [key, {key, view: viewMade, model: modelMade}];
+      });
+
+      return define({
+        tag,
+        ...TemplateViewer({
+          templates: Object.values(templatesMade),
+          dataIds,
+          onFileInput: previewOnFileInputFn({
+            templates: templatesMade
+          }),
+          onFileDrop: previewOnFileInputFn({
+            templates: templatesMade,
+            preventDefault: true,
+          }),
+          onError,
+          error,
+        }),
+      })
+    })
 }
 
 /* TODO: implement rejection */
