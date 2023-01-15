@@ -119,7 +119,7 @@ The imported stylesheet (`import "./style.css"`) is not part of the package. It 
 
 ### Example without hybrids
 
-Find the full example in the [examples/example-qr-bill-hybrids](https://github.com/prpsake/prp/tree/main/examples/example-qr-bill) folder of this repo.
+Find the full example in the [examples/example-qr-bill](https://github.com/prpsake/prp/tree/main/examples/example-qr-bill) folder of this repo.
 
 ```typescript
 import {QrBillHybridElement, jsonToQrBillModel} from "@prpsake/qr-bill";
