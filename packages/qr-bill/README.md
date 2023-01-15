@@ -115,9 +115,11 @@ function handleQrBillError(_host, {detail}) {
 <my-app></my-app>
 ```
 
-The imported stylesheet (`import "./style.css"`) is not part of the package. It is shown here to refer to the additional styles used in the full example mentioned above. it contains a few reset, component positioning, page and print styles, respectively some screen-only-styles. See [here](https://github.com/prpsake/prp/blob/main/examples/example-qr-bill-hybrids/src/style.css).
+The imported stylesheet (`import "./style.css"`) is not part of the package. It is shown here to refer to the additional styles used in the full examples. It contains a few reset, positioning, page and print styles, respectively some screen-only-styles. See [here](https://github.com/prpsake/prp/blob/main/examples/example-qr-bill-hybrids/src/style.css).
 
 ### Example without hybrids
+
+Find the full example in the [examples/example-qr-bill-hybrids](https://github.com/prpsake/prp/tree/main/examples/example-qr-bill) folder of this repo.
 
 ```typescript
 import {QrBillHybridElement, jsonToQrBillModel} from "@prpsake/qr-bill";
