@@ -11,11 +11,13 @@ export default (_) =>
     publicDir: "public",
     build: {
       target: "esnext",
-      minify: true,
+      minify: false,
       lib: {
         entry: resolve(__dirname, "src/index.ts"),
-        fileName: "index",
-        formats: ["es"],
+        name: "PRPCore",
+        fileName: (format) =>
+          format === "es" ? "index.js" : `index.${format}.js`,
+        formats: ["es", "umd"],
       },
     },
     plugins: [

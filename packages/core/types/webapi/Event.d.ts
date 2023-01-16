@@ -1,7 +1,6 @@
 import {Cause} from "./Error";
 
-export function readFileAsText(file: File): Promise<{
-  result: string;
+export function getFile(e: InputEvent): Promise<{
   file: File | null;
   error?: Cause.Structured;
 }>;

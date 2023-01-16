@@ -261,11 +261,16 @@ function readyView({host}) {
 function previewOnFileInputFn({templates, preventDefault = false}) {
   return function previewOnFileInput(host, e) {
     preventDefault && e.preventDefault();
-    readTemplateJsonData({host, e, templates})
-      .then(togglePreview)
-      .then(preview)
-      .then(togglePreview)
-      .then(handleError);
+    const {file, error: fileError} = Webapi.Event.getFile(e);
+    if (fileError) {
+      handleError({host, error: [fileError]});
+    } else if (file) {
+      readTemplateJsonData({host, file, templates})
+        .then(togglePreview)
+        .then(preview)
+        .then(togglePreview)
+        .then(handleError);
+    }
   };
 }
 
@@ -313,8 +318,8 @@ function togglePreview({host, error = []}) {
   ]);
 }
 
-function readTemplateJsonData({host, e, templates, error = []}) {
-  return Webapi.FileReader.readFileAsText(e)
+function readTemplateJsonData({host, file, templates, error = []}) {
+  return Webapi.FileReader.readFileAsText(file)
     .then(({result, file, error: fileReaderError}) => {
       if (fileReaderError) {
         return {error_: fileReaderError};
