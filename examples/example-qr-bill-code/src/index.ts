@@ -6,7 +6,7 @@ fetch("/data/qr-bill-sample.json")
   .then((json) => {
     const {data, svg} = jsonToQrBillCode(json);
     if (data.error.length > 0) {
-      data.error.forEach(console.log);
+      console.log(data.error);
     } else {
       const div = document.querySelector("#qr-bill-code");
       const template = document.createElement("template");

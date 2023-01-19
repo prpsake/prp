@@ -1,8 +1,8 @@
-import { resolve } from "path"
-import { defineConfig } from "vite"
+import {resolve} from "path";
+import {defineConfig} from "vite";
 
-
-export default () => defineConfig({
+export default () =>
+  defineConfig({
     publicDir: "public",
     build: {
       target: "esnext",
@@ -11,12 +11,12 @@ export default () => defineConfig({
         external: ["@prpsake/template-viewer"],
         output: {
           preserveModules: true,
-          entryFileNames: "[name].mjs"
-        }
+          entryFileNames: "[name].mjs",
+        },
       },
       lib: {
         entry: resolve(__dirname, "src/index.ts"),
-        formats: ["es"]
+        formats: ["es"],
       },
-    }
-  })
+    },
+  });

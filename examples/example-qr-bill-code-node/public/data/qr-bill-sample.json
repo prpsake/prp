@@ -1,0 +1,23 @@
+{
+  "language": "it",
+  "currency": "CHF",
+  "amount": "2880.00",
+  "iban": "CH1509000000152034087",
+  "message": "Rechnung 00123",
+  "creditor": {
+    "name": "Andere Org",
+    "street": "Hustensaft",
+    "houseNumber": "9",
+    "postCode": "9000",
+    "locality": "Da",
+    "countryCode": "CH"
+  },
+  "debtor": {
+    "name": "Eine Org",
+    "street": "Geleepistole",
+    "houseNumber": "1",
+    "postCode": "1000",
+    "locality": "Dort",
+    "countryCode": "CH"
+  }
+}
