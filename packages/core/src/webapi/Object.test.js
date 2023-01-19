@@ -5,7 +5,7 @@ import * as Obj from "./Object.mjs";
 const title = Ava.titleWithNamespace(test, "core:webapi:Object");
 
 test(
-  `.omit: returns a shallow clone without the provided property`,
+  `#omit: returns a shallow clone without the provided property`,
   title,
   (t) => {
     //s
@@ -19,7 +19,7 @@ test(
 );
 
 test(
-  `.omit: returns a shallow clone if the property does not exist`,
+  `#omit: returns a shallow clone if the property does not exist`,
   title,
   (t) => {
     //s
@@ -31,7 +31,7 @@ test(
   },
 );
 
-test(`.map: modifies entries by the provided function`, title, (t) => {
+test(`#map: modifies entries by the provided function`, title, (t) => {
   //s
   const init = {a: 1, b: 2};
   const expect = {1: "a", 2: "b"};
@@ -42,7 +42,7 @@ test(`.map: modifies entries by the provided function`, title, (t) => {
 });
 
 test(
-  `.isObject: returns true if the provided value is an object literal`,
+  `#isObject: returns true if the provided value is an object literal`,
   title,
   (t) => {
     //e
@@ -53,7 +53,7 @@ test(
 );
 
 test(
-  `.isObject: returns false if the provided value is not an object literal`,
+  `#isObject: returns false if the provided value is not an object literal`,
   title,
   (t) => {
     //s

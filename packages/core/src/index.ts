@@ -1,11 +1,11 @@
 import * as Error_ from "./webapi/Error.mjs";
 import * as Event_ from "./webapi/Event.mjs";
-import * as FileReader_ from "./webapi/FileReader.mjs";
+import * as File_ from "./webapi/File.mjs";
 import * as Object_ from "./webapi/Object.mjs";
 
 export const Webapi = {
   Error: Error_,
   Event: Event_,
-  FileReader: FileReader_,
+  File: File_,
   Object: Object_,
 };

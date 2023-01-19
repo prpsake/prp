@@ -319,7 +319,7 @@ function togglePreview({host, error = []}) {
 }
 
 function readTemplateJsonData({host, file, templates, error = []}) {
-  return Webapi.FileReader.readFileAsText(file)
+  return Webapi.File.toText(file)
     .then(({result, file, error: fileReaderError}) => {
       if (fileReaderError) {
         return {error_: fileReaderError};
