@@ -1,4 +1,9 @@
-import {QrBillModel} from "../src";
+import {Data, QrBillModel} from "../src";
+
+type QrBillCode = {
+  data: Data.Comp;
+  svg: string;
+};
 
 /**
  * Parse, validate and transform the data for the component.
@@ -7,3 +12,5 @@ import {QrBillModel} from "../src";
  * @return {QrBillModel} - The transformed data for the component.
  */
 export function jsonToQrBillModel(x: string | Record<string, any>): QrBillModel;
+
+export function jsonToQrBillCode(x: string | Record<string, any>): QrBillCode;

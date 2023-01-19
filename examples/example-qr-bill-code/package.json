@@ -1,0 +1,17 @@
+{
+  "name": "@prpsake/example-qr-bill-code",
+  "version": "0.0.1",
+  "description": "",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "echo run example qr bill test && exit 0",
+    "dev": "vite"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prpsake/qr-bill": "*"
+  }
+}

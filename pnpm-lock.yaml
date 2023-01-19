@@ -68,6 +68,12 @@ importers:
     dependencies:
       '@prpsake/qr-bill': link:../../packages/qr-bill
 
+  examples/example-qr-bill-code:
+    specifiers:
+      '@prpsake/qr-bill': '*'
+    dependencies:
+      '@prpsake/qr-bill': link:../../packages/qr-bill
+
   examples/example-qr-bill-hybrids:
     specifiers:
       '@prpsake/qr-bill': '*'
