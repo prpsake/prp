@@ -1,17 +1,7 @@
-type t
-
 type resultFile = {
   file?: Webapi.File.t,
   error?: Error.Cause.structured
 }
-
-let toPromise =
-  (listen, res) =>
-  Promise.make(
-    (resolve, _reject) => listen(.
-      e => resolve(. res(. e))
-    )
-  )
 
 let getFile: Webapi.Dom.InputEvent.t => resultFile = (e) => {
   switch Webapi.Dom.InputEvent.type_(e) {

@@ -4,14 +4,20 @@ import {JSDOM} from "jsdom";
 import {Ava} from "@prpsake/utils";
 
 const title = Ava.titleWithNamespace(test, "core:webapi:File");
+const bpfContent = fs.readFileSync("./src/lib/blob.lib.js", {encoding: "utf8"});
 const libContent = fs.readFileSync("./dist/index.umd.js", {encoding: "utf8"});
 
 let window;
 test.beforeEach(() => {
   window = new JSDOM("", {runScripts: "dangerously"}).window;
 
+  const bpfScript = window.document.createElement("script");
   const libScript = window.document.createElement("script");
+
+  bpfScript.textContent = bpfContent;
   libScript.textContent = libContent;
+
+  window.document.body.appendChild(bpfScript);
   window.document.body.appendChild(libScript);
 });
 
@@ -32,13 +38,17 @@ test(
   },
 );
 
-test(`#toText: returns an object literal`, title, async (t) => {
-  //s
-  const nonFile = null;
-  const expect = {file: null};
-  //e
-  const actual = await window.PRPCore.Webapi.File.toText(null);
-  //v
-  //t.log(actual);
-  t.true(true);
-});
+test(
+  `#toText: returns an object literal with an error cause if no file is provided`,
+  title,
+  async (t) => {
+    //s
+    const nonFile = null;
+    const include = /@prpsake\/core#[0-9]+"/;
+    //e
+    const actual = await window.PRPCore.Webapi.File.toText(nonFile);
+    const content = JSON.stringify(actual);
+    //v
+    t.regex(content, include);
+  },
+);

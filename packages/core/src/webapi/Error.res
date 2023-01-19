@@ -34,4 +34,5 @@ let makeStructured: Cause.structured => t =
 
 let resolveStructured: Cause.structured => Promise.t<t> =
   cause =>
-  makeStructured(cause)->Promise.resolve
+  makeStructured(cause)
+  ->Promise.resolve
