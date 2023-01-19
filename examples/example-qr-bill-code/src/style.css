@@ -1,4 +1,17 @@
+body {
+  display: grid;
+  place-content: center;
+  height: 100vh;
+  background-color: rgb(229 231 235);
+  overflow: hidden;
+}
+
 #qr-bill-code {
-  width: 280px;
-  height: 280px;
+  width: 333px;
+  height: 333px;
+  background-color: white;
+  padding: 24px;
+  filter:
+    drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
+    drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 }

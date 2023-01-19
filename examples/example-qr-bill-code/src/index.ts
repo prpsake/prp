@@ -11,7 +11,7 @@ fetch("/data/qr-bill-sample.json")
       const div = document.querySelector("#qr-bill-code");
       const template = document.createElement("template");
       template.innerHTML = svg;
-      div.firstChild.replaceWith(template.content.firstChild);
+      div.appendChild(template.content.firstChild);
     }
   })
   .catch(console.log);
