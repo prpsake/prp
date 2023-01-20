@@ -1,7 +1,7 @@
 import {defineWith} from "@prpsake/template-viewer";
 import * as estimate from "./templates/estimate";
 import * as invoice from "./templates/invoice";
-import style from "./style.css";
+import style from "./style.css?inline";
 
 defineWith({
   templates: {estimate, invoice},

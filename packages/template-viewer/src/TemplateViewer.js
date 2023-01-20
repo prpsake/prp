@@ -1,4 +1,4 @@
-import styleApp from "./style.css";
+import styleApp from "./style.css?inline";
 import {store, define, router, html} from "hybrids";
 import {QrBill} from "@prpsake/qr-bill";
 import {Webapi} from "@prpsake/core";
@@ -146,15 +146,18 @@ const TemplateViewer = ({
 
 export function defineWith({
   templates,
-  style,
   tag = "template-viewer",
   tagQrBill,
   api = {},
   onError,
+  style,
 }) {
   let error = [];
 
-  if (tagQrBill === true) tagQrBill = "qr-bill";
+  if (tagQrBill === true) {
+    tagQrBill = "qr-bill";
+  }
+
   if (typeof tagQrBill === "string") {
     if (
       Boolean(
@@ -185,26 +188,35 @@ export function defineWith({
     });
   }
 
+  if (api && typeof api.idKey !== "string") {
+    error.push({
+      id_: "__ERROR_CAUSE_ID__",
+      key: "api.idKey",
+      value: Webapi.Error.Cause.valueToString(api.idKey),
+      message: "must be a string",
+    });
+
+    if (typeof api.get !== "function") {
+      error.push({
+        id_: "__ERROR_CAUSE_ID__",
+        key: "api.get",
+        value: Webapi.Error.Cause.valueToString(api.get),
+        message: "must be a function",
+      });
+    }
+
+    if (typeof api.list !== "function") {
+      error.push({
+        id_: "__ERROR_CAUSE_ID__",
+        key: "api.list",
+        value: Webapi.Error.Cause.valueToString(api.list),
+        message: "must be a function",
+      });
+    }
+  }
+
   if (typeof onError !== "function") {
     onError = console.log;
-  }
-
-  if (typeof api?.get !== "function") {
-    error.push({
-      id_: "__ERROR_CAUSE_ID__",
-      key: "api.get",
-      value: Webapi.Error.Cause.valueToString(api.get),
-      message: "must be a function",
-    });
-  }
-
-  if (typeof api?.list !== "function") {
-    error.push({
-      id_: "__ERROR_CAUSE_ID__",
-      key: "api.list",
-      value: Webapi.Error.Cause.valueToString(api.list),
-      message: "must be a function",
-    });
   }
 
   return Promise.all([api.list(), store.set(Session, {style})]).then(

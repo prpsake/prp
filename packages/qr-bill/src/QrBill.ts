@@ -12,7 +12,7 @@ import type {Translation} from "../types/Translations";
 import {translations} from "./Translations.mjs";
 import * as QRCode from "./QRCode.mjs";
 import * as Data from "./Data.mjs";
-import style from "./style.css";
+import style from "./style.css?inline";
 
 interface QrBillModel extends Comp {}
 interface QrBill extends Comp {

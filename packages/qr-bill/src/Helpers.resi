@@ -3,5 +3,5 @@ type qrBillCode = {
   svg: string
 }
 
-let jsonToQrBillModel: Js.Dict.t<Js.Json.t> => Data.comp
-let jsonToQrBillCode: Js.Dict.t<Js.Json.t> => qrBillCode
+let jsonToQrBillModel: Js.Json.t => Data.comp
+let jsonToQrBillCode: Js.Json.t => qrBillCode

@@ -1,7 +1,7 @@
 import {defineWith} from "../index.js";
 import * as foo from "./templates/foo.js";
 import * as baz from "./templates/baz.js";
-import style from "./style.css";
+import style from "./style.css?inline";
 
 defineWith({
   templates: {foo, baz},

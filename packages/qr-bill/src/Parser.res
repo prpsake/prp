@@ -89,15 +89,14 @@ let parseAddress: Data.opt<Js.Json.t> => Data.opt<Data.address> => Data.opt<Data
   | _ => dfo
   }
 
-let parse: Js.Dict.t<Js.Json.t> => Data.init =
-  str =>
+let parse: Js.Json.t => Data.init =
+  any =>
   try {
-    let json =
-      switch Js.Json.stringifyAny(str) {
-      | Some(x) => x
-      | None => ""
+    let json = switch Js.Json.classify(any) {
+      | JSONObject(_) => any
+      | JSONString(s) => Js.Json.parseExn(s)
+      | _ => Js.Json.null
       }
-      ->Js.Json.parseExn
     switch Js.Json.classify(json) {
     | JSONObject(d) =>
       let dataGet = dictGet(d)
@@ -119,7 +118,7 @@ let parse: Js.Dict.t<Js.Json.t> => Data.init =
         creditor: dataGet("creditor")->parseAddress(defaults.creditor),
         debtor: dataGet("debtor")->parseAddress(defaults.debtor),
       }
-    | _ => Data.initDefaults //failwith("Expected an object")
+    | _ => Data.initDefaults
     }
   } catch {
   | _ => Data.initDefaults

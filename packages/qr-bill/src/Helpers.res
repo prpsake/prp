@@ -3,13 +3,13 @@ type qrBillCode = {
   svg: string
 }
 
-let jsonToQrBillModel: Js.Dict.t<Js.Json.t> => Data.comp =
+let jsonToQrBillModel: Js.Json.t => Data.comp =
   x =>
   Parser.parse(x)
   ->Validator.validate
   ->Data.comp
 
-let jsonToQrBillCode: Js.Dict.t<Js.Json.t> => qrBillCode =
+let jsonToQrBillCode: Js.Json.t => qrBillCode =
   x =>
   jsonToQrBillModel(x)
   ->data => {
