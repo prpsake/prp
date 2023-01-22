@@ -9,3 +9,9 @@ export namespace Webapi {
   export const File: typeof File_;
   export const Object: typeof Object_;
 }
+
+import * as Tag_ from "./utils/Tag";
+
+export namespace Utils {
+  export const Tag: typeof Tag_;
+}

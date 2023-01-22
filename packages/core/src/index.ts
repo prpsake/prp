@@ -9,3 +9,9 @@ export const Webapi = {
   File: File_,
   Object: Object_,
 };
+
+import * as Tag_ from "./utils/Tag.mjs";
+
+export const Utils = {
+  Tag: Tag_,
+};

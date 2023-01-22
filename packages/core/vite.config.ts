@@ -11,7 +11,7 @@ export default (_) =>
     publicDir: "public",
     build: {
       target: "esnext",
-      minify: false,
+      minify: true,
       lib: {
         entry: resolve(__dirname, "src/index.ts"),
         name: "PRPCore",

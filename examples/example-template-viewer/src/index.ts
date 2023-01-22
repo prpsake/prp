@@ -17,6 +17,6 @@ defineWith({
         .then((resp) => resp.json())
         .catch(console.log),
   },
-  onError: ({error}) => error.forEach(console.log),
+  onError: ({error}) => console.log(error),
   style,
 });

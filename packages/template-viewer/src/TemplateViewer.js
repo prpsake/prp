@@ -1,26 +1,21 @@
 import styleApp from "./style.css?inline";
 import {store, define, router, html} from "hybrids";
 import {QrBill} from "@prpsake/qr-bill";
-import {Webapi} from "@prpsake/core";
+import {Webapi, Utils} from "@prpsake/core";
 import {makeWith as makeModelWith} from "./Model.js";
 import {makeWith as makeViewWith} from "./View.js";
 import {preview} from "./Paginator.js";
 import Session from "./Session.js";
 
 if (import.meta.env.EXP_ROUTER_DEBUG) router.debug();
-if (import.meta.hot) {
-  import.meta.hot.accept(() => {
-    if (import.meta.env.EXP_HMR_FORCE_RELOAD) {
-      import.meta.hot.invalidate();
-    }
-  });
-}
+if (import.meta.hot) import.meta.hot.accept();
 
 const TemplateViewer = ({
   templates,
   dataIds,
-  onFileInput,
-  onFileDrop,
+  // NB: not supported for now
+  // onFileInput,
+  // onFileDrop,
   onError,
   error,
 }) => ({
@@ -37,11 +32,14 @@ const TemplateViewer = ({
       });
     },
   },
-  view: router(templates.map(({view}) => view)),
+  view: router(
+    templates.map(({view}) => view),
+    {url: `/${templates[0].key}/${dataIds[0]}`},
+  ),
   showPreview: true,
   error: {
     set: (host, values = []) =>
-      Object.values(values.reduce((a, b) => ((a[b.id] = b), a), {})),
+      Object.values(values.reduce((a, b) => ((a[b.id_] = b), a), {})),
     observe: (host, values) => {
       if (values.length > 0) {
         onError({host, error: values});
@@ -55,7 +53,6 @@ const TemplateViewer = ({
         onerror=${handleViewError}>
         ${view}
       </div>
-
       <div
         class=${{
           "template-view": true,
@@ -66,9 +63,12 @@ const TemplateViewer = ({
           "transition-opacity": true,
           "duration-300": true,
           "preview-sm": !session.viewVertical,
-        }}
-        ondragover=${(e) => e.preventDefault()}
-        ondrop=${onFileDrop}></div>
+        }}></div>
+      <!--
+        NB: not supported for now
+        ondragover=(e) => e.preventDefault()
+        ondrop=onFileDrop></div>
+      -->
 
       <aside
         class="fixed bottom-0 right-0 p-8 w-96 font-sans text-system-fg prp-template-viewer-app">
@@ -83,7 +83,7 @@ const TemplateViewer = ({
                         class="inline-block px-2 py-1 drop-shadow-sm rounded-md bg-action-bg hover:bg-action-hover-bg font-light text-sm text-gray-200 select-none"
                         href="${router.url(view_, {dataId})}"
                         onclick=${previewOnClick}>
-                        ${key}/${dataId}
+                        ${key} ${dataId}
                       </a>
                     </li>
                   `,
@@ -112,6 +112,7 @@ const TemplateViewer = ({
               </div>
             </button>
           </div>
+          <!-- NB: not supported for now
           <div>
             <input
               class="hidden"
@@ -119,13 +120,13 @@ const TemplateViewer = ({
               id="control-file"
               name="file"
               accept="application/json"
-              onchange=${onFileInput} />
+              onchange=onFileInput />
             <label
               class="flex justify-between w-11 h-11 drop-shadow-sm bg-action-bg hover:bg-action-hover-bg rounded-md text-gray-200 cursor-pointer select-none"
               for="control-file">
               <div
                 class="w-0 overflow-hidden opacity-0 flex-auto font-light text-sm truncate onhover-show">
-                ${session.title}
+                session.title
               </div>
               <div class="w-11 w-11 p-3 text-gray-200">
                 <svg
@@ -139,6 +140,7 @@ const TemplateViewer = ({
               </div>
             </label>
           </div>
+          -->
         </div>
       </aside>
     `.style(styleApp),
@@ -148,77 +150,189 @@ export function defineWith({
   templates,
   tag = "template-viewer",
   tagQrBill,
-  api = {},
+  api,
   onError,
   style,
 }) {
+  // initiate the error cause array
   let error = [];
 
-  if (tagQrBill === true) {
-    tagQrBill = "qr-bill";
+  // override an invalid onError user argument with the default value
+  if (typeof onError !== "function") {
+    onError = console.log;
   }
 
-  if (typeof tagQrBill === "string") {
-    if (
-      Boolean(
-        tagQrBill.match(
-          /^(([a-zA-Z]{1}[a-zA-Z0-9]{1,})([-][a-zA-Z0-9]{1,}){1,})$/,
-        ),
-      )
-    ) {
-      define({
-        ...QrBill,
-        tag: tagQrBill,
-        class: "absolute bottom-0 left-0",
-      });
+  // initiate falsy qr bill custom tag variable, its value may be overridden
+  // by a valid user argument
+  let tagQrBill_ = "";
+
+  // user opts for the default qr bill custom tag
+  if (tagQrBill === true) {
+    tagQrBill_ = "qr-bill";
+
+    // user opts for a custom qr bill custom tag
+  } else if (typeof tagQrBill === "string") {
+    // check if the custom qr bill custom tag has a valid format and
+    // override initial falsy variable value
+    if (Utils.Tag.isCustom(tagQrBill)) {
+      tagQrBill_ = tagQrBill;
+
+      // store an error cause if the custom qr bill custom tag has not a valid
+      // format
     } else {
       error.push({
         id_: "__ERROR_CAUSE_ID__",
         key: "tagQrBill",
         value: tagQrBill,
-        message: "must be a valid custom-tag string value or a boolean",
+        message: "must be a valid custom tag string value or a boolean",
       });
     }
-  } else {
-    error.push({
-      id_: "__ERROR_CAUSE_ID__",
-      key: "tagQrBill",
-      value: Webapi.Error.Cause.valueToString(tagQrBill),
-      message: "must be a valid custom-tag string value or a boolean",
+  }
+
+  // define the custom element if the custom tag string value is valid
+  if (Boolean(tagQrBill_)) {
+    define({
+      ...QrBill,
+      tag: tagQrBill_,
+      class: "absolute bottom-0 left-0",
     });
   }
 
-  if (api && typeof api.idKey !== "string") {
-    error.push({
-      id_: "__ERROR_CAUSE_ID__",
-      key: "api.idKey",
-      value: Webapi.Error.Cause.valueToString(api.idKey),
-      message: "must be a string",
-    });
+  // initially assume an api connection, its value may be overridden by
+  // invalid or inexistent user arguments
+  let tryApi = true;
 
+  // user opts for an api connection
+  if (Boolean(api)) {
+    // if the user did not specify the id key for single item requests,
+    // store an error cause and negate the api connection
+    if (typeof api.idKey !== "string") {
+      error.push({
+        id_: "__ERROR_CAUSE_ID__",
+        key: "api.idKey",
+        value: Webapi.Error.Cause.valueToString(api?.idKey),
+        message: "must be a string",
+      });
+      tryApi = false;
+    }
+
+    // if the user did not specify the get function for single item
+    // requests, store an error cause and negate the api connection
     if (typeof api.get !== "function") {
       error.push({
         id_: "__ERROR_CAUSE_ID__",
         key: "api.get",
-        value: Webapi.Error.Cause.valueToString(api.get),
+        value: Webapi.Error.Cause.valueToString(api?.get),
         message: "must be a function",
       });
+      tryApi = false;
     }
 
+    // if the user did not specify the list function for the list request,
+    // store an error cause and negate the api connection
     if (typeof api.list !== "function") {
       error.push({
         id_: "__ERROR_CAUSE_ID__",
         key: "api.list",
-        value: Webapi.Error.Cause.valueToString(api.list),
+        value: Webapi.Error.Cause.valueToString(api?.list),
         message: "must be a function",
       });
+      tryApi = false;
     }
+
+    // user did not opt for an api connection
+  } else {
+    error.push({
+      id_: "__ERROR_CAUSE_ID__",
+      key: "api",
+      value: Webapi.Error.Cause.valueToString(api),
+      message: "must be an object literal",
+    });
+    tryApi = false;
   }
 
-  if (typeof onError !== "function") {
-    onError = console.log;
+  // initially assume templates, its value may be overridden by
+  // invalid or inexistent user arguments
+  let tryTemplates = true;
+
+  if (Boolean(templates)) {
+    if (!Webapi.Object.isObject(templates)) {
+      error.push({
+        id_: "__ERROR_CAUSE_ID__",
+        key: "templates",
+        value: Webapi.Error.Cause.valueToString(templates),
+        message: "must be an object literal",
+      });
+      tryTemplates = false;
+    }
+
+    let templateValues = Object.values(templates);
+
+    if (templateValues.length < 1) {
+      error.push({
+        id_: "__ERROR_CAUSE_ID__",
+        key: "templates",
+        value: Webapi.Error.Cause.valueToString(templateValues),
+        message: "must contain at least one template object literal",
+      });
+    }
+
+    if (!Webapi.Object.isObject(templateValues[0].model)) {
+      error.push({
+        id_: "__ERROR_CAUSE_ID__",
+        key: "templates.model",
+        value: Webapi.Error.Cause.valueToString(templateValues[0].model),
+        message: "must be an object literal",
+      });
+      tryTemplates = false;
+    }
+
+    if (typeof templateValues[0].view !== "function") {
+      error.push({
+        id_: "__ERROR_CAUSE_ID__",
+        key: "templates.view",
+        value: Webapi.Error.Cause.valueToString(templateValues[0].view),
+        message: "must be a function",
+      });
+      tryTemplates = false;
+    }
+  } else {
+    error.push({
+      id_: "__ERROR_CAUSE_ID__",
+      key: "templates",
+      value: Webapi.Error.Cause.valueToString(templates),
+      message: "must be an object literal",
+    });
+    tryTemplates = false;
   }
 
+  if (!(tryApi && tryTemplates)) {
+    api = {
+      idKey: "id",
+      get: ({id}) => ({
+        id,
+        foo: "bar",
+      }),
+      list: () => [
+        {
+          id: 1,
+          foo: "bar",
+        },
+      ],
+    };
+
+    templates = {
+      baz: {
+        model: {
+          id: true,
+          foo: "",
+        },
+        view: ({data}) => html` <div>${data.foo}</div> `,
+      },
+    };
+  }
+
+  // TODO: implement definition failure
   return Promise.all([api.list(), store.set(Session, {style})]).then(
     ([list, _session]) => {
       const dataIds = list.map(({[api.idKey]: k}) => String(k));
@@ -241,13 +355,14 @@ export function defineWith({
         ...TemplateViewer({
           templates: Object.values(templatesMade),
           dataIds,
-          onFileInput: previewOnFileInputFn({
-            templates: templatesMade,
-          }),
-          onFileDrop: previewOnFileInputFn({
-            templates: templatesMade,
-            preventDefault: true,
-          }),
+          // NB: not supported for now
+          // onFileInput: previewOnFileInputFn({
+          //   templates: templatesMade,
+          // }),
+          // onFileDrop: previewOnFileInputFn({
+          //   templates: templatesMade,
+          //   preventDefault: true,
+          // }),
           onError,
           error,
         }),

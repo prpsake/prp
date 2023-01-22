@@ -100,8 +100,8 @@ export function defineWith(param: {
       offset,
       limit,
     }: {
-      offset: number;
-      limit: number;
+      offset?: number;
+      limit?: number;
     }) => PromiseLike<M>;
   };
   onError?: ({
@@ -111,7 +111,7 @@ export function defineWith(param: {
     host: HybridsComponent<unknown>;
     error: Cause.Structured[];
   }) => void;
-}): void;
+}): Promise<HybridsComponent<unknown>>;
 
 /**
  * Define a html template.
