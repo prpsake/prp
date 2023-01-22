@@ -1,7 +1,7 @@
 {
   "name": "@prpsake/qr-bill",
   "description": "swiss qr-bill web component",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "type": "module",
   "files": [
     "dist",
@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@prpsake/core": "*",
-    "@prpsake/utils": "0.0.1"
+    "@prpsake/utils": "*"
   },
   "optionalDependencies": {
     "hybrids": "^8.1.5"

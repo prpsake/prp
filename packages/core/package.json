@@ -1,7 +1,7 @@
 {
   "name": "@prpsake/core",
   "description": "",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "type": "module",
   "files": [
     "dist",
@@ -18,6 +18,6 @@
     "release": "pnpm publish --no-git-checks"
   },
   "devDependencies": {
-    "@prpsake/utils": "0.0.1"
+    "@prpsake/utils": "*"
   }
 }
