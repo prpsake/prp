@@ -35,13 +35,6 @@ type Template<M> = {
 };
 
 /**
- * @typedef {{
- *   get: <M>(_: {id: string | number}) => PromiseLike<M>,
- *   list: <M>(_: {offset: number, limit, number}) => PromiseLike<M>
- * }} api
- */
-
-/**
  * Register the template-viewer custom element with template modules and their
  * styles. Optionally register the qr-bill custom element. The object keys of
  * `param.templates` are used to set up the url paths to the corresponding
@@ -70,27 +63,10 @@ type Template<M> = {
  *   tagQrBill: "my-qr-bill",
  *   onError: ({error}) => error.forEach(console.log)
  * })
- *
- * @param param
- * @param {Record<string, Template<unknown>>} param.templates - The template
- *   modules.
- * @param {string} param.styles - The styles for the templates.
- * @param {string} [param.tag="template-viewer"] - The tag to be used for the
- *   template-viewer custom element.
- * @param {string|boolean} [param.tagQrBill] - The tag to be used for the
- * qr-bill custom element or true for `qr-bill` or any falsy value, which
- * means that the qr-bill component won't be used.
- * @param {{
- *   get: <M>(_: {id: string | number}) => PromiseLike<M>,
- *   list: <M>(_: {offset: number, limit: number}) => PromiseLike<M>
- * }} param.api
- * @param {(param: {host: HybridsComponent<unknown>, error:
- *   Cause.Structured[]}) => void} [param.onError=console.log] - The function
- *   handling errors
  */
 export function defineWith(param: {
   templates: Record<string, Template<unknown>>;
-  style: string;
+  style?: string;
   tag?: string;
   tagQrBill?: string | boolean;
   api: {
@@ -111,23 +87,18 @@ export function defineWith(param: {
     host: HybridsComponent<unknown>;
     error: Cause.Structured[];
   }) => void;
-}): Promise<HybridsComponent<unknown>>;
+}): PromiseLike<HybridsComponent<unknown> | Cause.Structured[]>;
 
 /**
  * Define a html template.
  *
  * @example ```
- * import { html } from "@prpsake/template-viewer"
+ * import {html} from "@prpsake/template-viewer"
  *
- * const updateFn = ({ prop }) => html`
+ * const view = ({prop}) => html`
  *  <p>${prop}</p>
  * `
  * ```
- *
- * @function html
- * @param {TemplateStringsArray} parts
- * @param {...unknown} args
- * @return {UpdateFunctionWithMethods<E>}
  */
 export const html: typeof hybridsHtml;
 
@@ -136,9 +107,9 @@ export const html: typeof hybridsHtml;
  * dynamic content.
  *
  * @example ```
- * import { html, svg } from "@prpsake/template-viewer"
+ * import {html, svg} from "@prpsake/template-viewer"
  *
- * const updateFn = ({ prop }) => html`
+ * const updateFn = ({prop}) => html`
  *  <svg>
  *    ${svg`
  *      <text>${prop}</text>
@@ -146,11 +117,6 @@ export const html: typeof hybridsHtml;
  *  </svg>
  * `
  * ```
- *
- * @function svg
- * @param {TemplateStringsArray} parts
- * @param {...unknown} args
- * @return {UpdateFunctionWithMethods<E>}
  */
 export const svg: typeof hybridsSvg;
 
