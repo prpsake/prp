@@ -32,9 +32,13 @@ const TemplateViewer = ({
       });
     },
   },
+  dataId: dataIds[0],
   view: router(
     templates.map(({view}) => view),
-    {url: `/${templates[0].key}/${dataIds[0]}`},
+    {
+      url: `/${templates[0].key}/${dataIds[0]}`,
+      params: ["dataId"],
+    },
   ),
   showPreview: true,
   error: {
@@ -404,7 +408,6 @@ export function defineWith({
 
     // if saving the styles or retrieving the list succeeded, prepare the
     // templates for the element definition
-    const dataIds = list.map(({[api.idKey]: k}) => String(k));
     const templatesMade = Webapi.Object.map(
       templates,
       ([key, {model, view}]) => {
@@ -413,7 +416,6 @@ export function defineWith({
           view,
           model: modelMade,
           key,
-          dataId: dataIds[0],
         });
         return [key, {key, view: viewMade, model: modelMade}];
       },
@@ -424,7 +426,7 @@ export function defineWith({
       tag,
       ...TemplateViewer({
         templates: Object.values(templatesMade),
-        dataIds,
+        dataIds: list.map(({[api.idKey]: k}) => String(k)),
         // NB: not supported for now
         // onFileInput: previewOnFileInputFn({
         //   templates: templatesMade,
