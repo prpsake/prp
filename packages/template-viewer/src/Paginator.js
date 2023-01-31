@@ -42,13 +42,17 @@ export function preview({host, error = []}) {
       error,
     };
 
-    session.error_
-      ? value.error.push(session.error_)
-      : (value.session = session);
+    if (session.error_) {
+      value.error.push(session.error_);
+    } else {
+      value.session = session;
+    }
 
-    previewer.error_
-      ? value.error.push(previewer.error_)
-      : (value.previewer = previewer);
+    if (previewer.error_) {
+      value.error.push(previewer.error_);
+    } else {
+      value.previewer = previewer;
+    }
 
     return value;
   });

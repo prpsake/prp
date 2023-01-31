@@ -32,9 +32,13 @@ const TemplateViewer = ({
       });
     },
   },
+  dataId: dataIds[0],
   view: router(
     templates.map(({view}) => view),
-    {url: `/${templates[0].key}/${dataIds[0]}`},
+    {
+      url: `/${templates[0].key}/${dataIds[0]}`,
+      params: ["dataId"],
+    },
   ),
   showPreview: true,
   error: {
@@ -152,7 +156,7 @@ export function defineWith({
   tagQrBill,
   api,
   onError,
-  style,
+  style = "",
 }) {
   // initiate the error cause array
   let error = [];
@@ -189,7 +193,7 @@ export function defineWith({
     }
   }
 
-  // define the custom element if the custom tag string value is valid
+  // define the qr bill custom element if the custom tag string value is valid
   if (Boolean(tagQrBill_)) {
     define({
       ...QrBill,
@@ -255,7 +259,10 @@ export function defineWith({
   // invalid or inexistent user arguments
   let tryTemplates = true;
 
+  // check user templates argument
   if (Boolean(templates)) {
+    // if the user did not provide an object literal, store an error cause
+    // and negate use of templates
     if (!Webapi.Object.isObject(templates)) {
       error.push({
         id_: "__ERROR_CAUSE_ID__",
@@ -264,39 +271,49 @@ export function defineWith({
         message: "must be an object literal",
       });
       tryTemplates = false;
-    }
+    } else {
+      // get the template entries of the provided object literal
+      let templateEntries = Object.entries(templates);
 
-    let templateValues = Object.values(templates);
+      // if no template entries exist, store an error cause and negate use of
+      // templates
+      if (templateEntries.length < 1) {
+        error.push({
+          id_: "__ERROR_CAUSE_ID__",
+          key: "templates",
+          value: Webapi.Error.Cause.valueToString(templateEntries),
+          message: "must contain at least one template object literal",
+        });
+        tryTemplates = false;
+      } else {
+        // if a template entry does not provide a model object literal or a
+        // view function, store an error cause and negate use of templates
+        templateEntries.forEach(([templateKey, template]) => {
+          if (!Webapi.Object.isObject(template.model)) {
+            error.push({
+              id_: "__ERROR_CAUSE_ID__",
+              key: `templates.${templateKey}.model`,
+              value: Webapi.Error.Cause.valueToString(template.model),
+              message: "must be an object literal",
+            });
+            tryTemplates = false;
+          }
 
-    if (templateValues.length < 1) {
-      error.push({
-        id_: "__ERROR_CAUSE_ID__",
-        key: "templates",
-        value: Webapi.Error.Cause.valueToString(templateValues),
-        message: "must contain at least one template object literal",
-      });
-    }
-
-    if (!Webapi.Object.isObject(templateValues[0].model)) {
-      error.push({
-        id_: "__ERROR_CAUSE_ID__",
-        key: "templates.model",
-        value: Webapi.Error.Cause.valueToString(templateValues[0].model),
-        message: "must be an object literal",
-      });
-      tryTemplates = false;
-    }
-
-    if (typeof templateValues[0].view !== "function") {
-      error.push({
-        id_: "__ERROR_CAUSE_ID__",
-        key: "templates.view",
-        value: Webapi.Error.Cause.valueToString(templateValues[0].view),
-        message: "must be a function",
-      });
-      tryTemplates = false;
+          if (typeof template.view !== "function") {
+            error.push({
+              id_: "__ERROR_CAUSE_ID__",
+              key: `templates.${templateKey}.view`,
+              value: Webapi.Error.Cause.valueToString(template.view),
+              message: "must be a function",
+            });
+            tryTemplates = false;
+          }
+        });
+      }
     }
   } else {
+    // if user does not specify a templates object literal, store an error
+    // cause and negate use of templates
     error.push({
       id_: "__ERROR_CAUSE_ID__",
       key: "templates",
@@ -306,19 +323,23 @@ export function defineWith({
     tryTemplates = false;
   }
 
+  // if either the API or the templates are not worth setting up, set up a
+  // simple placeholder
   if (!(tryApi && tryTemplates)) {
     api = {
       idKey: "id",
-      get: ({id}) => ({
-        id,
-        foo: "bar",
-      }),
-      list: () => [
-        {
-          id: 1,
+      get: ({id}) =>
+        Promise.resolve({
+          id,
           foo: "bar",
-        },
-      ],
+        }),
+      list: () =>
+        Promise.resolve([
+          {
+            id: 1,
+            foo: "bar",
+          },
+        ]),
     };
 
     templates = {
@@ -332,43 +353,93 @@ export function defineWith({
     };
   }
 
-  // TODO: implement definition failure
-  return Promise.all([api.list(), store.set(Session, {style})]).then(
-    ([list, _session]) => {
-      const dataIds = list.map(({[api.idKey]: k}) => String(k));
-      const templatesMade = Webapi.Object.map(
-        templates,
-        ([key, {model, view}]) => {
-          const modelMade = makeModelWith({model, apiGet: api.get});
-          const viewMade = makeViewWith({
-            view,
-            model: modelMade,
-            key,
-            dataId: dataIds[0],
-          });
-          return [key, {key, view: viewMade, model: modelMade}];
+  return Promise.all([
+    // save the styles to be ready for the templates
+    store.set(Session, {style}).catch((_) => ({
+      error_: {
+        id_: "__ERROR_CAUSE_ID__",
+        key: "style",
+        message: "failed to update session model",
+      },
+    })),
+    // retrieve the data item list for the template navigation
+    Promise.resolve(api.list())
+      .then((res) =>
+        res instanceof Error
+          ? {
+              error_: {
+                id_: "__ERROR_CAUSE_ID__",
+                key: "api.list",
+                message: res.message || "failed to fetch data",
+              },
+            }
+          : res,
+      )
+      .catch((_) => ({
+        error_: {
+          id_: "__ERROR_CAUSE_ID__",
+          key: "api.list",
+          message: "failed to fetch data",
         },
-      );
+      })),
+  ]).then(([session, list]) => {
+    // check the promise results and store errors accordingly
+    if (session.error_) {
+      error.push(session.error_);
+    }
 
-      return define({
-        tag,
-        ...TemplateViewer({
-          templates: Object.values(templatesMade),
-          dataIds,
-          // NB: not supported for now
-          // onFileInput: previewOnFileInputFn({
-          //   templates: templatesMade,
-          // }),
-          // onFileDrop: previewOnFileInputFn({
-          //   templates: templatesMade,
-          //   preventDefault: true,
-          // }),
-          onError,
-          error,
-        }),
+    if (Boolean(list)) {
+      if (list.error_) {
+        error.push(list.error_);
+      }
+    } else {
+      error.push({
+        id_: "__ERROR_CAUSE_ID__",
+        key: "api.list",
+        message: "must return a thenable",
       });
-    },
-  );
+    }
+
+    // if either saving the styles or retrieving the list fails, reject the
+    // element definition with the error array
+    if (session.error_ || !Boolean(list) || list.error_) {
+      return Promise.reject(error);
+    }
+
+    // if saving the styles or retrieving the list succeeded, prepare the
+    // templates for the element definition
+    const templatesMade = Webapi.Object.map(
+      templates,
+      ([key, {model, view}]) => {
+        const modelMade = makeModelWith({model, apiGet: api.get});
+        const viewMade = makeViewWith({
+          view,
+          model: modelMade,
+          key,
+        });
+        return [key, {key, view: viewMade, model: modelMade}];
+      },
+    );
+
+    // finally try the element definition
+    return define({
+      tag,
+      ...TemplateViewer({
+        templates: Object.values(templatesMade),
+        dataIds: list.map(({[api.idKey]: k}) => String(k)),
+        // NB: not supported for now
+        // onFileInput: previewOnFileInputFn({
+        //   templates: templatesMade,
+        // }),
+        // onFileDrop: previewOnFileInputFn({
+        //   templates: templatesMade,
+        //   preventDefault: true,
+        // }),
+        onError,
+        error,
+      }),
+    });
+  });
 }
 
 /* TODO: implement rejection */
