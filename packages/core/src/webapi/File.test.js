@@ -44,10 +44,10 @@ test(
   async (t) => {
     //s
     const nonFile = null;
-    const include = /^@prpsake\/core#[0-9]+/;
+    const pattern = /^@prpsake\/core#[0-9]+/;
     //e
     const actual = await window.PRPCore.Webapi.File.toText(nonFile);
     //v
-    t.regex(String(actual?.error?.id_), include);
+    t.regex(String(actual?.error?.id_), pattern);
   },
 );
