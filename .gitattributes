@@ -211,5 +211,6 @@ Procfile          text
 # Visibility
 *.config.js       linguist-detectable=false
 *.config.cjs      linguist-detectable=false
+*rc.cjs           linguist-detectable=false
 *.lib.js          linguist-detectable=false
 *.test.js         linguist-detectable=false
