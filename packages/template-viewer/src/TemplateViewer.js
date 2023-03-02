@@ -408,6 +408,7 @@ export function defineWith({
 
     // if saving the styles or retrieving the list succeeded, prepare the
     // templates for the element definition
+    const datasetIds = list.map(({[api.idKey]: k}) => String(k));
     const templatesMade = Webapi.Object.map(
       templates,
       ([key, {model, view}]) => {
@@ -416,6 +417,7 @@ export function defineWith({
           view,
           model: modelMade,
           key,
+          initDatasetId: datasetIds[0],
         });
         return [key, {key, view: viewMade, model: modelMade}];
       },
@@ -426,7 +428,7 @@ export function defineWith({
       tag,
       ...TemplateViewer({
         templates: Object.values(templatesMade),
-        datasetIds: list.map(({[api.idKey]: k}) => String(k)),
+        datasetIds,
         // NB: not supported for now
         // onFileInput: previewOnFileInputFn({
         //   templates: templatesMade,
