@@ -12,7 +12,7 @@ if (import.meta.hot) import.meta.hot.accept();
 
 const TemplateViewer = ({
   templates,
-  dataIds,
+  datasetIds,
   // NB: not supported for now
   // onFileInput,
   // onFileDrop,
@@ -32,12 +32,12 @@ const TemplateViewer = ({
       });
     },
   },
-  dataId: dataIds[0],
+  datasetId: datasetIds[0],
   view: router(
     templates.map(({view}) => view),
     {
-      url: `/${templates[0].key}/${dataIds[0]}`,
-      params: ["dataId"],
+      url: `/${templates[0].key}/${datasetIds[0]}`,
+      params: ["datasetId"],
     },
   ),
   showPreview: true,
@@ -80,14 +80,14 @@ const TemplateViewer = ({
           <div>
             <ul class="text-right">
               ${templates.map(({view: view_, key}) =>
-                dataIds.map(
-                  (dataId) => html`
+                datasetIds.map(
+                  (datasetId) => html`
                     <li class="mb-2">
                       <a
                         class="inline-block px-2 py-1 drop-shadow-sm rounded-md bg-action-bg hover:bg-action-hover-bg font-light text-sm text-gray-200 select-none"
-                        href="${router.url(view_, {dataId})}"
+                        href="${router.url(view_, {datasetId})}"
                         onclick=${previewOnClick}>
-                        ${key} ${dataId}
+                        ${key} ${datasetId}
                       </a>
                     </li>
                   `,
@@ -426,7 +426,7 @@ export function defineWith({
       tag,
       ...TemplateViewer({
         templates: Object.values(templatesMade),
-        dataIds: list.map(({[api.idKey]: k}) => String(k)),
+        datasetIds: list.map(({[api.idKey]: k}) => String(k)),
         // NB: not supported for now
         // onFileInput: previewOnFileInputFn({
         //   templates: templatesMade,
