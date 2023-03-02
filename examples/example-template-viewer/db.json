@@ -1,7 +1,7 @@
 {
   "billable": [
     {
-      "id": "a",
+      "id": "1",
       "templates": ["estimate", "invoice"],
       "title": "Rechnung-00123-AndereOrg-010123",
       "number": "00123",
@@ -138,7 +138,7 @@
       ]
     },
     {
-      "id": "b",
+      "id": "2",
       "templates": ["estimate", "invoice"],
       "title": "Rechnung-00124-AndereOrg-010123",
       "number": "00124",

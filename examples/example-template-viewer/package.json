@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@prpsake/utils": "0.0.1",
+    "@prpsake/utils": "*",
     "@prpsake/template-viewer": "*",
     "autoprefixer": "^10.4.12",
     "postcss": "^8.4.18",

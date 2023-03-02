@@ -19,7 +19,7 @@ export default ({mode}) =>
         publicDir: false,
         build: {
           target: "esnext",
-          minify: true,
+          minify: false,
           lib: {
             entry: resolve(__dirname, "src/index.js"),
             fileName: "index",
