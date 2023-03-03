@@ -32,13 +32,9 @@ const TemplateViewer = ({
       });
     },
   },
-  datasetId: datasetIds[0],
   view: router(
     templates.map(({view}) => view),
-    {
-      url: `/${templates[0].key}/${datasetIds[0]}`,
-      params: ["datasetId"],
-    },
+    {url: `/${templates[0].key}/${datasetIds[0]}`},
   ),
   showPreview: true,
   error: {
