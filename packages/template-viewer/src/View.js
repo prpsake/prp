@@ -6,7 +6,7 @@ import Session from "./Session.js";
 
 export function makeWith({view, model, key, initDatasetId}) {
   return define({
-    [router.connect]: {url: `/${key}/:datasetId`, multiple: true},
+    [router.connect]: {url: `/${key}/:datasetId`, replace: true},
     tag: `view-${key}`,
     datasetId: initDatasetId,
     data: store(model, {id: ({datasetId}) => ({id: datasetId})}),
