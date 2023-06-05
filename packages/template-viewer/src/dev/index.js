@@ -11,6 +11,6 @@ defineWith({
   api: {
     idKey: "blah",
     get: () => {},
-    list: () => {},
+    list: () => Promise.reject(),
   },
 }).catch(console.log);
